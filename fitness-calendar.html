@@ -1,0 +1,2115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12-Month Fat Loss Program</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Weekly training and nutrition calendar for sustainable weight loss - 110kg to 91kg in 12 months">
+    <meta name="theme-color" content="#e85d25">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Fat Loss Plan">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Light theme (default) */
+            --bg-dark: #f5f5f7;
+            --bg-card: #ffffff;
+            --bg-card-hover: #fafafa;
+            --accent-orange: #e85d25;
+            --accent-yellow: #d4a012;
+            --accent-green: #0d9488;
+            --accent-purple: #9333ea;
+            --accent-blue: #2563eb;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --border-subtle: #e0e0e0;
+            --shadow-color: rgba(0,0,0,0.08);
+            --modal-overlay: rgba(0,0,0,0.5);
+            --section-bg: rgba(0,0,0,0.02);
+        }
+
+        [data-theme="dark"] {
+            --bg-dark: #0d0d0d;
+            --bg-card: #1a1a1a;
+            --bg-card-hover: #252525;
+            --accent-orange: #ff6b35;
+            --accent-yellow: #f7c948;
+            --accent-green: #4ecdc4;
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --text-muted: #666666;
+            --border-subtle: #333333;
+            --shadow-color: rgba(0,0,0,0.3);
+            --modal-overlay: rgba(0,0,0,0.9);
+            --section-bg: rgba(255,255,255,0.02);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 2rem;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(232,93,37,0.08) 0%, transparent 100%);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        [data-theme="dark"] .header {
+            background: linear-gradient(180deg, rgba(255,107,53,0.1) 0%, transparent 100%);
+        }
+
+        .header h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .theme-toggle-wrapper {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent-orange);
+            color: var(--accent-orange);
+            transform: rotate(15deg);
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .theme-toggle .moon-icon {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .sun-icon {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .moon-icon {
+            display: block;
+        }
+
+        .header {
+            position: relative;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+
+        .stat-value {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-orange);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+        }
+
+        /* Calendar Grid */
+        .calendar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .week-label {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .week-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-subtle);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1200px) {
+            .calendar-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .calendar-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calendar-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Day Card */
+        .day-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-subtle);
+            position: relative;
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+
+        .day-card:hover {
+            transform: translateY(-4px);
+            background: var(--bg-card-hover);
+            border-color: var(--accent-orange);
+            box-shadow: 0 8px 32px var(--shadow-color);
+        }
+
+        .day-header {
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .day-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .day-type {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .day-type.gym { background: var(--accent-orange); color: #000; }
+        .day-type.cardio { background: var(--accent-green); color: #000; }
+        .day-type.recovery { background: var(--accent-purple); color: #fff; }
+
+        .day-content {
+            padding: 1rem;
+        }
+
+        .workout-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .workout-duration {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .workout-duration svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--accent-orange);
+        }
+
+        .diet-preview {
+            background: var(--section-bg);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .diet-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent-yellow);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .macros {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .macro {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .macro strong {
+            color: var(--text-primary);
+        }
+
+        .click-hint {
+            text-align: center;
+            padding: 0.75rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-subtle);
+            transition: color 0.3s ease;
+        }
+
+        .day-card:hover .click-hint {
+            color: var(--accent-orange);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--modal-overlay);
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border-radius: 16px;
+            max-width: 1100px;
+            width: 100%;
+            margin: 2rem auto;
+            border: 1px solid var(--border-subtle);
+            animation: modalSlide 0.3s ease;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(232,93,37,0.08) 0%, transparent 100%);
+        }
+
+        [data-theme="dark"] .modal-header {
+            background: linear-gradient(135deg, rgba(255,107,53,0.1) 0%, transparent 100%);
+        }
+
+        .modal-header h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .modal-header .day-type {
+            font-size: 0.8rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--accent-orange);
+        }
+
+        .close-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .modal-body {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section {
+            background: var(--section-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon.workout {
+            background: linear-gradient(135deg, var(--accent-orange), #ff8c5a);
+        }
+
+        .section-icon.nutrition {
+            background: linear-gradient(135deg, var(--accent-green), #6ee7de);
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: #000;
+        }
+
+        .section-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .workout-block {
+            margin-bottom: 1.25rem;
+        }
+
+        .workout-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .workout-block-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent-orange);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .exercise-list {
+            list-style: none;
+        }
+
+        .exercise-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .exercise-list li:last-child {
+            border-bottom: none;
+        }
+
+        .exercise-list li span:last-child {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .meal-block {
+            margin-bottom: 1.25rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .meal-block:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .meal-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent-green);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .meal-title .protein {
+            color: var(--accent-yellow);
+        }
+
+        .meal-content {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .tips-section {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(147,51,234,0.08) 0%, rgba(37,99,235,0.08) 100%);
+            border-color: var(--accent-purple);
+        }
+
+        [data-theme="dark"] .tips-section {
+            background: linear-gradient(135deg, rgba(168,85,247,0.1) 0%, rgba(59,130,246,0.1) 100%);
+        }
+
+        .tips-section .section-icon {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+        }
+
+        .tips-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .tip {
+            display: flex;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .tip-icon {
+            color: var(--accent-yellow);
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        /* Expanded Nutrition Styles */
+        .nutrition-summary {
+            background: linear-gradient(135deg, rgba(13,148,136,0.1) 0%, rgba(78,205,196,0.05) 100%);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.25rem;
+            border-left: 3px solid var(--accent-green);
+        }
+
+        .nutrition-summary p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .nutrition-summary .calories-badge {
+            display: inline-block;
+            background: var(--accent-green);
+            color: #000;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .meal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .meal-card:hover {
+            border-color: var(--accent-green);
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+
+        .meal-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .meal-image {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .meal-card-content {
+            padding: 1rem;
+        }
+
+        .meal-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .meal-card-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .meal-card-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .meal-card-protein {
+            background: var(--accent-yellow);
+            color: #000;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .meal-card-description {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .recipe-toggle {
+            background: var(--section-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
+            color: var(--accent-orange);
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            font-family: 'Source Sans 3', sans-serif;
+        }
+
+        .recipe-toggle:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-orange);
+        }
+
+        .recipe-toggle svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .recipe-toggle.active svg {
+            transform: rotate(180deg);
+        }
+
+        .recipe-content {
+            display: none;
+            padding: 1rem;
+            background: var(--section-bg);
+            border-radius: 0 0 8px 8px;
+            margin-top: 0.5rem;
+        }
+
+        .recipe-content.active {
+            display: block;
+        }
+
+        .recipe-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem;
+            color: var(--accent-orange);
+            margin-bottom: 0.75rem;
+        }
+
+        .recipe-section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .recipe-section-title:first-child {
+            margin-top: 0;
+        }
+
+        .ingredients-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .ingredients-list li {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding: 0.25rem 0;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .ingredients-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+        }
+
+        .recipe-instructions {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .alternatives {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .alternatives-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .alternatives-list {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .snacks-section {
+            background: var(--section-bg);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .snacks-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent-yellow);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .snack-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.85rem;
+        }
+
+        .snack-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .snack-name {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .snack-suggestion {
+            color: var(--text-secondary);
+        }
+
+        .snack-calories {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        /* Update modal for better layout with images */
+        .modal-body {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 2rem;
+        }
+
+        .nutrition-section {
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .nutrition-section::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .nutrition-section::-webkit-scrollbar-track {
+            background: var(--bg-card);
+        }
+
+        .nutrition-section::-webkit-scrollbar-thumb {
+            background: var(--border-subtle);
+            border-radius: 3px;
+        }
+
+        .nutrition-section::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-orange);
+        }
+
+        /* Golden Rules Section */
+        .golden-rules {
+            background: linear-gradient(135deg, rgba(212,160,18,0.1) 0%, rgba(232,93,37,0.1) 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border: 1px solid var(--accent-yellow);
+        }
+
+        [data-theme="dark"] .golden-rules {
+            background: linear-gradient(135deg, rgba(247,201,72,0.1) 0%, rgba(255,107,53,0.1) 100%);
+        }
+
+        .golden-rules h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent-yellow);
+            margin-bottom: 1rem;
+        }
+
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .rule {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .rule-num {
+            background: var(--accent-orange);
+            color: #000;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .footer strong {
+            color: var(--accent-orange);
+        }
+
+        /* PWA Install Banner */
+        .install-banner {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            border: 1px solid var(--accent-orange);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 -4px 20px var(--shadow-color);
+            z-index: 1001;
+            transition: bottom 0.4s ease;
+            max-width: 90%;
+            width: 500px;
+        }
+
+        .install-banner.show {
+            bottom: 20px;
+        }
+
+        .install-banner-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-orange), #ff8c5a);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .install-banner-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .install-banner-content {
+            flex: 1;
+        }
+
+        .install-banner-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .install-banner-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .install-banner-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .install-btn {
+            background: var(--accent-orange);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .install-btn:hover {
+            background: #d4521d;
+            transform: scale(1.02);
+        }
+
+        .dismiss-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-subtle);
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dismiss-btn:hover {
+            border-color: var(--text-secondary);
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 540px) {
+            .install-banner {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.25rem;
+            }
+            
+            .install-banner-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Offline indicator */
+        .offline-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #ef4444;
+            color: white;
+            text-align: center;
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            z-index: 1002;
+            display: none;
+        }
+
+        .offline-indicator.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="theme-toggle-wrapper">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+                <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"/>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                </svg>
+                <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+            </button>
+        </div>
+        <h1>12-Month Fat Loss Program</h1>
+        <p>Weekly Training & Nutrition Calendar</p>
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-value">110 → 91kg</div>
+                <div class="stat-label">Target Weight</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">~0.4 kg/week</div>
+                <div class="stat-label">Loss Rate</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">2,400-2,700</div>
+                <div class="stat-label">Daily Calories</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">150-170g</div>
+                <div class="stat-label">Daily Protein</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="calendar-container">
+        <div class="week-label">Weekly Schedule (Repeat)</div>
+        <div class="calendar-grid" id="calendar"></div>
+
+        <div class="golden-rules">
+            <h3>⚡ The Golden Rules</h3>
+            <div class="rules-grid">
+                <div class="rule"><span class="rule-num">1</span> Protein first, always</div>
+                <div class="rule"><span class="rule-num">2</span> Never compensate food with exercise</div>
+                <div class="rule"><span class="rule-num">3</span> Bad sleep = no deficit</div>
+                <div class="rule"><span class="rule-num">4</span> Weekly averages > daily perfection</div>
+                <div class="rule"><span class="rule-num">5</span> Miss nothing twice</div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div>
+                    <h2 id="modal-title">Monday</h2>
+                </div>
+                <button class="close-btn" onclick="closeModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Content injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Target pace: <strong>~0.4 kg/week</strong> • Total focused exercise time: <strong>~4-5 hours/week</strong></p>
+        <p style="margin-top: 0.5rem;">Consistency > Perfection • Energy, sleep, and stress improve before big scale changes</p>
+    </footer>
+
+    <!-- Offline Indicator -->
+    <div class="offline-indicator" id="offline-indicator">
+        📴 You're offline. Some features may be limited.
+    </div>
+
+    <!-- PWA Install Banner -->
+    <div class="install-banner" id="install-banner">
+        <div class="install-banner-icon">
+            <svg viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/></svg>
+        </div>
+        <div class="install-banner-content">
+            <div class="install-banner-title">Install Fat Loss Plan</div>
+            <div class="install-banner-text">Add to home screen for quick access & offline use</div>
+        </div>
+        <div class="install-banner-buttons">
+            <button class="install-btn" id="install-btn">Install</button>
+            <button class="dismiss-btn" id="dismiss-btn">Not now</button>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        }
+
+        loadTheme();
+
+        const weekData = [
+            {
+                day: "Monday",
+                type: "gym",
+                typeLabel: "Gym Day",
+                title: "Lower Body Power + Conditioning",
+                duration: "60 min",
+                dietType: "Training Day",
+                workout: {
+                    warmup: {
+                        title: "Warm-up (10 min)",
+                        exercises: [
+                            ["Dynamic hips & ankles", ""],
+                            ["Light rowing", "3-5 min"]
+                        ]
+                    },
+                    main: {
+                        title: "Strength + Plyo (25 min)",
+                        exercises: [
+                            ["Goblet Squats (KB)", "4×8"],
+                            ["Box Jumps / Step Jumps", "4×5"],
+                            ["Romanian Deadlift (KB)", "3×10"],
+                            ["Walking Lunges", "3×12/leg"]
+                        ]
+                    },
+                    conditioning: {
+                        title: "Conditioning (15 min)",
+                        exercises: [
+                            ["Rowing Machine Intervals", ""],
+                            ["250m hard / 250m easy", "×6 rounds"]
+                        ]
+                    },
+                    cooldown: {
+                        title: "Cooldown (10 min)",
+                        exercises: [
+                            ["Hip flexor stretch", ""],
+                            ["Hamstring stretch", ""],
+                            ["Calf stretch", ""]
+                        ]
+                    }
+                },
+                nutrition: {
+                    summary: "High carb day to fuel lower body power work. Focus on complex carbs around training.",
+                    calories: "2,600-2,800",
+                    meals: [
+                        { 
+                            name: "Breakfast", 
+                            time: "7:00 AM",
+                            protein: "35g", 
+                            content: "Scrambled eggs with vegetables & whole grain toast",
+                            image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Power Scramble",
+                                ingredients: ["3 whole eggs + 2 egg whites", "1 cup spinach", "½ cup mushrooms", "2 slices whole grain bread", "½ avocado"],
+                                instructions: "Sauté spinach and mushrooms. Scramble eggs and combine. Serve with toast and avocado."
+                            },
+                            alternatives: ["Greek yogurt parfait with granola", "Protein oatmeal with banana"]
+                        },
+                        { 
+                            name: "Lunch", 
+                            time: "12:30 PM",
+                            protein: "45g", 
+                            content: "Grilled chicken breast with rice and roasted vegetables",
+                            image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Chicken Power Bowl",
+                                ingredients: ["180g chicken breast", "1 cup brown rice", "1 cup broccoli", "1 cup bell peppers", "1 tbsp olive oil", "Herbs & spices"],
+                                instructions: "Season and grill chicken. Roast vegetables at 200°C for 20 min. Serve over rice with olive oil drizzle."
+                            },
+                            alternatives: ["Salmon with quinoa", "Turkey meatballs with pasta"]
+                        },
+                        { 
+                            name: "Post-Gym", 
+                            time: "Within 30 min",
+                            protein: "30g", 
+                            content: "Protein shake with banana and oats",
+                            image: "https://images.unsplash.com/photo-1622485831930-8d9c9d2f0bf9?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Recovery Shake",
+                                ingredients: ["1 scoop whey protein", "1 banana", "30g oats", "250ml milk or water", "1 tbsp peanut butter (optional)"],
+                                instructions: "Blend all ingredients until smooth. Drink within 30 minutes of training."
+                            },
+                            alternatives: ["Chocolate milk + protein bar", "Greek yogurt with honey"]
+                        },
+                        { 
+                            name: "Dinner", 
+                            time: "7:00 PM",
+                            protein: "45g", 
+                            content: "Lean beef stir-fry with noodles and vegetables",
+                            image: "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Beef Stir-Fry",
+                                ingredients: ["180g lean beef strips", "150g egg noodles", "1 cup mixed vegetables", "2 tbsp soy sauce", "1 tbsp sesame oil", "Garlic & ginger"],
+                                instructions: "Cook noodles. Stir-fry beef with garlic and ginger. Add vegetables, sauce, and noodles. Toss and serve."
+                            },
+                            alternatives: ["Grilled fish with sweet potato", "Chicken pasta with tomato sauce"]
+                        }
+                    ],
+                    snacks: [
+                        { name: "Mid-morning", suggestion: "Apple + 20 almonds", calories: "~200" },
+                        { name: "Pre-workout", suggestion: "Rice cakes with honey", calories: "~150" }
+                    ]
+                },
+                tips: [
+                    "Eat carbs earlier and post-training, taper at night",
+                    "Focus on explosive movement in plyos—quality over quantity",
+                    "Keep rowing intervals at ~75-80% effort on 'hard' portions"
+                ]
+            },
+            {
+                day: "Tuesday",
+                type: "gym",
+                typeLabel: "Gym Day",
+                title: "Upper Body Calisthenics + HIIT",
+                duration: "60 min",
+                dietType: "Training Day",
+                workout: {
+                    warmup: {
+                        title: "Warm-up (8 min)",
+                        exercises: [
+                            ["Resistance bands", "shoulder activation"],
+                            ["Shoulder mobility drills", ""]
+                        ]
+                    },
+                    main: {
+                        title: "Calisthenics Strength (30 min)",
+                        exercises: [
+                            ["Pull-ups (or assisted)", "4×AMRAP"],
+                            ["Push-ups", "4×15"],
+                            ["Dips (or bench dips)", "3×10"],
+                            ["Hanging Knee Raises", "3×12"]
+                        ]
+                    },
+                    hiit: {
+                        title: "HIIT Finisher (12 min)",
+                        exercises: [
+                            ["Kettlebell Swings", "20 sec on / 40 sec off"],
+                            ["Repeat", "×10 rounds"]
+                        ]
+                    },
+                    cooldown: {
+                        title: "Stretch (10 min)",
+                        exercises: [
+                            ["Chest stretch", ""],
+                            ["Shoulder stretch", ""],
+                            ["Lat stretch", ""]
+                        ]
+                    }
+                },
+                nutrition: {
+                    summary: "Moderate carb day. Prioritize protein for muscle recovery after upper body work.",
+                    calories: "2,500-2,700",
+                    meals: [
+                        { 
+                            name: "Breakfast", 
+                            time: "7:00 AM",
+                            protein: "40g", 
+                            content: "Greek yogurt parfait with protein granola",
+                            image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Protein Parfait",
+                                ingredients: ["250g Greek yogurt (0% fat)", "1 scoop protein powder", "50g granola", "100g mixed berries", "1 tbsp honey"],
+                                instructions: "Mix protein powder into yogurt. Layer with granola and berries. Drizzle with honey."
+                            },
+                            alternatives: ["Cottage cheese with fruit", "Protein pancakes"]
+                        },
+                        { 
+                            name: "Lunch", 
+                            time: "12:30 PM",
+                            protein: "40g", 
+                            content: "Tuna salad with quinoa and chickpeas",
+                            image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Mediterranean Tuna Bowl",
+                                ingredients: ["150g tuna (canned or fresh)", "1 cup cooked quinoa", "½ cup chickpeas", "Cherry tomatoes, cucumber, red onion", "2 tbsp olive oil", "Lemon juice, herbs"],
+                                instructions: "Combine quinoa and chickpeas. Top with tuna and vegetables. Dress with olive oil and lemon."
+                            },
+                            alternatives: ["Chicken Caesar salad", "Turkey wrap with hummus"]
+                        },
+                        { 
+                            name: "Post-Gym", 
+                            time: "Within 30 min",
+                            protein: "30g", 
+                            content: "Protein shake with berries",
+                            image: "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Berry Blast Shake",
+                                ingredients: ["1 scoop whey protein", "100g mixed berries", "250ml almond milk", "Ice cubes"],
+                                instructions: "Blend all ingredients until smooth."
+                            },
+                            alternatives: ["Protein bar + banana", "Chocolate milk"]
+                        },
+                        { 
+                            name: "Dinner", 
+                            time: "7:00 PM",
+                            protein: "45g", 
+                            content: "Grilled salmon with roasted sweet potato and asparagus",
+                            image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Omega-3 Power Plate",
+                                ingredients: ["180g salmon fillet", "1 medium sweet potato", "150g asparagus", "1 tbsp olive oil", "Lemon, dill, garlic"],
+                                instructions: "Roast sweet potato at 200°C for 25 min. Season salmon and bake for 12-15 min. Grill asparagus with olive oil."
+                            },
+                            alternatives: ["Chicken thighs with vegetables", "Shrimp stir-fry with rice"]
+                        }
+                    ],
+                    snacks: [
+                        { name: "Mid-morning", suggestion: "Cottage cheese + pineapple", calories: "~180" },
+                        { name: "Evening", suggestion: "Casein shake or Greek yogurt", calories: "~150" }
+                    ]
+                },
+                tips: [
+                    "AMRAP = As Many Reps As Possible with good form",
+                    "KB swings should be hip-driven, not arm-pulled",
+                    "If pull-ups are hard, use bands or do negatives"
+                ]
+            },
+            {
+                day: "Wednesday",
+                type: "recovery",
+                typeLabel: "Recovery",
+                title: "Conditioning + Mobility",
+                duration: "60 min",
+                dietType: "Training Day",
+                workout: {
+                    conditioning: {
+                        title: "Conditioning (30-35 min)",
+                        exercises: [
+                            ["Choose ONE:", ""],
+                            ["Stair machine (steady moderate)", ""],
+                            ["Incline treadmill walk", ""],
+                            ["Easy row", ""]
+                        ]
+                    },
+                    mobility: {
+                        title: "Mobility + Flexibility (25-30 min)",
+                        exercises: [
+                            ["Ankle mobility", ""],
+                            ["Hip mobility", ""],
+                            ["Thoracic spine", ""],
+                            ["Long holds, breathing-based", ""]
+                        ]
+                    }
+                },
+                nutrition: {
+                    summary: "Lower carb recovery day. Focus on anti-inflammatory foods and hydration.",
+                    calories: "2,400-2,600",
+                    meals: [
+                        { 
+                            name: "Breakfast", 
+                            time: "7:00 AM",
+                            protein: "35g", 
+                            content: "Omelette with vegetables and avocado",
+                            image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Veggie Omelette",
+                                ingredients: ["3 whole eggs", "½ cup spinach", "¼ cup tomatoes", "¼ cup feta cheese", "½ avocado", "Fresh herbs"],
+                                instructions: "Whisk eggs. Cook vegetables in pan, pour eggs over. Fold when set. Serve with avocado."
+                            },
+                            alternatives: ["Smoked salmon with eggs", "Protein smoothie bowl"]
+                        },
+                        { 
+                            name: "Lunch", 
+                            time: "12:30 PM",
+                            protein: "40g", 
+                            content: "Large salad with grilled chicken and olive oil dressing",
+                            image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Recovery Salad Bowl",
+                                ingredients: ["150g grilled chicken", "Mixed greens", "Cucumber, tomatoes, red onion", "¼ cup walnuts", "2 tbsp olive oil", "Balsamic vinegar"],
+                                instructions: "Grill and slice chicken. Combine salad ingredients. Dress with olive oil and balsamic."
+                            },
+                            alternatives: ["Beef salad with greens", "Shrimp avocado bowl"]
+                        },
+                        { 
+                            name: "Snack", 
+                            time: "3:30 PM",
+                            protein: "25g", 
+                            content: "Greek yogurt with nuts and seeds",
+                            image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Protein Snack Bowl",
+                                ingredients: ["200g Greek yogurt", "1 tbsp mixed seeds", "10 almonds", "Cinnamon"],
+                                instructions: "Top yogurt with nuts, seeds, and cinnamon."
+                            },
+                            alternatives: ["Protein shake", "Cottage cheese with berries"]
+                        },
+                        { 
+                            name: "Dinner", 
+                            time: "7:00 PM",
+                            protein: "45g", 
+                            content: "Baked cod with Mediterranean vegetables",
+                            image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Mediterranean Fish",
+                                ingredients: ["180g cod fillet", "1 cup zucchini", "1 cup eggplant", "Cherry tomatoes", "Olives", "2 tbsp olive oil", "Herbs"],
+                                instructions: "Roast vegetables at 200°C for 20 min. Season cod and bake for 12 min. Serve together with herbs."
+                            },
+                            alternatives: ["Turkey meatballs with vegetables", "Chicken with roasted vegetables"]
+                        }
+                    ],
+                    snacks: [
+                        { name: "Mid-morning", suggestion: "Handful of mixed nuts", calories: "~170" },
+                        { name: "Evening", suggestion: "Herbal tea + small dark chocolate", calories: "~80" }
+                    ]
+                },
+                tips: [
+                    "This is a RECOVERY day that still burns calories",
+                    "Keep conditioning at conversational pace (Zone 2)",
+                    "Hold stretches for 60-90 seconds for best results"
+                ]
+            },
+            {
+                day: "Thursday",
+                type: "gym",
+                typeLabel: "Gym Day",
+                title: "Full-Body Kettlebell Power",
+                duration: "60 min",
+                dietType: "Training Day",
+                workout: {
+                    warmup: {
+                        title: "Warm-up (10 min)",
+                        exercises: [
+                            ["Light KB swings", ""],
+                            ["KB halos", ""],
+                            ["Hip circles", ""]
+                        ]
+                    },
+                    main: {
+                        title: "KB Complex (30 min) — 4-5 rounds",
+                        exercises: [
+                            ["KB Clean", "×5/side"],
+                            ["KB Press", "×5/side"],
+                            ["KB Front Squat", "×6"],
+                            ["KB Snatch", "×5/side"],
+                            ["Rest between rounds", "2 min"]
+                        ]
+                    },
+                    cooldown: {
+                        title: "Core + Stretch (20 min)",
+                        exercises: [
+                            ["Planks", "3×30-45 sec"],
+                            ["Dead bugs", "3×10/side"],
+                            ["Hip mobility", ""],
+                            ["Shoulder mobility", ""]
+                        ]
+                    }
+                },
+                nutrition: {
+                    summary: "High energy day for demanding KB work. Extra carbs pre and post workout.",
+                    calories: "2,700-2,900",
+                    meals: [
+                        { 
+                            name: "Breakfast", 
+                            time: "7:00 AM",
+                            protein: "35g", 
+                            content: "Protein oatmeal with banana and peanut butter",
+                            image: "https://images.unsplash.com/photo-1517673400267-0251440c45dc?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Power Oatmeal",
+                                ingredients: ["60g oats", "1 scoop protein powder", "1 banana", "2 tbsp peanut butter", "250ml milk", "Cinnamon"],
+                                instructions: "Cook oats with milk. Stir in protein powder. Top with sliced banana and peanut butter."
+                            },
+                            alternatives: ["Eggs with toast and fruit", "Protein pancakes with syrup"]
+                        },
+                        { 
+                            name: "Lunch", 
+                            time: "12:30 PM",
+                            protein: "45g", 
+                            content: "Turkey and rice bowl with black beans",
+                            image: "https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Tex-Mex Power Bowl",
+                                ingredients: ["180g ground turkey", "1 cup rice", "½ cup black beans", "Corn, peppers, onion", "Salsa", "Greek yogurt (sour cream alternative)"],
+                                instructions: "Cook turkey with taco seasoning. Serve over rice with beans and toppings."
+                            },
+                            alternatives: ["Chicken burrito bowl", "Beef and rice plate"]
+                        },
+                        { 
+                            name: "Post-Gym", 
+                            time: "Within 30 min",
+                            protein: "35g", 
+                            content: "Protein shake with banana and honey",
+                            image: "https://images.unsplash.com/photo-1622485831930-8d9c9d2f0bf9?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "KB Recovery Shake",
+                                ingredients: ["1.5 scoops whey protein", "1 banana", "1 tbsp honey", "300ml milk", "Ice"],
+                                instructions: "Blend until smooth. KB complexes are metabolically demanding—don't skimp on recovery nutrition."
+                            },
+                            alternatives: ["Mass gainer shake", "Greek yogurt + granola + fruit"]
+                        },
+                        { 
+                            name: "Dinner", 
+                            time: "7:00 PM",
+                            protein: "45g", 
+                            content: "Chicken thighs with roasted potatoes and green beans",
+                            image: "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Classic Chicken Dinner",
+                                ingredients: ["200g chicken thighs (skin optional)", "200g baby potatoes", "150g green beans", "2 tbsp olive oil", "Rosemary, garlic, lemon"],
+                                instructions: "Roast chicken and potatoes at 200°C for 35 min. Steam or roast green beans. Season with herbs."
+                            },
+                            alternatives: ["Steak with mashed potatoes", "Pork tenderloin with rice"]
+                        }
+                    ],
+                    snacks: [
+                        { name: "Mid-morning", suggestion: "Banana + protein bar", calories: "~300" },
+                        { name: "Pre-workout", suggestion: "Rice cakes with jam", calories: "~150" }
+                    ]
+                },
+                tips: [
+                    "Minimal rest BETWEEN movements, full rest between rounds",
+                    "Focus on hip hinge mechanics for cleans and snatches",
+                    "Start lighter—KB complexes are metabolically demanding"
+                ]
+            },
+            {
+                day: "Friday",
+                type: "gym",
+                typeLabel: "Gym Day",
+                title: "Plyometrics + Run or Row",
+                duration: "60 min",
+                dietType: "Training Day",
+                workout: {
+                    warmup: {
+                        title: "Warm-up (10 min)",
+                        exercises: [
+                            ["Dynamic stretching", ""],
+                            ["Light jogging/rowing", ""],
+                            ["Activation drills", ""]
+                        ]
+                    },
+                    plyo: {
+                        title: "Plyo Circuit (20 min)",
+                        exercises: [
+                            ["Jump Squats", "3×8"],
+                            ["Plyo Push-ups (or explosive incline)", "3×6"],
+                            ["Lateral Bounds", "3×8/side"]
+                        ]
+                    },
+                    cardio: {
+                        title: "Cardio (20 min)",
+                        exercises: [
+                            ["Choose ONE:", ""],
+                            ["Treadmill intervals (run/walk)", ""],
+                            ["Rower sprints", "30 sec hard / 90 sec easy"]
+                        ]
+                    },
+                    cooldown: {
+                        title: "Stretch (10 min)",
+                        exercises: [
+                            ["Full body stretching", ""],
+                            ["Focus on legs and hips", ""]
+                        ]
+                    }
+                },
+                nutrition: {
+                    summary: "End of training week. Good carbs for explosive work, moderate evening to prep for weekend.",
+                    calories: "2,500-2,700",
+                    meals: [
+                        { 
+                            name: "Breakfast", 
+                            time: "7:00 AM",
+                            protein: "35g", 
+                            content: "Eggs benedict style with turkey bacon",
+                            image: "https://images.unsplash.com/photo-1608039829572-9b0b9b3b9b0b?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Protein Eggs Benedict",
+                                ingredients: ["2 poached eggs", "1 English muffin", "3 slices turkey bacon", "Light hollandaise or Greek yogurt sauce", "Spinach"],
+                                instructions: "Toast muffin, cook turkey bacon, poach eggs. Layer with spinach and sauce."
+                            },
+                            alternatives: ["Breakfast burrito", "French toast with eggs"]
+                        },
+                        { 
+                            name: "Lunch", 
+                            time: "12:30 PM",
+                            protein: "40g", 
+                            content: "Asian chicken noodle bowl",
+                            image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Teriyaki Chicken Noodles",
+                                ingredients: ["150g chicken breast", "150g rice noodles", "Broccoli, carrots, snap peas", "3 tbsp teriyaki sauce", "Sesame seeds", "Green onions"],
+                                instructions: "Cook noodles. Stir-fry chicken and vegetables. Combine with sauce and garnish."
+                            },
+                            alternatives: ["Pho with beef", "Pad Thai with shrimp"]
+                        },
+                        { 
+                            name: "Post-Gym", 
+                            time: "Within 30 min",
+                            protein: "30g", 
+                            content: "Protein shake with dates",
+                            image: "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Friday Finisher Shake",
+                                ingredients: ["1 scoop protein", "3 Medjool dates (pitted)", "250ml oat milk", "1 tbsp almond butter", "Ice"],
+                                instructions: "Blend until smooth. Dates provide quick carbs for recovery."
+                            },
+                            alternatives: ["Chocolate protein shake", "Recovery smoothie"]
+                        },
+                        { 
+                            name: "Dinner", 
+                            time: "7:00 PM",
+                            protein: "45g", 
+                            content: "Lean steak with baked potato and salad",
+                            image: "https://images.unsplash.com/photo-1558030006-450675393462?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Friday Steak Night",
+                                ingredients: ["180g sirloin steak", "1 medium baked potato", "Side salad", "1 tbsp butter (for potato)", "Herbs and seasoning"],
+                                instructions: "Season and grill steak to preference. Bake potato at 200°C for 45 min. Serve with fresh salad."
+                            },
+                            alternatives: ["Lamb chops with vegetables", "Salmon with quinoa"]
+                        }
+                    ],
+                    snacks: [
+                        { name: "Mid-morning", suggestion: "Trail mix (30g)", calories: "~180" },
+                        { name: "Pre-workout", suggestion: "Small banana", calories: "~90" }
+                    ]
+                },
+                tips: [
+                    "If jumping hurts joints, use low-impact versions",
+                    "Speed matters more than height in plyos",
+                    "Last heavy day of the week—push hard, recover over weekend"
+                ]
+            },
+            {
+                day: "Saturday",
+                type: "cardio",
+                typeLabel: "Active",
+                title: "Bike Ride — Fat Burn",
+                duration: "30 min",
+                dietType: "Weekend",
+                workout: {
+                    main: {
+                        title: "Steady State Cycling (30 min)",
+                        exercises: [
+                            ["Conversational pace (Zone 2)", ""],
+                            ["Optional short hills if feeling good", ""],
+                            ["Keep heart rate 60-70% max", ""]
+                        ]
+                    }
+                },
+                nutrition: {
+                    summary: "Lower carb weekend day. Protein stays high, flexibility for one social meal.",
+                    calories: "2,300-2,500",
+                    meals: [
+                        { 
+                            name: "Breakfast", 
+                            time: "8:30 AM",
+                            protein: "35g", 
+                            content: "Weekend omelette with smoked salmon",
+                            image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Smoked Salmon Omelette",
+                                ingredients: ["3 eggs", "60g smoked salmon", "2 tbsp cream cheese", "Chives", "Capers (optional)"],
+                                instructions: "Make fluffy omelette. Fill with cream cheese and salmon. Garnish with chives."
+                            },
+                            alternatives: ["Avocado toast with eggs", "Shakshuka"]
+                        },
+                        { 
+                            name: "Lunch", 
+                            time: "1:00 PM",
+                            protein: "40g", 
+                            content: "Grilled chicken Greek salad",
+                            image: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Greek Power Salad",
+                                ingredients: ["150g grilled chicken", "Romaine lettuce", "Cucumber, tomatoes, red onion", "50g feta cheese", "Olives", "2 tbsp olive oil", "Oregano, lemon"],
+                                instructions: "Combine salad ingredients. Top with sliced chicken. Dress with olive oil and lemon."
+                            },
+                            alternatives: ["Cobb salad", "Chicken Caesar"]
+                        },
+                        { 
+                            name: "Dinner", 
+                            time: "7:00 PM",
+                            protein: "45g", 
+                            content: "Flexible meal — social or home-cooked",
+                            image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Weekend Flexibility",
+                                ingredients: ["Choose protein-focused option at restaurant", "OR home-cooked lean protein + vegetables"],
+                                instructions: "If eating out: prioritize protein, limit bread/starters, skip dessert or share. At home: simple grilled protein with vegetables."
+                            },
+                            alternatives: ["Sushi (sashimi-heavy)", "Grilled fish at restaurant", "BBQ with lean meats"]
+                        }
+                    ],
+                    snacks: [
+                        { name: "Afternoon", suggestion: "Protein shake or Greek yogurt", calories: "~150" }
+                    ]
+                },
+                tips: [
+                    "ONE indulgence meal max on weekends, not a full day",
+                    "Cycling is low-impact recovery while burning calories",
+                    "Enjoy time outdoors—mental recovery matters too"
+                ]
+            },
+            {
+                day: "Sunday",
+                type: "recovery",
+                typeLabel: "Recovery",
+                title: "Mobility + Light Core",
+                duration: "30 min",
+                dietType: "Weekend",
+                workout: {
+                    main: {
+                        title: "Active Recovery (30 min)",
+                        exercises: [
+                            ["Full-body stretching", ""],
+                            ["Yoga-style flow", ""],
+                            ["Easy core work", ""],
+                            ["Planks, bird dogs", "light"]
+                        ]
+                    }
+                },
+                nutrition: {
+                    summary: "Meal prep day. Moderate intake, focus on setting up the week ahead.",
+                    calories: "2,300-2,500",
+                    meals: [
+                        { 
+                            name: "Breakfast", 
+                            time: "9:00 AM",
+                            protein: "30g", 
+                            content: "Leisurely protein breakfast",
+                            image: "https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Sunday Brunch Plate",
+                                ingredients: ["2 eggs (any style)", "2 turkey sausages", "Grilled tomatoes", "Sautéed mushrooms", "1 slice whole grain toast"],
+                                instructions: "Cook eggs to preference. Grill sausages and tomatoes. Sauté mushrooms. Enjoy a relaxed breakfast."
+                            },
+                            alternatives: ["Protein smoothie bowl", "Cottage cheese pancakes"]
+                        },
+                        { 
+                            name: "Lunch", 
+                            time: "1:30 PM",
+                            protein: "40g", 
+                            content: "Meal prep cooking + taste testing",
+                            image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Meal Prep Session",
+                                ingredients: ["Batch cook: 500g chicken breast", "Batch cook: 3 cups rice or quinoa", "Roast: mixed vegetables", "Prep: salad ingredients", "Portion into containers"],
+                                instructions: "Spend 1-2 hours cooking proteins, carbs, and vegetables for the week. This saves time and ensures healthy options are ready."
+                            },
+                            alternatives: ["Order healthy meal prep delivery", "Simple leftover lunch"]
+                        },
+                        { 
+                            name: "Dinner", 
+                            time: "6:30 PM",
+                            protein: "45g", 
+                            content: "Light dinner to prepare for Monday",
+                            image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&h=300&fit=crop",
+                            recipe: {
+                                title: "Pre-Week Light Dinner",
+                                ingredients: ["150g baked fish (cod, tilapia, or salmon)", "Large portion roasted vegetables", "Small portion quinoa or rice (optional)", "Lemon and herbs"],
+                                instructions: "Keep dinner light to sleep well and wake up ready for Monday's training."
+                            },
+                            alternatives: ["Soup with protein", "Chicken stir-fry (light on oil)"]
+                        }
+                    ],
+                    snacks: [
+                        { name: "Afternoon", suggestion: "Herbal tea + small handful of nuts", calories: "~120" }
+                    ]
+                },
+                tips: [
+                    "Prepare mentally and physically for the week ahead",
+                    "Light movement helps recovery more than complete rest",
+                    "Good sleep tonight sets up Monday's training",
+                    "Use Sunday for meal prep—it's a game changer for consistency"
+                ]
+            }
+        ];
+
+        // Render calendar
+        function renderCalendar() {
+            const grid = document.getElementById('calendar');
+            grid.innerHTML = weekData.map((day, index) => `
+                <div class="day-card" onclick="openModal(${index})">
+                    <div class="day-header">
+                        <span class="day-name">${day.day}</span>
+                        <span class="day-type ${day.type}">${day.typeLabel}</span>
+                    </div>
+                    <div class="day-content">
+                        <div class="workout-title">${day.title}</div>
+                        <div class="workout-duration">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/></svg>
+                            ${day.duration}
+                        </div>
+                        <div class="diet-preview">
+                            <div class="diet-label">${day.dietType} Nutrition</div>
+                            <div class="macros">
+                                <span class="macro"><strong>150-170g</strong> protein</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="click-hint">Click for details →</div>
+                </div>
+            `).join('');
+        }
+
+        function openModal(index) {
+            const day = weekData[index];
+            document.getElementById('modal-title').innerHTML = `${day.day} <span class="day-type ${day.type}" style="margin-left: 1rem;">${day.typeLabel}</span>`;
+            
+            let workoutHTML = '';
+            for (const [key, block] of Object.entries(day.workout)) {
+                workoutHTML += `
+                    <div class="workout-block">
+                        <div class="workout-block-title">${block.title}</div>
+                        <ul class="exercise-list">
+                            ${block.exercises.map(ex => `<li><span>${ex[0]}</span><span>${ex[1]}</span></li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            // New expanded nutrition rendering
+            const nutritionSummaryHTML = day.nutrition.summary ? `
+                <div class="nutrition-summary">
+                    <p>${day.nutrition.summary}</p>
+                    ${day.nutrition.calories ? `<span class="calories-badge">📊 ${day.nutrition.calories} kcal target</span>` : ''}
+                </div>
+            ` : '';
+
+            const mealsHTML = day.nutrition.meals.map((meal, mealIndex) => `
+                <div class="meal-card">
+                    ${meal.image ? `<img src="${meal.image}" alt="${meal.name}" class="meal-image" loading="lazy" onerror="this.style.display='none'">` : ''}
+                    <div class="meal-card-content">
+                        <div class="meal-card-header">
+                            <div>
+                                <div class="meal-card-title">${meal.name}</div>
+                                ${meal.time ? `<div class="meal-card-time">${meal.time}</div>` : ''}
+                            </div>
+                            <span class="meal-card-protein">${meal.protein} protein</span>
+                        </div>
+                        <div class="meal-card-description">${meal.content}</div>
+                        ${meal.recipe ? `
+                            <button class="recipe-toggle" onclick="toggleRecipe(this, ${index}, ${mealIndex})">
+                                <span>📖 View Recipe & Ingredients</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </button>
+                            <div class="recipe-content" id="recipe-${index}-${mealIndex}">
+                                <div class="recipe-title">${meal.recipe.title}</div>
+                                <div class="recipe-section-title">Ingredients</div>
+                                <ul class="ingredients-list">
+                                    ${meal.recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                                </ul>
+                                <div class="recipe-section-title">Instructions</div>
+                                <p class="recipe-instructions">${meal.recipe.instructions}</p>
+                                ${meal.alternatives ? `
+                                    <div class="alternatives">
+                                        <div class="alternatives-title">Quick Alternatives</div>
+                                        <div class="alternatives-list">${meal.alternatives.join(' • ')}</div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            const snacksHTML = day.nutrition.snacks ? `
+                <div class="snacks-section">
+                    <div class="snacks-title">🥜 Snacks</div>
+                    ${day.nutrition.snacks.map(snack => `
+                        <div class="snack-item">
+                            <div>
+                                <span class="snack-name">${snack.name}:</span>
+                                <span class="snack-suggestion">${snack.suggestion}</span>
+                            </div>
+                            <span class="snack-calories">${snack.calories}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            ` : '';
+
+            const tipsHTML = day.tips.map(tip => `
+                <div class="tip">
+                    <span class="tip-icon">💡</span>
+                    <span>${tip}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('modal-body').innerHTML = `
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-icon workout">
+                            <svg viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/></svg>
+                        </div>
+                        <span class="section-title">Workout — ${day.duration}</span>
+                    </div>
+                    ${workoutHTML}
+                </div>
+                <div class="section nutrition-section">
+                    <div class="section-header">
+                        <div class="section-icon nutrition">
+                            <svg viewBox="0 0 24 24"><path d="M18.06 22.99h1.66c.84 0 1.53-.64 1.63-1.46L23 5.05l-5 2V1h-2v8l-5-2 1.66 16.48c.09.82.78 1.46 1.63 1.46h1.66L14 18h6l-1.94 4.99zM9 22v-2H7v2h2zm-5-2v2h2v-2H4zm9.86-10.27L12 5.27 4 8.5V11h2.3l-.3 1h-2l-.3 1h2.3L5 16h2l1-3h4l1 3h2l-1-3h2.3l-.3-1h-2l-.3-1H16V8.5l-2.14.73z"/></svg>
+                        </div>
+                        <span class="section-title">${day.dietType} Nutrition</span>
+                    </div>
+                    ${nutritionSummaryHTML}
+                    ${mealsHTML}
+                    ${snacksHTML}
+                </div>
+                <div class="section tips-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <svg viewBox="0 0 24 24"><path d="M9 21c0 .5.4 1 1 1h4c.6 0 1-.5 1-1v-1H9v1zm3-19C8.1 2 5 5.1 5 9c0 2.4 1.2 4.5 3 5.7V17c0 .5.4 1 1 1h6c.6 0 1-.5 1-1v-2.3c1.8-1.3 3-3.4 3-5.7 0-3.9-3.1-7-7-7z"/></svg>
+                        </div>
+                        <span class="section-title">Tips & Hints</span>
+                    </div>
+                    <div class="tips-list">
+                        ${tipsHTML}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function toggleRecipe(button, dayIndex, mealIndex) {
+            const recipeContent = document.getElementById(`recipe-${dayIndex}-${mealIndex}`);
+            button.classList.toggle('active');
+            recipeContent.classList.toggle('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on overlay click
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target.id === 'modal') {
+                closeModal();
+            }
+        });
+
+        // Close on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Initialize
+        renderCalendar();
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registered:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed:', error);
+                    });
+            });
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        const installBanner = document.getElementById('install-banner');
+        const installBtn = document.getElementById('install-btn');
+        const dismissBtn = document.getElementById('dismiss-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            // Show install banner
+            if (installBanner) {
+                installBanner.classList.add('show');
+            }
+        });
+
+        if (installBtn) {
+            installBtn.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log('User response:', outcome);
+                    deferredPrompt = null;
+                    installBanner.classList.remove('show');
+                }
+            });
+        }
+
+        if (dismissBtn) {
+            dismissBtn.addEventListener('click', () => {
+                installBanner.classList.remove('show');
+                localStorage.setItem('installDismissed', 'true');
+            });
+        }
+
+        // Don't show banner if previously dismissed
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('installDismissed') === 'true') {
+                if (installBanner) installBanner.style.display = 'none';
+            }
+        });
+
+        // Hide banner when app is installed
+        window.addEventListener('appinstalled', () => {
+            console.log('App installed');
+            if (installBanner) installBanner.classList.remove('show');
+        });
+
+        // Offline detection
+        const offlineIndicator = document.getElementById('offline-indicator');
+        
+        function updateOnlineStatus() {
+            if (!navigator.onLine) {
+                offlineIndicator.classList.add('show');
+            } else {
+                offlineIndicator.classList.remove('show');
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
+    </script>
+</body>
+</html>
