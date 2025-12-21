@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="#e85d25"/>
+
+  <!-- Flame behind runner -->
+  <g transform="translate(256, 256)">
+    <!-- Main flame shape -->
+    <path d="M-20,120
+             Q-80,60 -60,-20
+             Q-50,-60 -20,-100
+             Q0,-140 20,-100
+             Q40,-60 50,-20
+             Q70,40 40,80
+             Q20,40 0,60
+             Q-10,80 -20,120
+             Z"
+          fill="#FFD93D"
+          opacity="0.9"/>
+
+    <!-- Inner flame -->
+    <path d="M-10,100
+             Q-40,50 -30,-10
+             Q-20,-40 0,-70
+             Q15,-40 25,-10
+             Q40,30 20,60
+             Q10,40 0,50
+             Q-5,70 -10,100
+             Z"
+          fill="#FF8C00"
+          opacity="0.9"/>
+
+    <!-- Core flame -->
+    <path d="M0,80
+             Q-15,40 -10,0
+             Q-5,-25 5,-40
+             Q12,-25 15,0
+             Q20,30 10,50
+             Q5,40 0,80
+             Z"
+          fill="#ffffff"
+          opacity="0.7"/>
+  </g>
+
+  <!-- Running figure -->
+  <g transform="translate(256, 250)" fill="#ffffff">
+    <!-- Head -->
+    <circle cx="0" cy="-95" r="28"/>
+
+    <!-- Torso - leaning forward -->
+    <path d="M-15,-65 L20,-65 L35,15 L-5,20 Z"/>
+
+    <!-- Back arm (behind) -->
+    <path d="M15,-55 Q45,-35 55,-60"
+          stroke="#ffffff" stroke-width="18" stroke-linecap="round" fill="none"/>
+
+    <!-- Front arm (pumping forward) -->
+    <path d="M-5,-55 Q-45,-75 -60,-50"
+          stroke="#ffffff" stroke-width="18" stroke-linecap="round" fill="none"/>
+
+    <!-- Back leg (extended behind) -->
+    <path d="M25,15 Q60,45 90,35"
+          stroke="#ffffff" stroke-width="22" stroke-linecap="round" fill="none"/>
+
+    <!-- Front leg (bent, stepping forward) -->
+    <path d="M5,20 Q-30,70 -55,95"
+          stroke="#ffffff" stroke-width="22" stroke-linecap="round" fill="none"/>
+
+    <!-- Front foot -->
+    <ellipse cx="-62" cy="105" rx="18" ry="10" transform="rotate(-20 -62 105)"/>
+  </g>
+</svg>
