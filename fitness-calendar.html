@@ -221,15 +221,144 @@
             }
         }
 
+        @media (max-width: 900px) {
+            .calendar-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
         @media (max-width: 768px) {
             .calendar-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .header p {
+                font-size: 0.95rem;
+            }
+
+            .stats-bar {
+                gap: 0.75rem;
+            }
+
+            .stat {
+                padding: 0.5rem 1rem;
+            }
+
+            .stat-value {
+                font-size: 1.1rem;
+            }
+
+            .stat-label {
+                font-size: 0.65rem;
+            }
+
+            .golden-rules {
+                padding: 1rem;
+            }
+
+            .golden-rules h3 {
+                font-size: 0.85rem;
+            }
+
+            .rules-grid {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .rule {
+                font-size: 0.8rem;
+            }
+
+            .theme-toggle-wrapper {
+                top: 1rem;
+                right: 1rem;
+            }
+
+            .theme-toggle {
+                width: 38px;
+                height: 38px;
             }
         }
 
         @media (max-width: 480px) {
             .calendar-grid {
                 grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .header {
+                padding: 1.5rem 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+                padding-right: 2.5rem;
+            }
+
+            .header p {
+                font-size: 0.85rem;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+
+            .stat {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.75rem 1rem;
+            }
+
+            .stat-value {
+                font-size: 1.2rem;
+            }
+
+            .stat-label {
+                font-size: 0.7rem;
+            }
+
+            .calendar-container {
+                padding: 1rem;
+            }
+
+            .week-label {
+                font-size: 1rem;
+            }
+
+            .day-card {
+                border-radius: 10px;
+            }
+
+            .day-header {
+                padding: 0.75rem;
+            }
+
+            .day-name {
+                font-size: 1.1rem;
+            }
+
+            .day-content {
+                padding: 0.75rem;
+            }
+
+            .workout-title {
+                font-size: 0.9rem;
+            }
+
+            .footer {
+                padding: 1.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .footer p {
+                line-height: 1.5;
             }
         }
 
@@ -368,10 +497,18 @@
             padding: 2rem;
             overflow-y: auto;
             z-index: 1000;
+            -webkit-overflow-scrolling: touch;
         }
 
         .modal-overlay.active {
             display: flex;
+        }
+
+        /* Prevent body scroll when modal is open */
+        body.modal-open {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
         }
 
         .modal {
@@ -427,12 +564,19 @@
             border: none;
             color: var(--text-secondary);
             cursor: pointer;
-            padding: 0.5rem;
+            padding: 0.75rem;
             transition: color 0.3s ease;
+            border-radius: 8px;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .close-btn:hover {
             color: var(--accent-orange);
+            background: var(--section-bg);
         }
 
         .close-btn svg {
@@ -441,15 +585,193 @@
         }
 
         .modal-body {
-            padding: 2rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        @media (min-width: 769px) {
+            .modal-body {
+                padding: 2rem;
+                display: grid;
+                grid-template-columns: 1fr 1.2fr;
+                gap: 2rem;
+            }
         }
 
         @media (max-width: 768px) {
             .modal-body {
+                flex-direction: column;
+            }
+
+            .modal {
+                margin: 1rem;
+                border-radius: 12px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .modal-header {
+                padding: 1rem 1.25rem;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .modal-header h2 {
+                font-size: 1.25rem;
+            }
+
+            .section {
+                padding: 1rem;
+            }
+
+            .section-header {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .tips-section {
+                grid-column: 1;
+            }
+
+            .tips-list {
                 grid-template-columns: 1fr;
+            }
+
+            .nutrition-section {
+                max-height: none;
+                overflow-y: visible;
+                padding-right: 0;
+            }
+
+            .meal-image {
+                height: 120px;
+            }
+
+            .meal-card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .meal-card-protein {
+                align-self: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-overlay {
+                padding: 0.5rem;
+            }
+
+            .modal {
+                margin: 0.5rem;
+                border-radius: 10px;
+            }
+
+            .modal-header h2 {
+                font-size: 1.1rem;
+            }
+
+            .modal-header .day-type {
+                font-size: 0.65rem;
+                padding: 0.3rem 0.6rem;
+                margin-left: 0 !important;
+            }
+
+            .section {
+                padding: 0.75rem;
+                border-radius: 8px;
+            }
+
+            .section-icon {
+                width: 32px;
+                height: 32px;
+                border-radius: 8px;
+            }
+
+            .section-icon svg {
+                width: 16px;
+                height: 16px;
+            }
+
+            .section-title {
+                font-size: 0.9rem;
+            }
+
+            .workout-block-title {
+                font-size: 0.65rem;
+            }
+
+            .exercise-list li {
+                font-size: 0.8rem;
+                flex-wrap: wrap;
+                gap: 0.25rem;
+            }
+
+            .meal-card {
+                border-radius: 8px;
+            }
+
+            .meal-image {
+                height: 100px;
+            }
+
+            .meal-card-content {
+                padding: 0.75rem;
+            }
+
+            .meal-card-title {
+                font-size: 0.9rem;
+            }
+
+            .meal-card-description {
+                font-size: 0.8rem;
+            }
+
+            .recipe-toggle {
+                font-size: 0.7rem;
+                padding: 0.5rem;
+            }
+
+            .recipe-content {
+                padding: 0.75rem;
+            }
+
+            .ingredients-list li,
+            .recipe-instructions {
+                font-size: 0.75rem;
+            }
+
+            .snacks-section {
+                padding: 0.75rem;
+            }
+
+            .snack-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+
+            .tip {
+                font-size: 0.8rem;
+            }
+
+            .tip-icon {
+                font-size: 1rem;
+            }
+
+            .nutrition-summary {
+                padding: 0.75rem;
+            }
+
+            .nutrition-summary p {
+                font-size: 0.8rem;
+            }
+
+            .calories-badge {
+                font-size: 0.7rem !important;
             }
         }
 
@@ -850,18 +1172,13 @@
             font-size: 0.75rem;
         }
 
-        /* Update modal for better layout with images */
-        .modal-body {
-            padding: 2rem;
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 2rem;
-        }
-
-        .nutrition-section {
-            max-height: 70vh;
-            overflow-y: auto;
-            padding-right: 0.5rem;
+        /* Nutrition section scroll for desktop */
+        @media (min-width: 769px) {
+            .nutrition-section {
+                max-height: 70vh;
+                overflow-y: auto;
+                padding-right: 0.5rem;
+            }
         }
 
         .nutrition-section::-webkit-scrollbar {
@@ -929,6 +1246,358 @@
             font-size: 0.7rem;
             font-weight: 700;
             flex-shrink: 0;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .rule.clickable {
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            margin: -0.5rem -0.75rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .rule.clickable:hover {
+            background: rgba(232, 93, 37, 0.1);
+            color: var(--text-primary);
+        }
+
+        .rule.clickable:hover .rule-num {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(232, 93, 37, 0.3);
+        }
+
+        .rule.clickable:active {
+            transform: scale(0.98);
+        }
+
+        .view-rules-btn {
+            display: block;
+            width: 100%;
+            margin-top: 1.25rem;
+            padding: 0.85rem 1.5rem;
+            background: linear-gradient(135deg, var(--accent-orange), #ff8c5a);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-rules-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(232, 93, 37, 0.4);
+        }
+
+        /* Golden Rules Modal */
+        .rules-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--modal-overlay);
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 1rem;
+            overflow-y: auto;
+            z-index: 1000;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .rules-modal-overlay.active {
+            display: flex;
+        }
+
+        .rules-modal {
+            background: var(--bg-card);
+            border-radius: 16px;
+            max-width: 800px;
+            width: 100%;
+            margin: 1rem auto;
+            border: 1px solid var(--border-subtle);
+            animation: modalSlide 0.3s ease;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+
+        .rules-modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(247,201,72,0.1) 0%, rgba(232,93,37,0.1) 100%);
+            border-radius: 16px 16px 0 0;
+        }
+
+        [data-theme="dark"] .rules-modal-header {
+            background: linear-gradient(135deg, rgba(247,201,72,0.15) 0%, rgba(255,107,53,0.15) 100%);
+        }
+
+        .rules-modal-header h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .rules-modal-body {
+            padding: 1.5rem 2rem;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .rules-modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .rules-modal-body::-webkit-scrollbar-track {
+            background: var(--bg-card);
+        }
+
+        .rules-modal-body::-webkit-scrollbar-thumb {
+            background: var(--border-subtle);
+            border-radius: 3px;
+        }
+
+        .golden-rule-card {
+            background: var(--section-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .golden-rule-card:hover {
+            border-color: var(--accent-orange);
+        }
+
+        .golden-rule-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .golden-rule-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .golden-rule-number {
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-yellow));
+            color: #000;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .golden-rule-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .golden-rule-subtitle {
+            font-size: 0.85rem;
+            color: var(--accent-orange);
+            font-style: italic;
+        }
+
+        .golden-rule-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .golden-rule-section:first-of-type {
+            margin-top: 0.5rem;
+            padding-top: 0;
+            border-top: none;
+        }
+
+        .golden-rule-section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent-green);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .golden-rule-section-title.why {
+            color: var(--accent-purple);
+        }
+
+        .golden-rule-section-title.do {
+            color: var(--accent-green);
+        }
+
+        .golden-rule-section-title.looks {
+            color: var(--accent-blue);
+        }
+
+        .golden-rule-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .golden-rule-list li {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            padding: 0.35rem 0;
+            padding-left: 1.25rem;
+            position: relative;
+        }
+
+        .golden-rule-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent-orange);
+            font-weight: bold;
+        }
+
+        .golden-rule-tip {
+            background: linear-gradient(135deg, rgba(247,201,72,0.1) 0%, rgba(232,93,37,0.05) 100%);
+            border-left: 3px solid var(--accent-yellow);
+            padding: 0.75rem 1rem;
+            border-radius: 0 8px 8px 0;
+            margin-top: 0.75rem;
+        }
+
+        .golden-rule-tip p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .golden-rule-tip strong {
+            color: var(--accent-yellow);
+        }
+
+        .meta-rule {
+            background: linear-gradient(135deg, rgba(232,93,37,0.15) 0%, rgba(247,201,72,0.15) 100%);
+            border: 2px solid var(--accent-orange);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .meta-rule-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent-orange);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .meta-rule-text {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .rules-modal-header {
+                padding: 1rem 1.25rem;
+            }
+
+            .rules-modal-header h2 {
+                font-size: 1.25rem;
+            }
+
+            .rules-modal-body {
+                padding: 1rem;
+                max-height: 75vh;
+            }
+
+            .golden-rule-card {
+                padding: 1rem;
+            }
+
+            .golden-rule-header {
+                gap: 0.75rem;
+            }
+
+            .golden-rule-number {
+                width: 30px;
+                height: 30px;
+                font-size: 0.95rem;
+            }
+
+            .golden-rule-title {
+                font-size: 1rem;
+            }
+
+            .golden-rule-subtitle {
+                font-size: 0.8rem;
+            }
+
+            .golden-rule-list li {
+                font-size: 0.85rem;
+            }
+
+            .view-rules-btn {
+                font-size: 0.8rem;
+                padding: 0.75rem 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .rules-modal {
+                margin: 0.5rem;
+                border-radius: 12px;
+            }
+
+            .rules-modal-header {
+                border-radius: 12px 12px 0 0;
+            }
+
+            .golden-rule-card {
+                padding: 0.85rem;
+                border-radius: 8px;
+            }
+
+            .golden-rule-title {
+                font-size: 0.95rem;
+            }
+
+            .golden-rule-tip {
+                padding: 0.6rem 0.75rem;
+            }
+
+            .meta-rule {
+                padding: 1rem;
+            }
+
+            .meta-rule-text {
+                font-size: 0.95rem;
+            }
         }
 
         /* Footer */
@@ -1118,12 +1787,15 @@
         <div class="golden-rules">
             <h3>⚡ The Golden Rules</h3>
             <div class="rules-grid">
-                <div class="rule"><span class="rule-num">1</span> Protein first, always</div>
-                <div class="rule"><span class="rule-num">2</span> Never compensate food with exercise</div>
-                <div class="rule"><span class="rule-num">3</span> Bad sleep = no deficit</div>
-                <div class="rule"><span class="rule-num">4</span> Weekly averages > daily perfection</div>
-                <div class="rule"><span class="rule-num">5</span> Miss nothing twice</div>
+                <div class="rule clickable" onclick="openGoldenRulesModal(1)"><span class="rule-num">1</span> Protein first, always</div>
+                <div class="rule clickable" onclick="openGoldenRulesModal(2)"><span class="rule-num">2</span> Never compensate food with exercise</div>
+                <div class="rule clickable" onclick="openGoldenRulesModal(3)"><span class="rule-num">3</span> Bad sleep = no deficit</div>
+                <div class="rule clickable" onclick="openGoldenRulesModal(4)"><span class="rule-num">4</span> Weekly averages > daily perfection</div>
+                <div class="rule clickable" onclick="openGoldenRulesModal(5)"><span class="rule-num">5</span> Miss nothing twice</div>
             </div>
+            <button class="view-rules-btn" onclick="openGoldenRulesModal()">
+                📖 View Full Golden Rules Guide
+            </button>
         </div>
     </main>
 
@@ -1167,6 +1839,329 @@
         <div class="install-banner-buttons">
             <button class="install-btn" id="install-btn">Install</button>
             <button class="dismiss-btn" id="dismiss-btn">Not now</button>
+        </div>
+    </div>
+
+    <!-- Golden Rules Modal -->
+    <div class="rules-modal-overlay" id="rules-modal">
+        <div class="rules-modal">
+            <div class="rules-modal-header">
+                <h2>🥇 The Golden Rules</h2>
+                <button class="close-btn" onclick="closeGoldenRulesModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="rules-modal-body" id="rules-modal-body">
+                <!-- Rule 1 -->
+                <div class="golden-rule-card" id="golden-rule-1">
+                    <div class="golden-rule-header">
+                        <span class="golden-rule-number">1</span>
+                        <div>
+                            <div class="golden-rule-title">Protein First, Always</div>
+                            <div class="golden-rule-subtitle">This is the keystone habit. Break this and everything else wobbles.</div>
+                        </div>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title why">Why It Matters</div>
+                        <ul class="golden-rule-list">
+                            <li>Controls hunger better than any macro</li>
+                            <li>Preserves muscle while you lose weight</li>
+                            <li>Improves recovery and sleep quality</li>
+                            <li>Makes "accidental overeating" much harder</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title do">What To Do</div>
+                        <ul class="golden-rule-list">
+                            <li>Every meal starts by asking: <strong>"Where is the protein?"</strong></li>
+                            <li>Aim for 30–45g per main meal</li>
+                            <li>If in doubt, add protein instead of removing food</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title looks">What It Looks Like</div>
+                        <ul class="golden-rule-list">
+                            <li>Breakfast rushed? → Protein shake <em>plus</em> whatever else</li>
+                            <li>Takeout dinner? → Double chicken, skip extra sauces</li>
+                            <li>Late-night hunger? → Greek yogurt, not cereal</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-tip">
+                        <p><strong>Rule of thumb:</strong> If protein is hit, calories usually fall into place.</p>
+                    </div>
+                </div>
+
+                <!-- Rule 2 -->
+                <div class="golden-rule-card" id="golden-rule-2">
+                    <div class="golden-rule-header">
+                        <span class="golden-rule-number">2</span>
+                        <div>
+                            <div class="golden-rule-title">Never Compensate Food With Exercise</div>
+                            <div class="golden-rule-subtitle">Exercise is for fitness and metabolism—not permission to eat.</div>
+                        </div>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title why">Why It Matters</div>
+                        <ul class="golden-rule-list">
+                            <li>Exercise calorie estimates are wildly inaccurate</li>
+                            <li>"I earned this" leads to chronic overeating</li>
+                            <li>Compensation kills consistency</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title do">What To Do</div>
+                        <ul class="golden-rule-list">
+                            <li>Eat the same way on training days</li>
+                            <li>Let weight trends—not single workouts—drive adjustments</li>
+                            <li>Fuel workouts with carbs because they help performance, not as rewards</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title looks">What It Looks Like</div>
+                        <ul class="golden-rule-list">
+                            <li>Big leg day? → Normal structured meals</li>
+                            <li>Long bike ride? → Add carbs <em>around the ride</em>, not a giant dessert</li>
+                            <li>Missed workout? → Don't punish food intake</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-tip">
+                        <p><strong>Mindset shift:</strong> You train because you eat—not the other way around.</p>
+                    </div>
+                </div>
+
+                <!-- Rule 3 -->
+                <div class="golden-rule-card" id="golden-rule-3">
+                    <div class="golden-rule-header">
+                        <span class="golden-rule-number">3</span>
+                        <div>
+                            <div class="golden-rule-title">Bad Sleep = No Deficit</div>
+                            <div class="golden-rule-subtitle">This one protects your hormones and sanity.</div>
+                        </div>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title why">Why It Matters</div>
+                        <ul class="golden-rule-list">
+                            <li>Poor sleep raises hunger hormones</li>
+                            <li>Cortisol encourages fat storage</li>
+                            <li>Recovery + injury risk worsen when under-fueled</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title do">What To Do (If Sleep &lt;6 Hours)</div>
+                        <ul class="golden-rule-list">
+                            <li>Eat at <strong>maintenance</strong></li>
+                            <li>Keep protein high</li>
+                            <li>Reduce training intensity (Zone 2 > HIIT)</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title looks">What It Looks Like</div>
+                        <ul class="golden-rule-list">
+                            <li>Rough night with kids → Normal breakfast + extra carbs at lunch</li>
+                            <li>Exhausted day → Skip plyos, do mobility + walk</li>
+                            <li>No "making up" for bad sleep later</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-tip">
+                        <p><strong>Hidden benefit:</strong> This prevents binge–restrict cycles.</p>
+                    </div>
+                </div>
+
+                <!-- Rule 4 -->
+                <div class="golden-rule-card" id="golden-rule-4">
+                    <div class="golden-rule-header">
+                        <span class="golden-rule-number">4</span>
+                        <div>
+                            <div class="golden-rule-title">Weekly Averages Beat Daily Perfection</div>
+                            <div class="golden-rule-subtitle">Fat loss happens in trends, not moments.</div>
+                        </div>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title why">Why It Matters</div>
+                        <ul class="golden-rule-list">
+                            <li>Water, sodium, stress, and training mask fat loss</li>
+                            <li>Daily weight is noisy</li>
+                            <li>Perfectionism causes quit cycles</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title do">What To Do</div>
+                        <ul class="golden-rule-list">
+                            <li>Track weight daily <strong>without reacting</strong></li>
+                            <li>Look only at <strong>7-day averages</strong></li>
+                            <li>Adjust food every <strong>2 weeks</strong>, not daily</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title looks">What It Looks Like</div>
+                        <ul class="golden-rule-list">
+                            <li>Scale up 1 kg after salty meal → ignore</li>
+                            <li>Flat week after hard training → ignore</li>
+                            <li>Flat 3 weeks → small adjustment</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-tip">
+                        <p><strong>Rule:</strong> If you're thinking about calories every day, zoom out.</p>
+                    </div>
+                </div>
+
+                <!-- Rule 5 -->
+                <div class="golden-rule-card" id="golden-rule-5">
+                    <div class="golden-rule-header">
+                        <span class="golden-rule-number">5</span>
+                        <div>
+                            <div class="golden-rule-title">Miss Nothing Twice</div>
+                            <div class="golden-rule-subtitle">Consistency is a behavior, not a streak.</div>
+                        </div>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title why">Why It Matters</div>
+                        <ul class="golden-rule-list">
+                            <li>One miss is life</li>
+                            <li>Two misses is a pattern</li>
+                            <li>Guilt spirals kill long-term progress</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title do">What To Do (If You Miss)</div>
+                        <ul class="golden-rule-list">
+                            <li>Resume at the <strong>next planned session</strong></li>
+                            <li>No doubling workouts</li>
+                            <li>No food punishment</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title looks">What It Looks Like</div>
+                        <ul class="golden-rule-list">
+                            <li>Miss Monday workout → Train Tuesday as planned</li>
+                            <li>Overeat at dinner → Normal breakfast next day</li>
+                            <li>Bad weekend → Clean slate Monday</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-tip">
+                        <p><strong>Identity shift:</strong> You're someone who <em>returns quickly</em>.</p>
+                    </div>
+                </div>
+
+                <!-- Rule 6 -->
+                <div class="golden-rule-card" id="golden-rule-6">
+                    <div class="golden-rule-header">
+                        <span class="golden-rule-number">6</span>
+                        <div>
+                            <div class="golden-rule-title">Reduce Friction Before Adding Discipline</div>
+                            <div class="golden-rule-subtitle">Make the right choice the easy choice.</div>
+                        </div>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title why">Why It Matters</div>
+                        <ul class="golden-rule-list">
+                            <li>Willpower is limited</li>
+                            <li>Busy parents need automation</li>
+                            <li>Environment beats motivation</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title do">What To Do</div>
+                        <ul class="golden-rule-list">
+                            <li>Prepare the night before</li>
+                            <li>Keep default meals</li>
+                            <li>Store trigger foods out of sight</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title looks">What It Looks Like</div>
+                        <ul class="golden-rule-list">
+                            <li>Gym bag packed at night</li>
+                            <li>Same breakfast Mon–Fri</li>
+                            <li>Protein visible, snacks hidden</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-tip">
+                        <p><strong>Golden insight:</strong> If it requires motivation, it's too complex.</p>
+                    </div>
+                </div>
+
+                <!-- Rule 7 -->
+                <div class="golden-rule-card" id="golden-rule-7">
+                    <div class="golden-rule-header">
+                        <span class="golden-rule-number">7</span>
+                        <div>
+                            <div class="golden-rule-title">Train to Recover, Not to Destroy</div>
+                            <div class="golden-rule-subtitle">You're not 22—and that's a strength.</div>
+                        </div>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title why">Why It Matters</div>
+                        <ul class="golden-rule-list">
+                            <li>Recovery capacity governs fat loss</li>
+                            <li>Overreaching = stalled progress</li>
+                            <li>Quality beats volume</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title do">What To Do</div>
+                        <ul class="golden-rule-list">
+                            <li>Leave <strong>1–2 reps in reserve</strong></li>
+                            <li>Keep plyometrics crisp, low-volume</li>
+                            <li>Deload every 4th week</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title looks">What It Looks Like</div>
+                        <ul class="golden-rule-list">
+                            <li>Feeling great? → Progress slowly</li>
+                            <li>Feeling beat up? → Reduce volume, not frequency</li>
+                            <li>Joint pain? → Swap jumps for swings or sleds</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-tip">
+                        <p><strong>Rule:</strong> You should leave the gym feeling <em>better</em> than you arrived.</p>
+                    </div>
+                </div>
+
+                <!-- Rule 8 -->
+                <div class="golden-rule-card" id="golden-rule-8">
+                    <div class="golden-rule-header">
+                        <span class="golden-rule-number">8</span>
+                        <div>
+                            <div class="golden-rule-title">Protect Sleep Like It's Part of Training</div>
+                            <div class="golden-rule-subtitle">Because it is.</div>
+                        </div>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title why">Why It Matters</div>
+                        <ul class="golden-rule-list">
+                            <li>Sleep drives fat loss hormones</li>
+                            <li>Poor sleep increases injury risk</li>
+                            <li>Sleep improves decision-making</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title do">What To Do</div>
+                        <ul class="golden-rule-list">
+                            <li>Fixed wake time</li>
+                            <li>Protein + carbs at dinner</li>
+                            <li>Screens off 30 min before bed</li>
+                        </ul>
+                    </div>
+                    <div class="golden-rule-section">
+                        <div class="golden-rule-section-title looks">What It Looks Like</div>
+                        <ul class="golden-rule-list">
+                            <li>Late training → lighter dinner, earlier wind-down</li>
+                            <li>Insomnia night → next day Zone 2 only</li>
+                            <li>Short sleep streak → eat more, not less</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Meta Rule -->
+                <div class="meta-rule">
+                    <div class="meta-rule-label">🧠 The Meta-Golden Rule</div>
+                    <div class="meta-rule-text">"When in doubt, choose the option you can repeat for 12 months."</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -2007,6 +3002,7 @@
             `;
 
             document.getElementById('modal').classList.add('active');
+            document.body.classList.add('modal-open');
             document.body.style.overflow = 'hidden';
         }
 
@@ -2018,8 +3014,60 @@
 
         function closeModal() {
             document.getElementById('modal').classList.remove('active');
+            document.body.classList.remove('modal-open');
             document.body.style.overflow = '';
         }
+
+        // Golden Rules Modal Functions
+        function openGoldenRulesModal(ruleNumber) {
+            const modal = document.getElementById('rules-modal');
+            const modalBody = document.getElementById('rules-modal-body');
+
+            modal.classList.add('active');
+            document.body.classList.add('modal-open');
+            document.body.style.overflow = 'hidden';
+
+            // If a specific rule number is provided, scroll to it
+            if (ruleNumber) {
+                // Small delay to ensure modal is rendered
+                setTimeout(() => {
+                    const ruleElement = document.getElementById(`golden-rule-${ruleNumber}`);
+                    if (ruleElement && modalBody) {
+                        // Scroll the modal body to the rule
+                        const ruleTop = ruleElement.offsetTop - 20;
+                        modalBody.scrollTo({
+                            top: ruleTop,
+                            behavior: 'smooth'
+                        });
+
+                        // Add a brief highlight effect
+                        ruleElement.style.transition = 'box-shadow 0.3s ease';
+                        ruleElement.style.boxShadow = '0 0 0 3px var(--accent-orange), 0 4px 20px rgba(232, 93, 37, 0.3)';
+                        setTimeout(() => {
+                            ruleElement.style.boxShadow = '';
+                        }, 1500);
+                    }
+                }, 100);
+            } else {
+                // Reset scroll position when opening without a specific rule
+                if (modalBody) {
+                    modalBody.scrollTop = 0;
+                }
+            }
+        }
+
+        function closeGoldenRulesModal() {
+            document.getElementById('rules-modal').classList.remove('active');
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+        }
+
+        // Close golden rules modal on overlay click
+        document.getElementById('rules-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'rules-modal') {
+                closeGoldenRulesModal();
+            }
+        });
 
         // Close modal on overlay click
         document.getElementById('modal').addEventListener('click', (e) => {
@@ -2030,7 +3078,10 @@
 
         // Close on escape
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
+            if (e.key === 'Escape') {
+                closeModal();
+                closeGoldenRulesModal();
+            }
         });
 
         // Initialize
