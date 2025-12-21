@@ -1,9 +1,9 @@
-const CACHE_NAME = 'fitness-calendar-v1';
+const CACHE_NAME = 'fitness-calendar-v2';
 const urlsToCache = [
-  '/fitness-calendar.html',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png',
+  './fitness-calendar.html',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png',
   'https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap'
 ];
 
@@ -69,7 +69,7 @@ self.addEventListener('fetch', event => {
       })
       .catch(() => {
         // Offline fallback
-        return caches.match('/fitness-calendar.html');
+        return caches.match('./fitness-calendar.html');
       })
   );
 });
