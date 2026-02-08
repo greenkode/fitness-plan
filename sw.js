@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fitness-calendar-v2';
+const CACHE_NAME = 'fitness-calendar-v3';
 const urlsToCache = [
   './fitness-calendar.html',
   './manifest.json',

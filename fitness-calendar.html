@@ -1743,6 +1743,270 @@
         .offline-indicator.show {
             display: block;
         }
+
+        /* Monthly Calendar Styles */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .calendar-nav-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-nav-btn:hover {
+            border-color: var(--accent-orange);
+            color: var(--accent-orange);
+        }
+
+        .calendar-month-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .calendar-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .today-btn {
+            background: var(--accent-orange);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+
+        .today-btn:hover {
+            background: #d4521d;
+            transform: translateY(-1px);
+        }
+
+        .week-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .week-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .week-badge.week-1 { background: var(--accent-orange); color: #000; }
+        .week-badge.week-2 { background: var(--accent-green); color: #000; }
+        .week-badge.week-3 { background: var(--accent-blue); color: #fff; }
+        .week-badge.week-4 { background: var(--accent-purple); color: #fff; }
+
+        .week-theme {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .month-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            padding: 0.75rem 0.5rem;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .calendar-cell {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 0.5rem;
+            min-height: 100px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .calendar-cell:hover {
+            border-color: var(--accent-orange);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+
+        .calendar-cell.empty {
+            background: transparent;
+            border: 1px dashed var(--border-subtle);
+            cursor: default;
+        }
+
+        .calendar-cell.empty:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: var(--border-subtle);
+        }
+
+        .calendar-cell.today {
+            border: 2px solid var(--accent-orange);
+            box-shadow: 0 0 0 3px rgba(232, 93, 37, 0.2);
+        }
+
+        .calendar-date {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .calendar-cell.today .calendar-date {
+            color: var(--accent-orange);
+        }
+
+        .calendar-week-badge {
+            position: absolute;
+            top: 0.35rem;
+            right: 0.35rem;
+            font-size: 0.6rem;
+            padding: 0.15rem 0.35rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .calendar-workout-type {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            display: inline-block;
+            margin-bottom: 0.25rem;
+        }
+
+        .calendar-workout-type.gym { background: var(--accent-orange); color: #000; }
+        .calendar-workout-type.cardio { background: var(--accent-green); color: #000; }
+        .calendar-workout-type.recovery { background: var(--accent-purple); color: #fff; }
+
+        .calendar-workout-title {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            line-height: 1.3;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        @media (max-width: 900px) {
+            .calendar-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .calendar-nav {
+                justify-content: center;
+            }
+
+            .calendar-actions {
+                justify-content: center;
+            }
+
+            .calendar-cell {
+                min-height: 80px;
+                padding: 0.35rem;
+            }
+
+            .calendar-date {
+                font-size: 0.95rem;
+            }
+
+            .calendar-workout-title {
+                font-size: 0.65rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .month-calendar {
+                gap: 0.25rem;
+            }
+
+            .calendar-day-header {
+                font-size: 0.65rem;
+                padding: 0.5rem 0.25rem;
+            }
+
+            .calendar-cell {
+                min-height: 70px;
+                padding: 0.25rem;
+                border-radius: 6px;
+            }
+
+            .calendar-date {
+                font-size: 0.85rem;
+            }
+
+            .calendar-week-badge {
+                display: none;
+            }
+
+            .calendar-workout-type {
+                font-size: 0.5rem;
+                padding: 0.1rem 0.25rem;
+            }
+
+            .calendar-workout-title {
+                font-size: 0.55rem;
+                -webkit-line-clamp: 1;
+            }
+
+            .week-indicator {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1781,8 +2045,21 @@
     </header>
 
     <main class="calendar-container">
-        <div class="week-label">Weekly Schedule (Repeat)</div>
-        <div class="calendar-grid" id="calendar"></div>
+        <div class="calendar-header">
+            <div class="calendar-nav">
+                <button class="calendar-nav-btn" onclick="previousMonth()">&lt; Prev</button>
+                <div class="calendar-month-title" id="month-title">February 2026</div>
+                <button class="calendar-nav-btn" onclick="nextMonth()">Next &gt;</button>
+            </div>
+            <div class="calendar-actions">
+                <button class="today-btn" onclick="goToToday()">Today</button>
+            </div>
+        </div>
+        <div class="week-indicator" id="week-indicator">
+            <span class="week-badge week-1" id="current-week-badge">W1</span>
+            <span class="week-theme" id="current-week-theme">Foundation Week</span>
+        </div>
+        <div class="month-calendar" id="calendar"></div>
 
         <div class="golden-rules">
             <h3>⚡ The Golden Rules</h3>
@@ -2185,706 +2462,651 @@
 
         loadTheme();
 
-        const weekData = [
-            {
-                day: "Monday",
-                type: "gym",
-                typeLabel: "Gym Day",
-                title: "Lower Body Power + Conditioning",
-                duration: "60 min",
-                dietType: "Training Day",
-                workout: {
-                    warmup: {
-                        title: "Warm-up (10 min)",
-                        exercises: [
-                            ["Dynamic hips & ankles", ""],
-                            ["Light rowing", "3-5 min"]
-                        ]
-                    },
-                    main: {
-                        title: "Strength + Plyo (25 min)",
-                        exercises: [
-                            ["Goblet Squats (KB)", "4×8"],
-                            ["Box Jumps / Step Jumps", "4×5"],
-                            ["Romanian Deadlift (KB)", "3×10"],
-                            ["Walking Lunges", "3×12/leg"]
-                        ]
-                    },
-                    conditioning: {
-                        title: "Conditioning (15 min)",
-                        exercises: [
-                            ["Rowing Machine Intervals", ""],
-                            ["250m hard / 250m easy", "×6 rounds"]
-                        ]
-                    },
-                    cooldown: {
-                        title: "Cooldown (10 min)",
-                        exercises: [
-                            ["Hip flexor stretch", ""],
-                            ["Hamstring stretch", ""],
-                            ["Calf stretch", ""]
-                        ]
-                    }
-                },
-                nutrition: {
-                    summary: "High carb day to fuel lower body power work. Focus on complex carbs around training.",
-                    calories: "2,600-2,800",
-                    meals: [
-                        { 
-                            name: "Breakfast", 
-                            time: "7:00 AM",
-                            protein: "35g", 
-                            content: "Scrambled eggs with vegetables & whole grain toast",
-                            image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Power Scramble",
-                                ingredients: ["3 whole eggs + 2 egg whites", "1 cup spinach", "½ cup mushrooms", "2 slices whole grain bread", "½ avocado"],
-                                instructions: "Sauté spinach and mushrooms. Scramble eggs and combine. Serve with toast and avocado."
+        const PROGRAM_START_DATE = new Date(2026, 1, 2);
+        let currentYear = 2026;
+        let currentMonth = 1;
+
+        const weekThemes = [
+            { name: "Foundation", theme: "foundation" },
+            { name: "Strength Focus", theme: "strength" },
+            { name: "Athletic Development", theme: "athletic" },
+            { name: "Integration", theme: "integration" }
+        ];
+
+        const monthlyProgram = {
+            weeks: [
+                {
+                    name: "Foundation",
+                    theme: "foundation",
+                    days: [
+                        {
+                            day: "Monday",
+                            type: "gym",
+                            typeLabel: "Gym Day",
+                            title: "Lower Body Power + Foot Work",
+                            duration: "65 min",
+                            dietType: "Training Day",
+                            workout: {
+                                warmup: { title: "Warm-up (10 min)", exercises: [["Dynamic hips & ankles", ""], ["Light rowing", "3-5 min"]] },
+                                main: { title: "Strength + Plyo (25 min)", exercises: [["Goblet Squats (KB)", "4×8"], ["Box Jumps / Step Jumps", "4×5"], ["Romanian Deadlift (KB)", "3×10"], ["Walking Lunges", "3×12/leg"]] },
+                                conditioning: { title: "Conditioning (15 min)", exercises: [["Rowing Machine Intervals", ""], ["250m hard / 250m easy", "×6 rounds"]] },
+                                footwork: { title: "Foot Strengthening (5 min)", exercises: [["Toe curls with towel", "3×15"], ["Arch lifts", "3×12"], ["Single-leg balance", "30s each"]] },
+                                cooldown: { title: "Cooldown (10 min)", exercises: [["Hip flexor stretch", ""], ["Hamstring stretch", ""], ["Calf stretch", ""]] }
                             },
-                            alternatives: ["Greek yogurt parfait with granola", "Protein oatmeal with banana"]
+                            tips: ["Eat carbs earlier and post-training", "Focus on explosive movement in plyos", "Keep rowing at ~75-80% effort on hard portions"]
                         },
-                        { 
-                            name: "Lunch", 
-                            time: "12:30 PM",
-                            protein: "45g", 
-                            content: "Grilled chicken breast with rice and roasted vegetables",
-                            image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Chicken Power Bowl",
-                                ingredients: ["180g chicken breast", "1 cup brown rice", "1 cup broccoli", "1 cup bell peppers", "1 tbsp olive oil", "Herbs & spices"],
-                                instructions: "Season and grill chicken. Roast vegetables at 200°C for 20 min. Serve over rice with olive oil drizzle."
+                        {
+                            day: "Tuesday",
+                            type: "gym",
+                            typeLabel: "Gym Day",
+                            title: "Upper Body Calisthenics + HIIT",
+                            duration: "60 min",
+                            dietType: "Training Day",
+                            workout: {
+                                warmup: { title: "Warm-up (8 min)", exercises: [["Resistance bands", "shoulder activation"], ["Shoulder mobility drills", ""]] },
+                                main: { title: "Calisthenics Strength (30 min)", exercises: [["Pull-ups (or assisted)", "4×AMRAP"], ["Push-ups", "4×15"], ["Dips (or bench dips)", "3×10"], ["Hanging Knee Raises", "3×12"]] },
+                                hiit: { title: "HIIT Finisher (12 min)", exercises: [["Kettlebell Swings", "20 sec on / 40 sec off"], ["Repeat", "×10 rounds"]] },
+                                cooldown: { title: "Stretch (10 min)", exercises: [["Chest stretch", ""], ["Shoulder stretch", ""], ["Lat stretch", ""]] }
                             },
-                            alternatives: ["Salmon with quinoa", "Turkey meatballs with pasta"]
+                            tips: ["AMRAP = As Many Reps As Possible with good form", "KB swings should be hip-driven", "Use bands or negatives if pull-ups are hard"]
                         },
-                        { 
-                            name: "Post-Gym", 
-                            time: "Within 30 min",
-                            protein: "30g", 
-                            content: "Protein shake with banana and oats",
-                            image: "https://images.unsplash.com/photo-1622485831930-8d9c9d2f0bf9?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Recovery Shake",
-                                ingredients: ["1 scoop whey protein", "1 banana", "30g oats", "250ml milk or water", "1 tbsp peanut butter (optional)"],
-                                instructions: "Blend all ingredients until smooth. Drink within 30 minutes of training."
+                        {
+                            day: "Wednesday",
+                            type: "recovery",
+                            typeLabel: "Recovery",
+                            title: "Hip Opening & Mobility",
+                            duration: "45 min",
+                            dietType: "Recovery Day",
+                            workout: {
+                                main: { title: "Hip Mobility Flow (25 min)", exercises: [["Hip 90/90 stretch", "3×60s each side"], ["Pigeon stretch", "2×90s each side"], ["Frog stretch", "3×60s"], ["Hip circles", "2×10 each direction"]] },
+                                core: { title: "Light Core (10 min)", exercises: [["Dead bugs", "3×10/side"], ["Bird dogs", "3×8/side"]] },
+                                cooldown: { title: "Breathing & Relaxation (10 min)", exercises: [["Diaphragmatic breathing", ""], ["Child's pose", "2 min"]] }
                             },
-                            alternatives: ["Chocolate milk + protein bar", "Greek yogurt with honey"]
+                            tips: ["Hold stretches for full duration", "Breathe deeply through each stretch", "This is RECOVERY - don't push through pain"]
                         },
-                        { 
-                            name: "Dinner", 
-                            time: "7:00 PM",
-                            protein: "45g", 
-                            content: "Lean beef stir-fry with noodles and vegetables",
-                            image: "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Beef Stir-Fry",
-                                ingredients: ["180g lean beef strips", "150g egg noodles", "1 cup mixed vegetables", "2 tbsp soy sauce", "1 tbsp sesame oil", "Garlic & ginger"],
-                                instructions: "Cook noodles. Stir-fry beef with garlic and ginger. Add vegetables, sauce, and noodles. Toss and serve."
+                        {
+                            day: "Thursday",
+                            type: "gym",
+                            typeLabel: "Gym Day",
+                            title: "Full-Body Kettlebell Power",
+                            duration: "60 min",
+                            dietType: "Training Day",
+                            workout: {
+                                warmup: { title: "Warm-up (10 min)", exercises: [["Light KB swings", ""], ["KB halos", ""], ["Hip circles", ""]] },
+                                main: { title: "KB Complex (30 min) — 4-5 rounds", exercises: [["KB Clean", "×5/side"], ["KB Press", "×5/side"], ["KB Front Squat", "×6"], ["KB Snatch", "×5/side"], ["Rest between rounds", "2 min"]] },
+                                cooldown: { title: "Core + Stretch (20 min)", exercises: [["Planks", "3×30-45 sec"], ["Dead bugs", "3×10/side"], ["Hip mobility", ""], ["Shoulder mobility", ""]] }
                             },
-                            alternatives: ["Grilled fish with sweet potato", "Chicken pasta with tomato sauce"]
+                            tips: ["Minimal rest BETWEEN movements, full rest between rounds", "Focus on hip hinge mechanics", "Start lighter—KB complexes are demanding"]
+                        },
+                        {
+                            day: "Friday",
+                            type: "gym",
+                            typeLabel: "Gym Day",
+                            title: "Plyometrics + Run/Row",
+                            duration: "60 min",
+                            dietType: "Training Day",
+                            workout: {
+                                warmup: { title: "Warm-up (10 min)", exercises: [["Dynamic stretching", ""], ["Light jogging/rowing", ""], ["Activation drills", ""]] },
+                                plyo: { title: "Plyo Circuit (20 min)", exercises: [["Jump Squats", "3×8"], ["Plyo Push-ups", "3×6"], ["Lateral Bounds", "3×8/side"]] },
+                                cardio: { title: "Cardio (20 min)", exercises: [["Treadmill intervals OR Rower sprints", ""], ["30 sec hard / 90 sec easy", "×8-10 rounds"]] },
+                                cooldown: { title: "Stretch (10 min)", exercises: [["Full body stretching", ""], ["Focus on legs and hips", ""]] }
+                            },
+                            tips: ["Speed matters more than height in plyos", "Last heavy day of the week—push hard", "If jumping hurts joints, use low-impact versions"]
+                        },
+                        {
+                            day: "Saturday",
+                            type: "cardio",
+                            typeLabel: "Cardio",
+                            title: "Cycling + Foot Strengthening",
+                            duration: "45 min",
+                            dietType: "Active Day",
+                            workout: {
+                                main: { title: "Steady State Cycling (30-45 min)", exercises: [["Zone 2 conversational pace", ""], ["Heart rate 60-70% max", ""], ["Optional short hills", ""]] },
+                                footwork: { title: "Foot Strengthening (10 min)", exercises: [["Toe curls with towel", "3×15"], ["Arch lifts", "3×12"], ["Calf raises (slow)", "3×15"], ["Single-leg balance", "60s each"]] }
+                            },
+                            tips: ["Cycling is low-impact recovery while burning calories", "Enjoy time outdoors—mental recovery matters", "ONE indulgence meal max on weekends"]
+                        },
+                        {
+                            day: "Sunday",
+                            type: "recovery",
+                            typeLabel: "Recovery",
+                            title: "Mobility + Light Core",
+                            duration: "30 min",
+                            dietType: "Recovery Day",
+                            workout: {
+                                main: { title: "Active Recovery (30 min)", exercises: [["Full-body stretching", ""], ["Yoga-style flow", ""], ["Easy core work", ""], ["Planks, bird dogs", "light"]] }
+                            },
+                            tips: ["Prepare mentally for the week ahead", "Light movement helps recovery", "Good sleep tonight sets up Monday"]
                         }
-                    ],
-                    snacks: [
-                        { name: "Mid-morning", suggestion: "Apple + 20 almonds", calories: "~200" },
-                        { name: "Pre-workout", suggestion: "Rice cakes with honey", calories: "~150" }
                     ]
                 },
-                tips: [
-                    "Eat carbs earlier and post-training, taper at night",
-                    "Focus on explosive movement in plyos—quality over quantity",
-                    "Keep rowing intervals at ~75-80% effort on 'hard' portions"
-                ]
-            },
-            {
-                day: "Tuesday",
-                type: "gym",
-                typeLabel: "Gym Day",
-                title: "Upper Body Calisthenics + HIIT",
-                duration: "60 min",
-                dietType: "Training Day",
-                workout: {
-                    warmup: {
-                        title: "Warm-up (8 min)",
-                        exercises: [
-                            ["Resistance bands", "shoulder activation"],
-                            ["Shoulder mobility drills", ""]
-                        ]
-                    },
-                    main: {
-                        title: "Calisthenics Strength (30 min)",
-                        exercises: [
-                            ["Pull-ups (or assisted)", "4×AMRAP"],
-                            ["Push-ups", "4×15"],
-                            ["Dips (or bench dips)", "3×10"],
-                            ["Hanging Knee Raises", "3×12"]
-                        ]
-                    },
-                    hiit: {
-                        title: "HIIT Finisher (12 min)",
-                        exercises: [
-                            ["Kettlebell Swings", "20 sec on / 40 sec off"],
-                            ["Repeat", "×10 rounds"]
-                        ]
-                    },
-                    cooldown: {
-                        title: "Stretch (10 min)",
-                        exercises: [
-                            ["Chest stretch", ""],
-                            ["Shoulder stretch", ""],
-                            ["Lat stretch", ""]
-                        ]
-                    }
-                },
-                nutrition: {
-                    summary: "Moderate carb day. Prioritize protein for muscle recovery after upper body work.",
-                    calories: "2,500-2,700",
-                    meals: [
-                        { 
-                            name: "Breakfast", 
-                            time: "7:00 AM",
-                            protein: "40g", 
-                            content: "Greek yogurt parfait with protein granola",
-                            image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Protein Parfait",
-                                ingredients: ["250g Greek yogurt (0% fat)", "1 scoop protein powder", "50g granola", "100g mixed berries", "1 tbsp honey"],
-                                instructions: "Mix protein powder into yogurt. Layer with granola and berries. Drizzle with honey."
+                {
+                    name: "Strength Focus",
+                    theme: "strength",
+                    days: [
+                        {
+                            day: "Monday",
+                            type: "gym",
+                            typeLabel: "Gym Day",
+                            title: "Barbell Squats + Accessory",
+                            duration: "65 min",
+                            dietType: "Training Day",
+                            workout: {
+                                warmup: { title: "Warm-up (10 min)", exercises: [["Foam rolling quads/glutes", ""], ["Goblet squats", "2×10"], ["Hip circles", ""]] },
+                                main: { title: "Barbell Work (35 min)", exercises: [["Back Squat", "5×5 (progressive load)"], ["Pause Squats", "3×6"], ["Bulgarian Split Squats", "3×8/leg"], ["Leg Press", "3×12"]] },
+                                accessory: { title: "Accessory (10 min)", exercises: [["Leg Extensions", "3×12"], ["Seated Calf Raises", "3×15"]] },
+                                cooldown: { title: "Stretch (10 min)", exercises: [["Quad stretch", ""], ["Hip flexor stretch", ""], ["Hamstring stretch", ""]] }
                             },
-                            alternatives: ["Cottage cheese with fruit", "Protein pancakes"]
+                            tips: ["Focus on depth and form over weight", "Progressive overload—add 2.5kg when 5×5 feels comfortable", "Brace core throughout squats"]
                         },
-                        { 
-                            name: "Lunch", 
-                            time: "12:30 PM",
-                            protein: "40g", 
-                            content: "Tuna salad with quinoa and chickpeas",
-                            image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Mediterranean Tuna Bowl",
-                                ingredients: ["150g tuna (canned or fresh)", "1 cup cooked quinoa", "½ cup chickpeas", "Cherry tomatoes, cucumber, red onion", "2 tbsp olive oil", "Lemon juice, herbs"],
-                                instructions: "Combine quinoa and chickpeas. Top with tuna and vegetables. Dress with olive oil and lemon."
+                        {
+                            day: "Tuesday",
+                            type: "gym",
+                            typeLabel: "Gym Day",
+                            title: "Upper Body + Hip Flexor Strength",
+                            duration: "60 min",
+                            dietType: "Training Day",
+                            workout: {
+                                warmup: { title: "Warm-up (8 min)", exercises: [["Band pull-aparts", ""], ["Shoulder circles", ""], ["Light push-ups", ""]] },
+                                main: { title: "Upper Body (30 min)", exercises: [["Bench Press or DB Press", "4×8"], ["Bent Over Rows", "4×10"], ["Overhead Press", "3×8"], ["Face Pulls", "3×15"]] },
+                                hipflexor: { title: "Hip Flexor Strength (12 min)", exercises: [["Banded Marches", "3×15/leg"], ["Hanging Knee Raises", "3×12"], ["Psoas Holds (lying)", "3×20s/leg"]] },
+                                cooldown: { title: "Stretch (10 min)", exercises: [["Chest stretch", ""], ["Lat stretch", ""], ["Hip flexor stretch", ""]] }
                             },
-                            alternatives: ["Chicken Caesar salad", "Turkey wrap with hummus"]
+                            tips: ["Control the negative on all lifts", "Hip flexors are often weak—start light", "Keep shoulders back during rows"]
                         },
-                        { 
-                            name: "Post-Gym", 
-                            time: "Within 30 min",
-                            protein: "30g", 
-                            content: "Protein shake with berries",
-                            image: "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Berry Blast Shake",
-                                ingredients: ["1 scoop whey protein", "100g mixed berries", "250ml almond milk", "Ice cubes"],
-                                instructions: "Blend all ingredients until smooth."
+                        {
+                            day: "Wednesday",
+                            type: "recovery",
+                            typeLabel: "Recovery",
+                            title: "Conditioning + Foot Work",
+                            duration: "50 min",
+                            dietType: "Recovery Day",
+                            workout: {
+                                conditioning: { title: "Zone 2 Conditioning (30 min)", exercises: [["Stair machine OR incline walk", ""], ["Keep heart rate 120-140 bpm", ""], ["Conversational pace", ""]] },
+                                footwork: { title: "Foot Strengthening (15 min)", exercises: [["Toe curls with towel", "3×15"], ["Arch lifts", "3×12"], ["Calf raises", "3×15"], ["Single-leg balance", "60s each"], ["Toe spreads", "3×10"]] },
+                                mobility: { title: "Light Mobility (5 min)", exercises: [["Ankle circles", ""], ["Toe points/flexes", ""]] }
                             },
-                            alternatives: ["Protein bar + banana", "Chocolate milk"]
+                            tips: ["This is active recovery—keep intensity low", "Foot strength prevents injuries", "Zone 2 = can hold conversation"]
                         },
-                        { 
-                            name: "Dinner", 
-                            time: "7:00 PM",
-                            protein: "45g", 
-                            content: "Grilled salmon with roasted sweet potato and asparagus",
-                            image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Omega-3 Power Plate",
-                                ingredients: ["180g salmon fillet", "1 medium sweet potato", "150g asparagus", "1 tbsp olive oil", "Lemon, dill, garlic"],
-                                instructions: "Roast sweet potato at 200°C for 25 min. Season salmon and bake for 12-15 min. Grill asparagus with olive oil."
+                        {
+                            day: "Thursday",
+                            type: "gym",
+                            typeLabel: "Gym Day",
+                            title: "Barbell Deadlifts + Hamstrings",
+                            duration: "65 min",
+                            dietType: "Training Day",
+                            workout: {
+                                warmup: { title: "Warm-up (10 min)", exercises: [["Cat-cow stretches", ""], ["Hip hinges with band", ""], ["Light RDLs", ""]] },
+                                main: { title: "Deadlift Work (35 min)", exercises: [["Conventional Deadlift", "5×5 (progressive)"], ["Romanian Deadlift", "3×10"], ["Good Mornings", "3×12"]] },
+                                hamstring: { title: "Hamstring Focus (10 min)", exercises: [["Nordic Curl Negatives", "3×5 (slow)"], ["Lying Leg Curls", "3×12"]] },
+                                cooldown: { title: "Stretch (10 min)", exercises: [["Hamstring stretch", ""], ["Glute stretch", ""], ["Lower back stretch", ""]] }
                             },
-                            alternatives: ["Chicken thighs with vegetables", "Shrimp stir-fry with rice"]
+                            tips: ["Maintain neutral spine throughout", "Start Nordic negatives with assistance", "Hip hinge, don't squat the deadlift"]
+                        },
+                        {
+                            day: "Friday",
+                            type: "gym",
+                            typeLabel: "Gym Day",
+                            title: "Nordic Curls + Plyometrics",
+                            duration: "55 min",
+                            dietType: "Training Day",
+                            workout: {
+                                warmup: { title: "Warm-up (10 min)", exercises: [["Light jogging", ""], ["Dynamic leg swings", ""], ["Bodyweight squats", ""]] },
+                                main: { title: "Posterior Chain (25 min)", exercises: [["Nordic Curl Progressions", "4×5"], ["Reverse Nordics", "3×8"], ["Hip Thrusts", "3×12"]] },
+                                plyo: { title: "Plyometrics (15 min)", exercises: [["Box Jumps", "4×5"], ["Broad Jumps", "3×5"], ["Depth Drops", "3×3"]] },
+                                cooldown: { title: "Stretch (5 min)", exercises: [["Quad stretch", ""], ["Hip flexor stretch", ""]] }
+                            },
+                            tips: ["Nordic curls are HARD—use assistance as needed", "Quality over quantity on plyos", "Full recovery between plyo sets"]
+                        },
+                        {
+                            day: "Saturday",
+                            type: "cardio",
+                            typeLabel: "Cardio",
+                            title: "Step/Stair Climbing + Feet",
+                            duration: "50 min",
+                            dietType: "Active Day",
+                            workout: {
+                                main: { title: "Stair/Step Work (35-40 min)", exercises: [["Stair machine steady state", ""], ["OR outdoor stairs/hills", ""], ["Moderate pace, Zone 2-3", ""]] },
+                                footwork: { title: "Foot Strengthening (10 min)", exercises: [["Toe curls", "3×15"], ["Arch lifts", "3×12"], ["Calf raises", "3×15"], ["Balance work", "2 min"]] }
+                            },
+                            tips: ["Stairs build leg strength while burning fat", "Keep good posture—don't lean on rails", "Enjoy the weekend cardio variety"]
+                        },
+                        {
+                            day: "Sunday",
+                            type: "recovery",
+                            typeLabel: "Recovery",
+                            title: "Hip Mobility Deep Stretch",
+                            duration: "40 min",
+                            dietType: "Recovery Day",
+                            workout: {
+                                main: { title: "Deep Hip Work (40 min)", exercises: [["Hip 90/90 transitions", "5 min"], ["Pigeon pose", "3×90s each"], ["Frog stretch", "3×60s"], ["Couch stretch", "2×90s each"], ["Happy baby", "2 min"], ["Lying spinal twist", "2 min each"]] }
+                            },
+                            tips: ["This prepares you for next week's squats/deads", "Breathe deeply into each stretch", "Use props (blocks/pillows) as needed"]
                         }
-                    ],
-                    snacks: [
-                        { name: "Mid-morning", suggestion: "Cottage cheese + pineapple", calories: "~180" },
-                        { name: "Evening", suggestion: "Casein shake or Greek yogurt", calories: "~150" }
                     ]
                 },
-                tips: [
-                    "AMRAP = As Many Reps As Possible with good form",
-                    "KB swings should be hip-driven, not arm-pulled",
-                    "If pull-ups are hard, use bands or do negatives"
-                ]
-            },
-            {
-                day: "Wednesday",
-                type: "recovery",
-                typeLabel: "Recovery",
-                title: "Conditioning + Mobility",
-                duration: "60 min",
-                dietType: "Training Day",
-                workout: {
-                    conditioning: {
-                        title: "Conditioning (30-35 min)",
-                        exercises: [
-                            ["Choose ONE:", ""],
-                            ["Stair machine (steady moderate)", ""],
-                            ["Incline treadmill walk", ""],
-                            ["Easy row", ""]
-                        ]
-                    },
-                    mobility: {
-                        title: "Mobility + Flexibility (25-30 min)",
-                        exercises: [
-                            ["Ankle mobility", ""],
-                            ["Hip mobility", ""],
-                            ["Thoracic spine", ""],
-                            ["Long holds, breathing-based", ""]
-                        ]
-                    }
-                },
-                nutrition: {
-                    summary: "Lower carb recovery day. Focus on anti-inflammatory foods and hydration.",
-                    calories: "2,400-2,600",
-                    meals: [
-                        { 
-                            name: "Breakfast", 
-                            time: "7:00 AM",
-                            protein: "35g", 
-                            content: "Omelette with vegetables and avocado",
-                            image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Veggie Omelette",
-                                ingredients: ["3 whole eggs", "½ cup spinach", "¼ cup tomatoes", "¼ cup feta cheese", "½ avocado", "Fresh herbs"],
-                                instructions: "Whisk eggs. Cook vegetables in pan, pour eggs over. Fold when set. Serve with avocado."
+                {
+                    name: "Athletic Development",
+                    theme: "athletic",
+                    days: [
+                        {
+                            day: "Monday",
+                            type: "gym",
+                            typeLabel: "Gym Day",
+                            title: "Olympic Lift Intro (Clean Pulls)",
+                            duration: "65 min",
+                            dietType: "Training Day",
+                            workout: {
+                                warmup: { title: "Warm-up (15 min)", exercises: [["Jump rope", "3 min"], ["Hip hinges", ""], ["High pulls with empty bar", "3×5"]] },
+                                main: { title: "Olympic Basics (30 min)", exercises: [["Clean Pulls", "5×3 (light-moderate)"], ["Hang Power Cleans", "4×3"], ["Front Squats", "4×6"]] },
+                                accessory: { title: "Accessory (10 min)", exercises: [["RDLs", "3×8"], ["Shrugs", "3×12"]] },
+                                cooldown: { title: "Stretch (10 min)", exercises: [["Full body stretch", ""], ["Wrist mobility", ""]] }
                             },
-                            alternatives: ["Smoked salmon with eggs", "Protein smoothie bowl"]
+                            tips: ["Olympic lifts are about SPEED, not weight", "Master the pull before adding weight", "Keep bar close to body throughout"]
                         },
-                        { 
-                            name: "Lunch", 
-                            time: "12:30 PM",
-                            protein: "40g", 
-                            content: "Large salad with grilled chicken and olive oil dressing",
-                            image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Recovery Salad Bowl",
-                                ingredients: ["150g grilled chicken", "Mixed greens", "Cucumber, tomatoes, red onion", "¼ cup walnuts", "2 tbsp olive oil", "Balsamic vinegar"],
-                                instructions: "Grill and slice chicken. Combine salad ingredients. Dress with olive oil and balsamic."
+                        {
+                            day: "Tuesday",
+                            type: "gym",
+                            typeLabel: "Gym Day",
+                            title: "Upper Body Calisthenics",
+                            duration: "55 min",
+                            dietType: "Training Day",
+                            workout: {
+                                warmup: { title: "Warm-up (8 min)", exercises: [["Arm circles", ""], ["Band work", ""], ["Light push-ups", ""]] },
+                                main: { title: "Calisthenics (35 min)", exercises: [["Pull-ups", "5×max"], ["Dips", "4×max"], ["Push-up variations", "4×12"], ["Inverted Rows", "3×12"], ["L-Sit holds", "5×max hold"]] },
+                                cooldown: { title: "Stretch (12 min)", exercises: [["Chest stretch", ""], ["Lat stretch", ""], ["Shoulder stretch", ""]] }
                             },
-                            alternatives: ["Beef salad with greens", "Shrimp avocado bowl"]
+                            tips: ["Focus on control and full range", "Progress to harder variations when ready", "L-sits build incredible core strength"]
                         },
-                        { 
-                            name: "Snack", 
-                            time: "3:30 PM",
-                            protein: "25g", 
-                            content: "Greek yogurt with nuts and seeds",
-                            image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Protein Snack Bowl",
-                                ingredients: ["200g Greek yogurt", "1 tbsp mixed seeds", "10 almonds", "Cinnamon"],
-                                instructions: "Top yogurt with nuts, seeds, and cinnamon."
+                        {
+                            day: "Wednesday",
+                            type: "recovery",
+                            typeLabel: "Recovery",
+                            title: "Hip Flexibility + Core",
+                            duration: "45 min",
+                            dietType: "Recovery Day",
+                            workout: {
+                                hip: { title: "Hip Flexibility (25 min)", exercises: [["Hip 90/90", "3×60s each"], ["Pigeon", "2×90s each"], ["Frog stretch", "3×60s"], ["Lizard stretch", "2×60s each"]] },
+                                core: { title: "Core Work (15 min)", exercises: [["Hollow holds", "3×30s"], ["Dead bugs", "3×12/side"], ["Pallof press", "3×10/side"]] },
+                                breathwork: { title: "Breathing (5 min)", exercises: [["Diaphragmatic breathing", ""], ["Box breathing", ""]] }
                             },
-                            alternatives: ["Protein shake", "Cottage cheese with berries"]
+                            tips: ["Hip flexibility aids Olympic lifts", "Core stability prevents injury", "Breathe into tight spots"]
                         },
-                        { 
-                            name: "Dinner", 
-                            time: "7:00 PM",
-                            protein: "45g", 
-                            content: "Baked cod with Mediterranean vegetables",
-                            image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Mediterranean Fish",
-                                ingredients: ["180g cod fillet", "1 cup zucchini", "1 cup eggplant", "Cherry tomatoes", "Olives", "2 tbsp olive oil", "Herbs"],
-                                instructions: "Roast vegetables at 200°C for 20 min. Season cod and bake for 12 min. Serve together with herbs."
+                        {
+                            day: "Thursday",
+                            type: "gym",
+                            typeLabel: "Gym Day",
+                            title: "Front Squats + Reverse Nordics",
+                            duration: "60 min",
+                            dietType: "Training Day",
+                            workout: {
+                                warmup: { title: "Warm-up (10 min)", exercises: [["Foam rolling", ""], ["Goblet squats", ""], ["Wrist stretches", ""]] },
+                                main: { title: "Front Squat Focus (30 min)", exercises: [["Front Squat", "5×5"], ["Pause Front Squat", "3×5"], ["Goblet Squats", "3×10"]] },
+                                posterior: { title: "Posterior Work (15 min)", exercises: [["Reverse Nordics", "4×8"], ["Nordic Curl Negatives", "3×5"], ["Hip Thrusts", "3×10"]] },
+                                cooldown: { title: "Stretch (5 min)", exercises: [["Quad stretch", ""], ["Hip flexor stretch", ""]] }
                             },
-                            alternatives: ["Turkey meatballs with vegetables", "Chicken with roasted vegetables"]
+                            tips: ["Front squats build Olympic lift positions", "Keep elbows HIGH throughout", "Reverse Nordics protect knees"]
+                        },
+                        {
+                            day: "Friday",
+                            type: "gym",
+                            typeLabel: "Gym Day",
+                            title: "Conditioning Intervals",
+                            duration: "50 min",
+                            dietType: "Training Day",
+                            workout: {
+                                warmup: { title: "Warm-up (10 min)", exercises: [["Light cardio", ""], ["Dynamic stretches", ""]] },
+                                main: { title: "Interval Training (35 min)", exercises: [["Rower: 500m intervals", "4 rounds"], ["Rest 2 min between", ""], ["Assault bike: 30s sprints", "6 rounds"], ["Rest 90s between", ""], ["Sled push/pull (if available)", "4×20m"]] },
+                                cooldown: { title: "Stretch (5 min)", exercises: [["Full body stretch", ""]] }
+                            },
+                            tips: ["Push hard on work intervals", "Full recovery between sets", "This builds work capacity"]
+                        },
+                        {
+                            day: "Saturday",
+                            type: "cardio",
+                            typeLabel: "Cardio",
+                            title: "Cycling + Foot Strength",
+                            duration: "50 min",
+                            dietType: "Active Day",
+                            workout: {
+                                main: { title: "Cycling (35-40 min)", exercises: [["Zone 2 steady state", ""], ["Include some moderate hills", ""], ["Heart rate 60-70% max", ""]] },
+                                footwork: { title: "Foot Strengthening (10 min)", exercises: [["Toe curls", "3×15"], ["Arch lifts", "3×12"], ["Calf raises", "3×15"], ["Single-leg balance", "60s each"]] }
+                            },
+                            tips: ["Active recovery through movement", "Cycling prepares legs for next week", "Mental recovery matters too"]
+                        },
+                        {
+                            day: "Sunday",
+                            type: "recovery",
+                            typeLabel: "Recovery",
+                            title: "Full Body Mobility",
+                            duration: "40 min",
+                            dietType: "Recovery Day",
+                            workout: {
+                                main: { title: "Full Body Flow (40 min)", exercises: [["Cat-cow", "2 min"], ["Thread the needle", "10 each"], ["World's greatest stretch", "5 each"], ["Hip 90/90", "3 min"], ["Shoulder CARs", "10 each"], ["Ankle mobility", "2 min each"]] }
+                            },
+                            tips: ["Move through every joint", "Prep for integration week", "Sleep well tonight"]
                         }
-                    ],
-                    snacks: [
-                        { name: "Mid-morning", suggestion: "Handful of mixed nuts", calories: "~170" },
-                        { name: "Evening", suggestion: "Herbal tea + small dark chocolate", calories: "~80" }
                     ]
                 },
-                tips: [
-                    "This is a RECOVERY day that still burns calories",
-                    "Keep conditioning at conversational pace (Zone 2)",
-                    "Hold stretches for 60-90 seconds for best results"
-                ]
-            },
-            {
-                day: "Thursday",
-                type: "gym",
-                typeLabel: "Gym Day",
-                title: "Full-Body Kettlebell Power",
-                duration: "60 min",
-                dietType: "Training Day",
-                workout: {
-                    warmup: {
-                        title: "Warm-up (10 min)",
-                        exercises: [
-                            ["Light KB swings", ""],
-                            ["KB halos", ""],
-                            ["Hip circles", ""]
-                        ]
-                    },
-                    main: {
-                        title: "KB Complex (30 min) — 4-5 rounds",
-                        exercises: [
-                            ["KB Clean", "×5/side"],
-                            ["KB Press", "×5/side"],
-                            ["KB Front Squat", "×6"],
-                            ["KB Snatch", "×5/side"],
-                            ["Rest between rounds", "2 min"]
-                        ]
-                    },
-                    cooldown: {
-                        title: "Core + Stretch (20 min)",
-                        exercises: [
-                            ["Planks", "3×30-45 sec"],
-                            ["Dead bugs", "3×10/side"],
-                            ["Hip mobility", ""],
-                            ["Shoulder mobility", ""]
-                        ]
-                    }
-                },
-                nutrition: {
-                    summary: "High energy day for demanding KB work. Extra carbs pre and post workout.",
-                    calories: "2,700-2,900",
-                    meals: [
-                        { 
-                            name: "Breakfast", 
-                            time: "7:00 AM",
-                            protein: "35g", 
-                            content: "Protein oatmeal with banana and peanut butter",
-                            image: "https://images.unsplash.com/photo-1517673400267-0251440c45dc?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Power Oatmeal",
-                                ingredients: ["60g oats", "1 scoop protein powder", "1 banana", "2 tbsp peanut butter", "250ml milk", "Cinnamon"],
-                                instructions: "Cook oats with milk. Stir in protein powder. Top with sliced banana and peanut butter."
+                {
+                    name: "Integration",
+                    theme: "integration",
+                    days: [
+                        {
+                            day: "Monday",
+                            type: "gym",
+                            typeLabel: "Gym Day",
+                            title: "Lower Body Complex (Squat + DL)",
+                            duration: "70 min",
+                            dietType: "Training Day",
+                            workout: {
+                                warmup: { title: "Warm-up (10 min)", exercises: [["Foam rolling", ""], ["Dynamic stretches", ""], ["Light squats and hinges", ""]] },
+                                main: { title: "Compound Lifts (40 min)", exercises: [["Back Squat", "4×5"], ["Deadlift", "4×5"], ["Walking Lunges", "3×10/leg"], ["Romanian Deadlift", "3×8"]] },
+                                finisher: { title: "Finisher (10 min)", exercises: [["KB Swings", "4×15"], ["Box Jumps", "3×5"]] },
+                                cooldown: { title: "Stretch (10 min)", exercises: [["Full lower body stretch", ""]] }
                             },
-                            alternatives: ["Eggs with toast and fruit", "Protein pancakes with syrup"]
+                            tips: ["This combines everything learned", "Manage fatigue—drop weight if needed", "Quality over ego"]
                         },
-                        { 
-                            name: "Lunch", 
-                            time: "12:30 PM",
-                            protein: "45g", 
-                            content: "Turkey and rice bowl with black beans",
-                            image: "https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Tex-Mex Power Bowl",
-                                ingredients: ["180g ground turkey", "1 cup rice", "½ cup black beans", "Corn, peppers, onion", "Salsa", "Greek yogurt (sour cream alternative)"],
-                                instructions: "Cook turkey with taco seasoning. Serve over rice with beans and toppings."
+                        {
+                            day: "Tuesday",
+                            type: "gym",
+                            typeLabel: "Gym Day",
+                            title: "Push Press + Upper Strength",
+                            duration: "60 min",
+                            dietType: "Training Day",
+                            workout: {
+                                warmup: { title: "Warm-up (10 min)", exercises: [["Shoulder mobility", ""], ["Light pressing", ""], ["Jump shrugs", ""]] },
+                                main: { title: "Press Work (35 min)", exercises: [["Push Press", "5×5"], ["Strict Press", "3×8"], ["Bench Press", "4×8"], ["Bent Over Rows", "4×10"]] },
+                                accessory: { title: "Accessory (10 min)", exercises: [["Lateral Raises", "3×12"], ["Face Pulls", "3×15"]] },
+                                cooldown: { title: "Stretch (5 min)", exercises: [["Chest and shoulder stretch", ""]] }
                             },
-                            alternatives: ["Chicken burrito bowl", "Beef and rice plate"]
+                            tips: ["Push press uses leg drive—dip and drive!", "Keep core tight on all pressing", "Progress the push press slowly"]
                         },
-                        { 
-                            name: "Post-Gym", 
-                            time: "Within 30 min",
-                            protein: "35g", 
-                            content: "Protein shake with banana and honey",
-                            image: "https://images.unsplash.com/photo-1622485831930-8d9c9d2f0bf9?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "KB Recovery Shake",
-                                ingredients: ["1.5 scoops whey protein", "1 banana", "1 tbsp honey", "300ml milk", "Ice"],
-                                instructions: "Blend until smooth. KB complexes are metabolically demanding—don't skimp on recovery nutrition."
+                        {
+                            day: "Wednesday",
+                            type: "recovery",
+                            typeLabel: "Recovery",
+                            title: "Hip Flexor Focus + Nordic Prep",
+                            duration: "45 min",
+                            dietType: "Recovery Day",
+                            workout: {
+                                hipflexor: { title: "Hip Flexor Work (20 min)", exercises: [["Couch stretch", "2×90s each"], ["Lunge with reach", "2×10 each"], ["Banded marches", "3×12/leg"], ["Psoas holds", "3×20s each"]] },
+                                nordic: { title: "Nordic Prep (15 min)", exercises: [["Nordic negatives", "3×5 (slow)"], ["Reverse Nordic holds", "3×20s"], ["Hamstring curls", "3×12"]] },
+                                mobility: { title: "Mobility (10 min)", exercises: [["Hip 90/90", ""], ["Pigeon", ""]] }
                             },
-                            alternatives: ["Mass gainer shake", "Greek yogurt + granola + fruit"]
+                            tips: ["Hip flexor strength balances all the stretching", "Nordic prep prevents DOMS for Friday", "Active recovery keeps you moving"]
                         },
-                        { 
-                            name: "Dinner", 
-                            time: "7:00 PM",
-                            protein: "45g", 
-                            content: "Chicken thighs with roasted potatoes and green beans",
-                            image: "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Classic Chicken Dinner",
-                                ingredients: ["200g chicken thighs (skin optional)", "200g baby potatoes", "150g green beans", "2 tbsp olive oil", "Rosemary, garlic, lemon"],
-                                instructions: "Roast chicken and potatoes at 200°C for 35 min. Steam or roast green beans. Season with herbs."
+                        {
+                            day: "Thursday",
+                            type: "gym",
+                            typeLabel: "Gym Day",
+                            title: "Full Olympic Complex",
+                            duration: "65 min",
+                            dietType: "Training Day",
+                            workout: {
+                                warmup: { title: "Warm-up (15 min)", exercises: [["Jump rope", "3 min"], ["Empty bar complex", "3 rounds"], ["Muscle cleans", "5 reps"]] },
+                                main: { title: "Olympic Work (35 min)", exercises: [["Clean Pulls", "3×3"], ["Power Cleans", "5×3"], ["Front Squat", "3×5"], ["Push Press", "3×5"]] },
+                                accessory: { title: "Accessory (10 min)", exercises: [["RDL", "3×8"], ["Shrugs", "3×10"]] },
+                                cooldown: { title: "Stretch (5 min)", exercises: [["Full body stretch", ""]] }
                             },
-                            alternatives: ["Steak with mashed potatoes", "Pork tenderloin with rice"]
+                            tips: ["This is the culmination of Week 3's work", "Stay light—technique over weight", "Full extension on every pull"]
+                        },
+                        {
+                            day: "Friday",
+                            type: "gym",
+                            typeLabel: "Gym Day",
+                            title: "Hamstring & Posterior Chain",
+                            duration: "55 min",
+                            dietType: "Training Day",
+                            workout: {
+                                warmup: { title: "Warm-up (10 min)", exercises: [["Light RDLs", ""], ["Hip hinges", ""], ["Glute bridges", ""]] },
+                                main: { title: "Posterior Chain (35 min)", exercises: [["Nordic Curls", "4×5"], ["Reverse Nordics", "3×10"], ["Romanian Deadlift", "4×8"], ["Hip Thrusts", "3×12"], ["Good Mornings", "3×10"]] },
+                                finisher: { title: "Finisher (5 min)", exercises: [["KB Swings", "50 total"], ["Split any way", ""]] },
+                                cooldown: { title: "Stretch (5 min)", exercises: [["Hamstring stretch", ""], ["Glute stretch", ""]] }
+                            },
+                            tips: ["Full Nordic curls are the goal—get there gradually", "This builds bulletproof hamstrings", "Last gym day before deload"]
+                        },
+                        {
+                            day: "Saturday",
+                            type: "cardio",
+                            typeLabel: "Cardio",
+                            title: "Step/Bike Choice + Feet",
+                            duration: "50 min",
+                            dietType: "Active Day",
+                            workout: {
+                                main: { title: "Cardio Choice (35-40 min)", exercises: [["Cycling OR Stair climbing", ""], ["Your choice based on preference", ""], ["Zone 2 pace", ""]] },
+                                footwork: { title: "Foot Strengthening (10 min)", exercises: [["Toe curls", "3×15"], ["Arch lifts", "3×12"], ["Calf raises", "3×15"], ["Balance work", "3 min"]] }
+                            },
+                            tips: ["You've earned the choice!", "Keep it Zone 2—true recovery", "Celebrate completing Week 4"]
+                        },
+                        {
+                            day: "Sunday",
+                            type: "recovery",
+                            typeLabel: "Recovery",
+                            title: "Active Recovery + Mobility",
+                            duration: "35 min",
+                            dietType: "Recovery Day",
+                            workout: {
+                                main: { title: "Active Recovery (35 min)", exercises: [["Light walking", "10 min"], ["Full body stretch", "15 min"], ["Meditation/breathing", "10 min"]] }
+                            },
+                            tips: ["Week 4 complete—back to Foundation!", "Reflect on progress made", "Sleep well, eat well, recover fully"]
                         }
-                    ],
-                    snacks: [
-                        { name: "Mid-morning", suggestion: "Banana + protein bar", calories: "~300" },
-                        { name: "Pre-workout", suggestion: "Rice cakes with jam", calories: "~150" }
                     ]
-                },
-                tips: [
-                    "Minimal rest BETWEEN movements, full rest between rounds",
-                    "Focus on hip hinge mechanics for cleans and snatches",
-                    "Start lighter—KB complexes are metabolically demanding"
-                ]
-            },
+                }
+            ]
+        };
+
+        const nutritionByDay = [
             {
-                day: "Friday",
-                type: "gym",
-                typeLabel: "Gym Day",
-                title: "Plyometrics + Run or Row",
-                duration: "60 min",
+                summary: "High carb day to fuel lower body power work. Focus on complex carbs around training.",
+                calories: "2,600-2,800",
                 dietType: "Training Day",
-                workout: {
-                    warmup: {
-                        title: "Warm-up (10 min)",
-                        exercises: [
-                            ["Dynamic stretching", ""],
-                            ["Light jogging/rowing", ""],
-                            ["Activation drills", ""]
-                        ]
-                    },
-                    plyo: {
-                        title: "Plyo Circuit (20 min)",
-                        exercises: [
-                            ["Jump Squats", "3×8"],
-                            ["Plyo Push-ups (or explosive incline)", "3×6"],
-                            ["Lateral Bounds", "3×8/side"]
-                        ]
-                    },
-                    cardio: {
-                        title: "Cardio (20 min)",
-                        exercises: [
-                            ["Choose ONE:", ""],
-                            ["Treadmill intervals (run/walk)", ""],
-                            ["Rower sprints", "30 sec hard / 90 sec easy"]
-                        ]
-                    },
-                    cooldown: {
-                        title: "Stretch (10 min)",
-                        exercises: [
-                            ["Full body stretching", ""],
-                            ["Focus on legs and hips", ""]
-                        ]
-                    }
-                },
-                nutrition: {
-                    summary: "End of training week. Good carbs for explosive work, moderate evening to prep for weekend.",
-                    calories: "2,500-2,700",
-                    meals: [
-                        { 
-                            name: "Breakfast", 
-                            time: "7:00 AM",
-                            protein: "35g", 
-                            content: "Eggs benedict style with turkey bacon",
-                            image: "https://images.unsplash.com/photo-1608039829572-9b0b9b3b9b0b?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Protein Eggs Benedict",
-                                ingredients: ["2 poached eggs", "1 English muffin", "3 slices turkey bacon", "Light hollandaise or Greek yogurt sauce", "Spinach"],
-                                instructions: "Toast muffin, cook turkey bacon, poach eggs. Layer with spinach and sauce."
-                            },
-                            alternatives: ["Breakfast burrito", "French toast with eggs"]
-                        },
-                        { 
-                            name: "Lunch", 
-                            time: "12:30 PM",
-                            protein: "40g", 
-                            content: "Asian chicken noodle bowl",
-                            image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Teriyaki Chicken Noodles",
-                                ingredients: ["150g chicken breast", "150g rice noodles", "Broccoli, carrots, snap peas", "3 tbsp teriyaki sauce", "Sesame seeds", "Green onions"],
-                                instructions: "Cook noodles. Stir-fry chicken and vegetables. Combine with sauce and garnish."
-                            },
-                            alternatives: ["Pho with beef", "Pad Thai with shrimp"]
-                        },
-                        { 
-                            name: "Post-Gym", 
-                            time: "Within 30 min",
-                            protein: "30g", 
-                            content: "Protein shake with dates",
-                            image: "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Friday Finisher Shake",
-                                ingredients: ["1 scoop protein", "3 Medjool dates (pitted)", "250ml oat milk", "1 tbsp almond butter", "Ice"],
-                                instructions: "Blend until smooth. Dates provide quick carbs for recovery."
-                            },
-                            alternatives: ["Chocolate protein shake", "Recovery smoothie"]
-                        },
-                        { 
-                            name: "Dinner", 
-                            time: "7:00 PM",
-                            protein: "45g", 
-                            content: "Lean steak with baked potato and salad",
-                            image: "https://images.unsplash.com/photo-1558030006-450675393462?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Friday Steak Night",
-                                ingredients: ["180g sirloin steak", "1 medium baked potato", "Side salad", "1 tbsp butter (for potato)", "Herbs and seasoning"],
-                                instructions: "Season and grill steak to preference. Bake potato at 200°C for 45 min. Serve with fresh salad."
-                            },
-                            alternatives: ["Lamb chops with vegetables", "Salmon with quinoa"]
-                        }
-                    ],
-                    snacks: [
-                        { name: "Mid-morning", suggestion: "Trail mix (30g)", calories: "~180" },
-                        { name: "Pre-workout", suggestion: "Small banana", calories: "~90" }
-                    ]
-                },
-                tips: [
-                    "If jumping hurts joints, use low-impact versions",
-                    "Speed matters more than height in plyos",
-                    "Last heavy day of the week—push hard, recover over weekend"
-                ]
+                meals: [
+                    { name: "Breakfast", time: "7:00 AM", protein: "35g", content: "Scrambled eggs with vegetables & whole grain toast", image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&h=300&fit=crop", recipe: { title: "Power Scramble", ingredients: ["3 whole eggs + 2 egg whites", "1 cup spinach", "½ cup mushrooms", "2 slices whole grain bread", "½ avocado"], instructions: "Sauté spinach and mushrooms. Scramble eggs and combine. Serve with toast and avocado." }, alternatives: ["Greek yogurt parfait with granola", "Protein oatmeal with banana"] },
+                    { name: "Lunch", time: "12:30 PM", protein: "45g", content: "Grilled chicken breast with rice and roasted vegetables", image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop", recipe: { title: "Chicken Power Bowl", ingredients: ["180g chicken breast", "1 cup brown rice", "1 cup broccoli", "1 cup bell peppers", "1 tbsp olive oil", "Herbs & spices"], instructions: "Season and grill chicken. Roast vegetables at 200°C for 20 min. Serve over rice with olive oil drizzle." }, alternatives: ["Salmon with quinoa", "Turkey meatballs with pasta"] },
+                    { name: "Post-Gym", time: "Within 30 min", protein: "30g", content: "Protein shake with banana and oats", image: "https://images.unsplash.com/photo-1622485831930-8d9c9d2f0bf9?w=400&h=300&fit=crop", recipe: { title: "Recovery Shake", ingredients: ["1 scoop whey protein", "1 banana", "30g oats", "250ml milk or water", "1 tbsp peanut butter (optional)"], instructions: "Blend all ingredients until smooth. Drink within 30 minutes of training." }, alternatives: ["Chocolate milk + protein bar", "Greek yogurt with honey"] },
+                    { name: "Dinner", time: "7:00 PM", protein: "45g", content: "Lean beef stir-fry with noodles and vegetables", image: "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&h=300&fit=crop", recipe: { title: "Beef Stir-Fry", ingredients: ["180g lean beef strips", "150g egg noodles", "1 cup mixed vegetables", "2 tbsp soy sauce", "1 tbsp sesame oil", "Garlic & ginger"], instructions: "Cook noodles. Stir-fry beef with garlic and ginger. Add vegetables, sauce, and noodles. Toss and serve." }, alternatives: ["Grilled fish with sweet potato", "Chicken pasta with tomato sauce"] }
+                ],
+                snacks: [{ name: "Mid-morning", suggestion: "Apple + 20 almonds", calories: "~200" }, { name: "Pre-workout", suggestion: "Rice cakes with honey", calories: "~150" }]
             },
             {
-                day: "Saturday",
-                type: "cardio",
-                typeLabel: "Active",
-                title: "Bike Ride — Fat Burn",
-                duration: "30 min",
+                summary: "Moderate carb day. Prioritize protein for muscle recovery after upper body work.",
+                calories: "2,500-2,700",
+                dietType: "Training Day",
+                meals: [
+                    { name: "Breakfast", time: "7:00 AM", protein: "40g", content: "Greek yogurt parfait with protein granola", image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&h=300&fit=crop", recipe: { title: "Protein Parfait", ingredients: ["250g Greek yogurt (0% fat)", "1 scoop protein powder", "50g granola", "100g mixed berries", "1 tbsp honey"], instructions: "Mix protein powder into yogurt. Layer with granola and berries. Drizzle with honey." }, alternatives: ["Cottage cheese with fruit", "Protein pancakes"] },
+                    { name: "Lunch", time: "12:30 PM", protein: "40g", content: "Tuna salad with quinoa and chickpeas", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop", recipe: { title: "Mediterranean Tuna Bowl", ingredients: ["150g tuna (canned or fresh)", "1 cup cooked quinoa", "½ cup chickpeas", "Cherry tomatoes, cucumber, red onion", "2 tbsp olive oil", "Lemon juice, herbs"], instructions: "Combine quinoa and chickpeas. Top with tuna and vegetables. Dress with olive oil and lemon." }, alternatives: ["Chicken Caesar salad", "Turkey wrap with hummus"] },
+                    { name: "Post-Gym", time: "Within 30 min", protein: "30g", content: "Protein shake with berries", image: "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=400&h=300&fit=crop", recipe: { title: "Berry Blast Shake", ingredients: ["1 scoop whey protein", "100g mixed berries", "250ml almond milk", "Ice cubes"], instructions: "Blend all ingredients until smooth." }, alternatives: ["Protein bar + banana", "Chocolate milk"] },
+                    { name: "Dinner", time: "7:00 PM", protein: "45g", content: "Grilled salmon with roasted sweet potato and asparagus", image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&h=300&fit=crop", recipe: { title: "Omega-3 Power Plate", ingredients: ["180g salmon fillet", "1 medium sweet potato", "150g asparagus", "1 tbsp olive oil", "Lemon, dill, garlic"], instructions: "Roast sweet potato at 200°C for 25 min. Season salmon and bake for 12-15 min. Grill asparagus with olive oil." }, alternatives: ["Chicken thighs with vegetables", "Shrimp stir-fry with rice"] }
+                ],
+                snacks: [{ name: "Mid-morning", suggestion: "Cottage cheese + pineapple", calories: "~180" }, { name: "Evening", suggestion: "Casein shake or Greek yogurt", calories: "~150" }]
+            },
+            {
+                summary: "Lower carb recovery day. Focus on anti-inflammatory foods and hydration.",
+                calories: "2,400-2,600",
+                dietType: "Recovery Day",
+                meals: [
+                    { name: "Breakfast", time: "7:00 AM", protein: "35g", content: "Omelette with vegetables and avocado", image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&h=300&fit=crop", recipe: { title: "Veggie Omelette", ingredients: ["3 whole eggs", "½ cup spinach", "¼ cup tomatoes", "¼ cup feta cheese", "½ avocado", "Fresh herbs"], instructions: "Whisk eggs. Cook vegetables in pan, pour eggs over. Fold when set. Serve with avocado." }, alternatives: ["Smoked salmon with eggs", "Protein smoothie bowl"] },
+                    { name: "Lunch", time: "12:30 PM", protein: "40g", content: "Large salad with grilled chicken and olive oil dressing", image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop", recipe: { title: "Recovery Salad Bowl", ingredients: ["150g grilled chicken", "Mixed greens", "Cucumber, tomatoes, red onion", "¼ cup walnuts", "2 tbsp olive oil", "Balsamic vinegar"], instructions: "Grill and slice chicken. Combine salad ingredients. Dress with olive oil and balsamic." }, alternatives: ["Beef salad with greens", "Shrimp avocado bowl"] },
+                    { name: "Snack", time: "3:30 PM", protein: "25g", content: "Greek yogurt with nuts and seeds", image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&h=300&fit=crop", recipe: { title: "Protein Snack Bowl", ingredients: ["200g Greek yogurt", "1 tbsp mixed seeds", "10 almonds", "Cinnamon"], instructions: "Top yogurt with nuts, seeds, and cinnamon." }, alternatives: ["Protein shake", "Cottage cheese with berries"] },
+                    { name: "Dinner", time: "7:00 PM", protein: "45g", content: "Baked cod with Mediterranean vegetables", image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400&h=300&fit=crop", recipe: { title: "Mediterranean Fish", ingredients: ["180g cod fillet", "1 cup zucchini", "1 cup eggplant", "Cherry tomatoes", "Olives", "2 tbsp olive oil", "Herbs"], instructions: "Roast vegetables at 200°C for 20 min. Season cod and bake for 12 min. Serve together with herbs." }, alternatives: ["Turkey meatballs with vegetables", "Chicken with roasted vegetables"] }
+                ],
+                snacks: [{ name: "Mid-morning", suggestion: "Handful of mixed nuts", calories: "~170" }, { name: "Evening", suggestion: "Herbal tea + small dark chocolate", calories: "~80" }]
+            },
+            {
+                summary: "High energy day for demanding work. Extra carbs pre and post workout.",
+                calories: "2,700-2,900",
+                dietType: "Training Day",
+                meals: [
+                    { name: "Breakfast", time: "7:00 AM", protein: "35g", content: "Protein oatmeal with banana and peanut butter", image: "https://images.unsplash.com/photo-1517673400267-0251440c45dc?w=400&h=300&fit=crop", recipe: { title: "Power Oatmeal", ingredients: ["60g oats", "1 scoop protein powder", "1 banana", "2 tbsp peanut butter", "250ml milk", "Cinnamon"], instructions: "Cook oats with milk. Stir in protein powder. Top with sliced banana and peanut butter." }, alternatives: ["Eggs with toast and fruit", "Protein pancakes with syrup"] },
+                    { name: "Lunch", time: "12:30 PM", protein: "45g", content: "Turkey and rice bowl with black beans", image: "https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=400&h=300&fit=crop", recipe: { title: "Tex-Mex Power Bowl", ingredients: ["180g ground turkey", "1 cup rice", "½ cup black beans", "Corn, peppers, onion", "Salsa", "Greek yogurt (sour cream alternative)"], instructions: "Cook turkey with taco seasoning. Serve over rice with beans and toppings." }, alternatives: ["Chicken burrito bowl", "Beef and rice plate"] },
+                    { name: "Post-Gym", time: "Within 30 min", protein: "35g", content: "Protein shake with banana and honey", image: "https://images.unsplash.com/photo-1622485831930-8d9c9d2f0bf9?w=400&h=300&fit=crop", recipe: { title: "Recovery Shake", ingredients: ["1.5 scoops whey protein", "1 banana", "1 tbsp honey", "300ml milk", "Ice"], instructions: "Blend until smooth." }, alternatives: ["Mass gainer shake", "Greek yogurt + granola + fruit"] },
+                    { name: "Dinner", time: "7:00 PM", protein: "45g", content: "Chicken thighs with roasted potatoes and green beans", image: "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=400&h=300&fit=crop", recipe: { title: "Classic Chicken Dinner", ingredients: ["200g chicken thighs (skin optional)", "200g baby potatoes", "150g green beans", "2 tbsp olive oil", "Rosemary, garlic, lemon"], instructions: "Roast chicken and potatoes at 200°C for 35 min. Steam or roast green beans. Season with herbs." }, alternatives: ["Steak with mashed potatoes", "Pork tenderloin with rice"] }
+                ],
+                snacks: [{ name: "Mid-morning", suggestion: "Banana + protein bar", calories: "~300" }, { name: "Pre-workout", suggestion: "Rice cakes with jam", calories: "~150" }]
+            },
+            {
+                summary: "End of training week. Good carbs for explosive work, moderate evening.",
+                calories: "2,500-2,700",
+                dietType: "Training Day",
+                meals: [
+                    { name: "Breakfast", time: "7:00 AM", protein: "35g", content: "Eggs benedict style with turkey bacon", image: "https://images.unsplash.com/photo-1608039829572-9b0b9b3b9b0b?w=400&h=300&fit=crop", recipe: { title: "Protein Eggs Benedict", ingredients: ["2 poached eggs", "1 English muffin", "3 slices turkey bacon", "Light hollandaise or Greek yogurt sauce", "Spinach"], instructions: "Toast muffin, cook turkey bacon, poach eggs. Layer with spinach and sauce." }, alternatives: ["Breakfast burrito", "French toast with eggs"] },
+                    { name: "Lunch", time: "12:30 PM", protein: "40g", content: "Asian chicken noodle bowl", image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop", recipe: { title: "Teriyaki Chicken Noodles", ingredients: ["150g chicken breast", "150g rice noodles", "Broccoli, carrots, snap peas", "3 tbsp teriyaki sauce", "Sesame seeds", "Green onions"], instructions: "Cook noodles. Stir-fry chicken and vegetables. Combine with sauce and garnish." }, alternatives: ["Pho with beef", "Pad Thai with shrimp"] },
+                    { name: "Post-Gym", time: "Within 30 min", protein: "30g", content: "Protein shake with dates", image: "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=400&h=300&fit=crop", recipe: { title: "Friday Finisher Shake", ingredients: ["1 scoop protein", "3 Medjool dates (pitted)", "250ml oat milk", "1 tbsp almond butter", "Ice"], instructions: "Blend until smooth. Dates provide quick carbs for recovery." }, alternatives: ["Chocolate protein shake", "Recovery smoothie"] },
+                    { name: "Dinner", time: "7:00 PM", protein: "45g", content: "Lean steak with baked potato and salad", image: "https://images.unsplash.com/photo-1558030006-450675393462?w=400&h=300&fit=crop", recipe: { title: "Friday Steak Night", ingredients: ["180g sirloin steak", "1 medium baked potato", "Side salad", "1 tbsp butter (for potato)", "Herbs and seasoning"], instructions: "Season and grill steak to preference. Bake potato at 200°C for 45 min. Serve with fresh salad." }, alternatives: ["Lamb chops with vegetables", "Salmon with quinoa"] }
+                ],
+                snacks: [{ name: "Mid-morning", suggestion: "Trail mix (30g)", calories: "~180" }, { name: "Pre-workout", suggestion: "Small banana", calories: "~90" }]
+            },
+            {
+                summary: "Lower carb weekend day. Protein stays high, flexibility for one social meal.",
+                calories: "2,300-2,500",
                 dietType: "Weekend",
-                workout: {
-                    main: {
-                        title: "Steady State Cycling (30 min)",
-                        exercises: [
-                            ["Conversational pace (Zone 2)", ""],
-                            ["Optional short hills if feeling good", ""],
-                            ["Keep heart rate 60-70% max", ""]
-                        ]
-                    }
-                },
-                nutrition: {
-                    summary: "Lower carb weekend day. Protein stays high, flexibility for one social meal.",
-                    calories: "2,300-2,500",
-                    meals: [
-                        { 
-                            name: "Breakfast", 
-                            time: "8:30 AM",
-                            protein: "35g", 
-                            content: "Weekend omelette with smoked salmon",
-                            image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Smoked Salmon Omelette",
-                                ingredients: ["3 eggs", "60g smoked salmon", "2 tbsp cream cheese", "Chives", "Capers (optional)"],
-                                instructions: "Make fluffy omelette. Fill with cream cheese and salmon. Garnish with chives."
-                            },
-                            alternatives: ["Avocado toast with eggs", "Shakshuka"]
-                        },
-                        { 
-                            name: "Lunch", 
-                            time: "1:00 PM",
-                            protein: "40g", 
-                            content: "Grilled chicken Greek salad",
-                            image: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Greek Power Salad",
-                                ingredients: ["150g grilled chicken", "Romaine lettuce", "Cucumber, tomatoes, red onion", "50g feta cheese", "Olives", "2 tbsp olive oil", "Oregano, lemon"],
-                                instructions: "Combine salad ingredients. Top with sliced chicken. Dress with olive oil and lemon."
-                            },
-                            alternatives: ["Cobb salad", "Chicken Caesar"]
-                        },
-                        { 
-                            name: "Dinner", 
-                            time: "7:00 PM",
-                            protein: "45g", 
-                            content: "Flexible meal — social or home-cooked",
-                            image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Weekend Flexibility",
-                                ingredients: ["Choose protein-focused option at restaurant", "OR home-cooked lean protein + vegetables"],
-                                instructions: "If eating out: prioritize protein, limit bread/starters, skip dessert or share. At home: simple grilled protein with vegetables."
-                            },
-                            alternatives: ["Sushi (sashimi-heavy)", "Grilled fish at restaurant", "BBQ with lean meats"]
-                        }
-                    ],
-                    snacks: [
-                        { name: "Afternoon", suggestion: "Protein shake or Greek yogurt", calories: "~150" }
-                    ]
-                },
-                tips: [
-                    "ONE indulgence meal max on weekends, not a full day",
-                    "Cycling is low-impact recovery while burning calories",
-                    "Enjoy time outdoors—mental recovery matters too"
-                ]
+                meals: [
+                    { name: "Breakfast", time: "8:30 AM", protein: "35g", content: "Weekend omelette with smoked salmon", image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&h=300&fit=crop", recipe: { title: "Smoked Salmon Omelette", ingredients: ["3 eggs", "60g smoked salmon", "2 tbsp cream cheese", "Chives", "Capers (optional)"], instructions: "Make fluffy omelette. Fill with cream cheese and salmon. Garnish with chives." }, alternatives: ["Avocado toast with eggs", "Shakshuka"] },
+                    { name: "Lunch", time: "1:00 PM", protein: "40g", content: "Grilled chicken Greek salad", image: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&h=300&fit=crop", recipe: { title: "Greek Power Salad", ingredients: ["150g grilled chicken", "Romaine lettuce", "Cucumber, tomatoes, red onion", "50g feta cheese", "Olives", "2 tbsp olive oil", "Oregano, lemon"], instructions: "Combine salad ingredients. Top with sliced chicken. Dress with olive oil and lemon." }, alternatives: ["Cobb salad", "Chicken Caesar"] },
+                    { name: "Dinner", time: "7:00 PM", protein: "45g", content: "Flexible meal — social or home-cooked", image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=300&fit=crop", recipe: { title: "Weekend Flexibility", ingredients: ["Choose protein-focused option at restaurant", "OR home-cooked lean protein + vegetables"], instructions: "If eating out: prioritize protein, limit bread/starters, skip dessert or share. At home: simple grilled protein with vegetables." }, alternatives: ["Sushi (sashimi-heavy)", "Grilled fish at restaurant", "BBQ with lean meats"] }
+                ],
+                snacks: [{ name: "Afternoon", suggestion: "Protein shake or Greek yogurt", calories: "~150" }]
             },
             {
-                day: "Sunday",
-                type: "recovery",
-                typeLabel: "Recovery",
-                title: "Mobility + Light Core",
-                duration: "30 min",
+                summary: "Meal prep day. Moderate intake, focus on setting up the week ahead.",
+                calories: "2,300-2,500",
                 dietType: "Weekend",
-                workout: {
-                    main: {
-                        title: "Active Recovery (30 min)",
-                        exercises: [
-                            ["Full-body stretching", ""],
-                            ["Yoga-style flow", ""],
-                            ["Easy core work", ""],
-                            ["Planks, bird dogs", "light"]
-                        ]
-                    }
-                },
-                nutrition: {
-                    summary: "Meal prep day. Moderate intake, focus on setting up the week ahead.",
-                    calories: "2,300-2,500",
-                    meals: [
-                        { 
-                            name: "Breakfast", 
-                            time: "9:00 AM",
-                            protein: "30g", 
-                            content: "Leisurely protein breakfast",
-                            image: "https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Sunday Brunch Plate",
-                                ingredients: ["2 eggs (any style)", "2 turkey sausages", "Grilled tomatoes", "Sautéed mushrooms", "1 slice whole grain toast"],
-                                instructions: "Cook eggs to preference. Grill sausages and tomatoes. Sauté mushrooms. Enjoy a relaxed breakfast."
-                            },
-                            alternatives: ["Protein smoothie bowl", "Cottage cheese pancakes"]
-                        },
-                        { 
-                            name: "Lunch", 
-                            time: "1:30 PM",
-                            protein: "40g", 
-                            content: "Meal prep cooking + taste testing",
-                            image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Meal Prep Session",
-                                ingredients: ["Batch cook: 500g chicken breast", "Batch cook: 3 cups rice or quinoa", "Roast: mixed vegetables", "Prep: salad ingredients", "Portion into containers"],
-                                instructions: "Spend 1-2 hours cooking proteins, carbs, and vegetables for the week. This saves time and ensures healthy options are ready."
-                            },
-                            alternatives: ["Order healthy meal prep delivery", "Simple leftover lunch"]
-                        },
-                        { 
-                            name: "Dinner", 
-                            time: "6:30 PM",
-                            protein: "45g", 
-                            content: "Light dinner to prepare for Monday",
-                            image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&h=300&fit=crop",
-                            recipe: {
-                                title: "Pre-Week Light Dinner",
-                                ingredients: ["150g baked fish (cod, tilapia, or salmon)", "Large portion roasted vegetables", "Small portion quinoa or rice (optional)", "Lemon and herbs"],
-                                instructions: "Keep dinner light to sleep well and wake up ready for Monday's training."
-                            },
-                            alternatives: ["Soup with protein", "Chicken stir-fry (light on oil)"]
-                        }
-                    ],
-                    snacks: [
-                        { name: "Afternoon", suggestion: "Herbal tea + small handful of nuts", calories: "~120" }
-                    ]
-                },
-                tips: [
-                    "Prepare mentally and physically for the week ahead",
-                    "Light movement helps recovery more than complete rest",
-                    "Good sleep tonight sets up Monday's training",
-                    "Use Sunday for meal prep—it's a game changer for consistency"
-                ]
+                meals: [
+                    { name: "Breakfast", time: "9:00 AM", protein: "30g", content: "Leisurely protein breakfast", image: "https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=400&h=300&fit=crop", recipe: { title: "Sunday Brunch Plate", ingredients: ["2 eggs (any style)", "2 turkey sausages", "Grilled tomatoes", "Sautéed mushrooms", "1 slice whole grain toast"], instructions: "Cook eggs to preference. Grill sausages and tomatoes. Sauté mushrooms. Enjoy a relaxed breakfast." }, alternatives: ["Protein smoothie bowl", "Cottage cheese pancakes"] },
+                    { name: "Lunch", time: "1:30 PM", protein: "40g", content: "Meal prep cooking + taste testing", image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop", recipe: { title: "Meal Prep Session", ingredients: ["Batch cook: 500g chicken breast", "Batch cook: 3 cups rice or quinoa", "Roast: mixed vegetables", "Prep: salad ingredients", "Portion into containers"], instructions: "Spend 1-2 hours cooking proteins, carbs, and vegetables for the week. This saves time and ensures healthy options are ready." }, alternatives: ["Order healthy meal prep delivery", "Simple leftover lunch"] },
+                    { name: "Dinner", time: "6:30 PM", protein: "45g", content: "Light dinner to prepare for Monday", image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&h=300&fit=crop", recipe: { title: "Pre-Week Light Dinner", ingredients: ["150g baked fish (cod, tilapia, or salmon)", "Large portion roasted vegetables", "Small portion quinoa or rice (optional)", "Lemon and herbs"], instructions: "Keep dinner light to sleep well and wake up ready for Monday's training." }, alternatives: ["Soup with protein", "Chicken stir-fry (light on oil)"] }
+                ],
+                snacks: [{ name: "Afternoon", suggestion: "Herbal tea + small handful of nuts", calories: "~120" }]
             }
         ];
 
-        // Render calendar
-        function renderCalendar() {
-            const grid = document.getElementById('calendar');
-            grid.innerHTML = weekData.map((day, index) => `
-                <div class="day-card" onclick="openModal(${index})">
-                    <div class="day-header">
-                        <span class="day-name">${day.day}</span>
-                        <span class="day-type ${day.type}">${day.typeLabel}</span>
-                    </div>
-                    <div class="day-content">
-                        <div class="workout-title">${day.title}</div>
-                        <div class="workout-duration">
-                            <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/></svg>
-                            ${day.duration}
-                        </div>
-                        <div class="diet-preview">
-                            <div class="diet-label">${day.dietType} Nutrition</div>
-                            <div class="macros">
-                                <span class="macro"><strong>150-170g</strong> protein</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="click-hint">Click for details →</div>
-                </div>
-            `).join('');
+        function getDayOfWeek(date) {
+            return date.getDay() === 0 ? 6 : date.getDay() - 1;
         }
 
-        function openModal(index) {
-            const day = weekData[index];
-            document.getElementById('modal-title').innerHTML = `${day.day} <span class="day-type ${day.type}" style="margin-left: 1rem;">${day.typeLabel}</span>`;
+        function getWeekNumber(date) {
+            const diffTime = date - PROGRAM_START_DATE;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            return Math.floor(diffDays / 7) % 4;
+        }
+
+        function getDayData(date) {
+            const weekNum = getWeekNumber(date);
+            const dayOfWeek = getDayOfWeek(date);
+            return monthlyProgram.weeks[weekNum].days[dayOfWeek];
+        }
+
+        function getNutritionForDay(date) {
+            const dayOfWeek = getDayOfWeek(date);
+            return nutritionByDay[dayOfWeek];
+        }
+
+        function getMonthName(month) {
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            return months[month];
+        }
+
+        function getDaysInMonth(year, month) {
+            return new Date(year, month + 1, 0).getDate();
+        }
+
+        function getFirstDayOfMonth(year, month) {
+            const day = new Date(year, month, 1).getDay();
+            return day === 0 ? 6 : day - 1;
+        }
+
+        function updateWeekIndicator(date) {
+            const weekNum = getWeekNumber(date);
+            const theme = weekThemes[weekNum];
+            const badge = document.getElementById('current-week-badge');
+            const themeText = document.getElementById('current-week-theme');
+            badge.textContent = `W${weekNum + 1}`;
+            badge.className = `week-badge week-${weekNum + 1}`;
+            themeText.textContent = `${theme.name} Week`;
+        }
+
+        function renderMonthCalendar() {
+            const grid = document.getElementById('calendar');
+            const daysInMonth = getDaysInMonth(currentYear, currentMonth);
+            const firstDay = getFirstDayOfMonth(currentYear, currentMonth);
+            const today = new Date();
+
+            document.getElementById('month-title').textContent = `${getMonthName(currentMonth)} ${currentYear}`;
+            updateWeekIndicator(new Date(currentYear, currentMonth, 15));
+
+            const dayHeaders = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            let html = dayHeaders.map(d => `<div class="calendar-day-header">${d}</div>`).join('');
+
+            for (let i = 0; i < firstDay; i++) {
+                html += '<div class="calendar-cell empty"></div>';
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(currentYear, currentMonth, day);
+                const dayData = getDayData(date);
+                const weekNum = getWeekNumber(date);
+                const isToday = date.toDateString() === today.toDateString();
+
+                html += `
+                    <div class="calendar-cell ${isToday ? 'today' : ''}" onclick="openModal(new Date(${currentYear}, ${currentMonth}, ${day}))">
+                        <div class="calendar-date">${day}</div>
+                        <span class="calendar-week-badge week-badge week-${weekNum + 1}">W${weekNum + 1}</span>
+                        <div class="calendar-workout-type ${dayData.type}">${dayData.typeLabel}</div>
+                        <div class="calendar-workout-title">${dayData.title}</div>
+                    </div>
+                `;
+            }
+
+            const totalCells = firstDay + daysInMonth;
+            const remainingCells = (7 - (totalCells % 7)) % 7;
+            for (let i = 0; i < remainingCells; i++) {
+                html += '<div class="calendar-cell empty"></div>';
+            }
+
+            grid.innerHTML = html;
+        }
+
+        function previousMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderMonthCalendar();
+        }
+
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderMonthCalendar();
+        }
+
+        function goToToday() {
+            const today = new Date();
+            currentYear = today.getFullYear();
+            currentMonth = today.getMonth();
+            renderMonthCalendar();
+        }
+
+        function openModal(dateOrIndex) {
+            let day, nutrition, recipeId;
+            if (dateOrIndex instanceof Date) {
+                day = getDayData(dateOrIndex);
+                nutrition = getNutritionForDay(dateOrIndex);
+                const weekNum = getWeekNumber(dateOrIndex);
+                recipeId = dateOrIndex.getTime();
+                const dateStr = dateOrIndex.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+                document.getElementById('modal-title').innerHTML = `${dateStr} <span class="day-type ${day.type}" style="margin-left: 1rem;">${day.typeLabel}</span> <span class="week-badge week-${weekNum + 1}" style="margin-left: 0.5rem; font-size: 0.7rem;">W${weekNum + 1}</span>`;
+            } else {
+                day = monthlyProgram.weeks[0].days[dateOrIndex];
+                nutrition = nutritionByDay[dateOrIndex];
+                recipeId = dateOrIndex;
+                document.getElementById('modal-title').innerHTML = `${day.day} <span class="day-type ${day.type}" style="margin-left: 1rem;">${day.typeLabel}</span>`;
+            }
             
             let workoutHTML = '';
             for (const [key, block] of Object.entries(day.workout)) {
@@ -2899,14 +3121,14 @@
             }
 
             // New expanded nutrition rendering
-            const nutritionSummaryHTML = day.nutrition.summary ? `
+            const nutritionSummaryHTML = nutrition.summary ? `
                 <div class="nutrition-summary">
-                    <p>${day.nutrition.summary}</p>
-                    ${day.nutrition.calories ? `<span class="calories-badge">📊 ${day.nutrition.calories} kcal target</span>` : ''}
+                    <p>${nutrition.summary}</p>
+                    ${nutrition.calories ? `<span class="calories-badge">📊 ${nutrition.calories} kcal target</span>` : ''}
                 </div>
             ` : '';
 
-            const mealsHTML = day.nutrition.meals.map((meal, mealIndex) => `
+            const mealsHTML = nutrition.meals.map((meal, mealIndex) => `
                 <div class="meal-card">
                     ${meal.image ? `<img src="${meal.image}" alt="${meal.name}" class="meal-image" loading="lazy" onerror="this.style.display='none'">` : ''}
                     <div class="meal-card-content">
@@ -2919,13 +3141,13 @@
                         </div>
                         <div class="meal-card-description">${meal.content}</div>
                         ${meal.recipe ? `
-                            <button class="recipe-toggle" onclick="toggleRecipe(this, ${index}, ${mealIndex})">
+                            <button class="recipe-toggle" onclick="toggleRecipe(this, '${recipeId}', ${mealIndex})">
                                 <span>📖 View Recipe & Ingredients</span>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polyline points="6 9 12 15 18 9"></polyline>
                                 </svg>
                             </button>
-                            <div class="recipe-content" id="recipe-${index}-${mealIndex}">
+                            <div class="recipe-content" id="recipe-${recipeId}-${mealIndex}">
                                 <div class="recipe-title">${meal.recipe.title}</div>
                                 <div class="recipe-section-title">Ingredients</div>
                                 <ul class="ingredients-list">
@@ -2945,10 +3167,10 @@
                 </div>
             `).join('');
 
-            const snacksHTML = day.nutrition.snacks ? `
+            const snacksHTML = nutrition.snacks ? `
                 <div class="snacks-section">
                     <div class="snacks-title">🥜 Snacks</div>
-                    ${day.nutrition.snacks.map(snack => `
+                    ${nutrition.snacks.map(snack => `
                         <div class="snack-item">
                             <div>
                                 <span class="snack-name">${snack.name}:</span>
@@ -3085,7 +3307,10 @@
         });
 
         // Initialize
-        renderCalendar();
+        const today = new Date();
+        currentYear = today.getFullYear();
+        currentMonth = today.getMonth();
+        renderMonthCalendar();
 
         // Service Worker Registration
         if ('serviceWorker' in navigator) {
