@@ -2988,12 +2988,19 @@
         function getWeekNumber(date) {
             const diffTime = date - PROGRAM_START_DATE;
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            return Math.floor(diffDays / 7) % 4;
+            let weekNum = Math.floor(diffDays / 7) % 4;
+            if (weekNum < 0) weekNum += 4;
+            return weekNum;
         }
 
         function getDayData(date) {
             const weekNum = getWeekNumber(date);
             const dayOfWeek = getDayOfWeek(date);
+            if (!monthlyProgram.weeks[weekNum]) {
+                console.error('Invalid weekNum:', weekNum, 'for date:', date);
+                console.log('monthlyProgram.weeks length:', monthlyProgram.weeks.length);
+                return monthlyProgram.weeks[0].days[dayOfWeek];
+            }
             return monthlyProgram.weeks[weekNum].days[dayOfWeek];
         }
 
