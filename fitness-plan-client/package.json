@@ -1,0 +1,18 @@
+{
+  "name": "krachtix-client",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "preview": "nuxi preview",
+    "lint": "npx nuxi lint"
+  },
+  "dependencies": {
+    "@pinia/nuxt": "^0.4.0",
+    "nuxt": "^3.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5"
+  }
+}
