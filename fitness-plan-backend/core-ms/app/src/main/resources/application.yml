@@ -1,0 +1,230 @@
+spring:
+  autoconfigure:
+    exclude:
+      - org.springdoc.core.configuration.SpringDocHateoasConfiguration
+      - org.springframework.boot.quartz.autoconfigure.QuartzAutoConfiguration
+      - org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
+  config:
+    import: "optional:configtree:/run/secrets/"
+  threads:
+    virtual:
+      enabled: true
+  application:
+    name: krachtix
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  datasource:
+    core:
+      url: "jdbc:postgresql://${DB_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME}?ApplicationName=${spring.application.name}&reWriteBatchedInserts=true&prepareThreshold=1&preferQueryMode=extended"
+      username: "${db_user:krachtix}"
+      password: "${db_password:RespectTheHangover}"
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        maximum-pool-size: 10
+        minimum-idle: 3
+        register-mbeans: false
+        connectionTimeout: 30000
+        idleTimeout: 300000
+        maxLifetime: 1800000
+        leakDetectionThreshold: 60000
+        validationTimeout: 5000
+        connectionTestQuery: "SELECT 1"
+        initializationFailTimeout: 30000
+    read-replica:
+      url: "jdbc:postgresql://${READ_REPLICA_DB_HOST:localhost}:${READ_REPLICA_DATABASE_PORT:5432}/${READ_REPLICA_DATABASE_NAME:${DATABASE_NAME}}?ApplicationName=${spring.application.name}&reWriteBatchedInserts=true"
+      username: "${db_user:krachtix}"
+      password: "${db_password:RespectTheHangover}"
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        maximum-pool-size: 5
+        minimum-idle: 1
+        register-mbeans: false
+        connectionTimeout: 30000
+        idleTimeout: 300000
+        maxLifetime: 1800000
+        leakDetectionThreshold: 60000
+        validationTimeout: 5000
+        connectionTestQuery: "SELECT 1"
+        initializationFailTimeout: 30000
+  flyway:
+    enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate.show_sql: false
+      hibernate.cache.use_second_level_cache: true
+      hibernate.cache.use_query_cache: false
+      hibernate.cache.region.factory_class: com.hazelcast.hibernate.HazelcastCacheRegionFactory
+      hibernate.cache.hazelcast.use_native_client: true
+      hibernate.cache.hazelcast.native_client_group: ${HAZELCAST_CLUSTER_NAME:dev}
+      hibernate.cache.hazelcast.native_client_address: ${HAZELCAST_CLIENT_ADDRESS:localhost:5701}
+
+  security:
+    oauth2:
+      client:
+        registration:
+          identity-ms:
+            client-id: ${auth_client_id:core-ms-client}
+            client-secret: ${auth_client_secret:RespectTheHangover}
+            authorization-grant-type: client_credentials
+            scope: openid,profile,internal:read
+        provider:
+          identity-ms:
+            token-uri: ${IDENTITY_MS_BASE_URL:http://localhost:9202}/oauth2/token
+      resourceserver:
+        jwt:
+          issuer-uri: ${JWT_ISSUER_URI:http://localhost:9202}
+          jwk-set-uri: ${JWT_ISSUER_URI:http://localhost:9202}/oauth2/jwks
+    permit-all-paths: "${SECURITY_PERMIT_ALL_PATHS:/webhooks/**, /error, /countries/supported-countries, /currencies/supported-currencies, /actuator/**}"
+  cache:
+    type: ${SPRING_CACHE_TYPE:hazelcast}
+
+server:
+  port: ${SERVER_PORT:9201}
+
+
+security:
+  jwt:
+    jti-validation:
+      enabled: ${JTI_VALIDATION_ENABLED:false}
+    jti-cache:
+      ttl-seconds: ${JTI_CACHE_TTL_SECONDS:900}
+    token-revocation:
+      enabled: ${TOKEN_REVOCATION_ENABLED:true}
+  request-signing:
+    enabled: ${REQUEST_SIGNING_ENABLED:false}
+    algorithm: ${REQUEST_SIGNING_ALGORITHM:HmacSHA256}
+    timestamp-tolerance-seconds: ${REQUEST_SIGNING_TIMESTAMP_TOLERANCE:300}
+
+application:
+  security:
+    allowed-origins: ${ALLOWED_CORS_ORIGINS:}
+
+  files:
+    storage-provider:
+      default: AWS_S3
+      aws-s3:
+        access-key: ${aws_access_key}
+        secret: ${aws_secret}
+        region: ${AWS_S3_REGION}
+        endpoint: ${AWS_ENDPOINT}
+        bucket: ${AWS_S3_BUCKET:krachtix-exports}
+
+app:
+  campaign-expiry:
+    enabled: true
+    interval-minutes: 60
+    batch-size: 100
+  scheduled-export:
+    enabled: true
+    interval-minutes: 60
+  export-cleanup:
+    enabled: true
+    interval-hours: 24
+  reports:
+    email:
+      enabled: false
+      recipients: ${REPORTS_EMAIL_RECIPIENTS:}
+      top-merchants-count: 5
+      top-vendors-count: 5
+  webhook-delivery:
+    enabled: true
+    interval-seconds: 10
+    batch-size: 50
+  billing:
+    daily-snapshot:
+      enabled: true
+    invoice-generation:
+      enabled: true
+    overdue-sweep:
+      enabled: true
+      interval-seconds: 3600
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  endpoint:
+    health:
+      show-details: never
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+springdoc:
+  api-docs:
+    enabled: ${SPRINGDOC_ENABLED:true}
+    path: /v3/api-docs
+    groups:
+      enabled: true
+  swagger-ui:
+    enabled: ${SPRINGDOC_ENABLED:true}
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+    doc-expansion: none
+    default-models-expand-depth: 1
+    display-request-duration: true
+    filter: true
+    show-extensions: true
+    oauth:
+      client-id: ${auth_client_id:core-ms-client}
+  security:
+    enabled: ${SWAGGER_SECURITY_ENABLED:true}
+    username: ${SWAGGER_USERNAME:swagger}
+    password: ${SWAGGER_PASSWORD:RespectTheHangover}
+  show-actuator: false
+  enable-hateoas: false
+
+logging:
+  level:
+    java.util.logging: INFO
+    org.javamoney: WARN
+    org.springframework.security.oauth2.server.resource: DEBUG
+    com.krachtix.user.security.AccessTokenRevocationFilter: DEBUG
+
+integration:
+  identity-ms:
+    base-url: ${IDENTITY_MS_BASE_URL:http://localhost:9202}
+    oauth2:
+      client-registration-id: ${IDENTITY_MS_CLIENT_REGISTRATION_ID:identity-ms}
+      principal: ${IDENTITY_MS_PRINCIPAL:core-ms}
+
+
+bucket4j:
+  enabled: ${BUCKET4J_ENABLED:false}
+  cache-to-use: hazelcast
+
+retry:
+  transaction:
+    max-attempts: 3
+    delay: 500
+    multiplier: 2.0
+    max-delay: 5000
+
+hibernate:
+  search:
+    backend:
+      type: ${HIBERNATE_SEARCH_BACKEND_TYPE:lucene}
+      directory:
+        root: ${HIBERNATE_SEARCH_INDEX_PATH:./indexes}
+      hosts: ${OPENSEARCH_HOSTS:}
+      protocol: ${OPENSEARCH_PROTOCOL:https}
+      username: ${OPENSEARCH_USERNAME:}
+      password: ${OPENSEARCH_PASSWORD:}
+    startup:
+      mass-indexer:
+        enabled: ${HIBERNATE_SEARCH_INDEX_ON_STARTUP:false}
+        batch-size: ${HIBERNATE_SEARCH_BATCH_SIZE:100}
+        threads: ${HIBERNATE_SEARCH_THREADS:2}
+    runtime:
+      enabled: ${HIBERNATE_SEARCH_RUNTIME_ENABLED:false}
+
+hazelcast:
+  cluster:
+    name: ${HAZELCAST_CLUSTER_NAME:identity-cluster}
+  port: 5702
+  members: ${HAZELCAST_MEMBERS:127.0.0.1:5701}

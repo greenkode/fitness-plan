@@ -1,0 +1,21 @@
+DATABASE_NAME: krachtix
+
+logging:
+  level:
+    org.thymeleaf: ERROR
+
+server:
+  port: 80
+
+# Identity MS (staging auth server)
+IDENTITY_MS_BASE_URL: https://id.id.krachtix.com
+JWT_ISSUER_URI: https://id.id.krachtix.com
+
+# AWS S3
+AWS_ENDPOINT: http://localhost:4566
+aws_access_key: krachtix
+aws_secret: RespectTheHangover
+AWS_S3_REGION: eu-west-2
+
+# CORS
+ALLOWED_CORS_ORIGINS: "http://localhost:3002,http://localhost:3000"

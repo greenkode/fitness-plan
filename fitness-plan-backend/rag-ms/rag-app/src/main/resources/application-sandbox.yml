@@ -1,0 +1,6 @@
+SERVER_PORT: 80
+
+DB_HOST: postgres
+DATABASE_NAME: krachtix_sandbox
+
+IDENTITY_BASEURL: https://id.id.krachtix.com

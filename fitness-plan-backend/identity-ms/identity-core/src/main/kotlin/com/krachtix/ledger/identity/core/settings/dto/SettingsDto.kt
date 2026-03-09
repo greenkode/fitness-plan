@@ -1,0 +1,171 @@
+package com.krachtix.identity.core.settings.dto
+
+import com.krachtix.identity.core.organization.entity.SubscriptionTier
+import com.krachtix.identity.core.entity.CompanyRole
+import com.krachtix.identity.core.entity.CompanySize
+import com.krachtix.identity.core.entity.EnvironmentMode
+import com.krachtix.identity.core.entity.IntendedPurpose
+import com.krachtix.identity.core.entity.OrganizationStatus
+import io.swagger.v3.oas.annotations.media.Schema
+
+@Schema(description = "User settings response")
+data class UserSettingsResponse(
+    @Schema(description = "User first name", example = "John")
+    val firstName: String?,
+    @Schema(description = "User last name", example = "Doe")
+    val lastName: String?,
+    @Schema(description = "User email address", example = "john.doe@example.com")
+    val email: String,
+    @Schema(description = "List of user roles", example = "[\"MERCHANT_ADMIN\"]")
+    val roles: List<String>,
+    @Schema(description = "Merchant name", example = "ABC Company Ltd")
+    val merchantName: String?
+)
+
+@Schema(description = "Update user name request")
+data class UpdateUserNameRequest(
+    @Schema(description = "New first name", example = "John")
+    val firstName: String?,
+    @Schema(description = "New last name", example = "Doe")
+    val lastName: String?
+)
+
+@Schema(description = "Update user name response")
+data class UpdateUserNameResponse(
+    @Schema(description = "Whether update was successful", example = "true")
+    val success: Boolean,
+    @Schema(description = "Response message", example = "User name updated successfully")
+    val message: String
+)
+
+@Schema(description = "Reset keys request")
+data class ResetKeysRequest(
+    @Schema(description = "Environment to reset keys for (SANDBOX or PRODUCTION)", example = "SANDBOX")
+    val environment: EnvironmentMode
+)
+
+@Schema(description = "Reset keys response")
+data class ResetKeysResponse(
+    @Schema(description = "Client ID", example = "client_abc123")
+    val clientId: String,
+    @Schema(description = "New client secret", example = "secret_xyz789")
+    val clientSecret: String,
+    @Schema(description = "Environment that was reset", example = "SANDBOX")
+    val environment: EnvironmentMode,
+    @Schema(description = "Whether reset was successful", example = "true")
+    val success: Boolean,
+    @Schema(description = "Response message", example = "Keys reset successfully")
+    val message: String
+)
+
+@Schema(description = "Update alerts request")
+data class UpdateAlertsRequest(
+    @Schema(description = "Transaction failure rate limit percentage", example = "5.0", required = true)
+    val failureLimit: java.math.BigDecimal,
+    @Schema(description = "Low balance alert threshold", example = "10000.00", required = true)
+    val lowBalance: java.math.BigDecimal
+)
+
+@Schema(description = "Update alerts response")
+data class UpdateAlertsResponse(
+    @Schema(description = "Whether update was successful", example = "true")
+    val success: Boolean,
+    @Schema(description = "Response message", example = "Alert settings updated successfully")
+    val message: String
+)
+
+@Schema(description = "Enable production request")
+data class EnableProductionRequest(
+    @Schema(description = "Environment mode to enable (PRODUCTION or SANDBOX)", example = "PRODUCTION")
+    val environmentMode: EnvironmentMode
+)
+
+@Schema(description = "Enable production response")
+data class EnableProductionResponse(
+    @Schema(description = "Merchant ID", example = "abc123")
+    val merchantId: String,
+    @Schema(description = "Environment mode enabled", example = "PRODUCTION")
+    val environmentMode: EnvironmentMode,
+    @Schema(description = "Number of users affected by the change", example = "5")
+    val affectedUsers: Int,
+    @Schema(description = "Whether update was successful", example = "true")
+    val success: Boolean,
+    @Schema(description = "Response message", example = "Merchant enabled for production")
+    val message: String
+)
+
+@Schema(description = "Complete organization setup request")
+data class CompleteOrganizationSetupRequest(
+    @Schema(description = "Company name", example = "Acme Corporation", required = true)
+    val companyName: String,
+    @Schema(description = "Intended purpose for using the platform", example = "CUSTOMER_SUPPORT", required = true)
+    val intendedPurpose: IntendedPurpose,
+    @Schema(description = "Company size", example = "SIZE_11_50", required = true)
+    val companySize: CompanySize,
+    @Schema(description = "User's role in the company", example = "CTO", required = true)
+    val roleInCompany: CompanyRole,
+    @Schema(description = "Country ISO2 code", example = "US", required = true)
+    val country: String,
+    @Schema(description = "Phone number", example = "+1234567890", required = true)
+    val phoneNumber: String,
+    @Schema(description = "Company website URL", example = "https://acme.com")
+    val website: String?,
+    @Schema(description = "Whether terms and conditions are accepted", example = "true", required = true)
+    val termsAccepted: Boolean
+)
+
+@Schema(description = "Complete organization setup response")
+data class CompleteOrganizationSetupResponse(
+    @Schema(description = "Whether setup was successful", example = "true")
+    val success: Boolean,
+    @Schema(description = "Response message", example = "Organization setup completed successfully")
+    val message: String,
+    @Schema(description = "Merchant ID", example = "abc123")
+    val merchantId: String? = null
+)
+
+@Schema(description = "Organization details response")
+data class OrganizationDetailsResponse(
+    @Schema(description = "Organization ID", example = "abc123")
+    val id: String,
+    @Schema(description = "Organization name", example = "Acme Corporation")
+    val name: String,
+    @Schema(description = "Organization subscription plan", example = "PROFESSIONAL")
+    val plan: SubscriptionTier,
+    @Schema(description = "Organization status", example = "ACTIVE")
+    val status: OrganizationStatus,
+    @Schema(description = "Current environment mode", example = "SANDBOX")
+    val environmentMode: EnvironmentMode,
+    @Schema(description = "Whether organization setup is completed", example = "true")
+    val setupCompleted: Boolean,
+    @Schema(description = "Intended purpose for using the platform", example = "CUSTOMER_SUPPORT")
+    val intendedPurpose: IntendedPurpose?,
+    @Schema(description = "Company size", example = "SIZE_11_50")
+    val companySize: CompanySize?,
+    @Schema(description = "User's role in the company", example = "CTO")
+    val roleInCompany: CompanyRole?,
+    @Schema(description = "Country ISO2 code", example = "US")
+    val country: String?,
+    @Schema(description = "Phone number", example = "+1234567890")
+    val phoneNumber: String?,
+    @Schema(description = "Company website URL", example = "https://acme.com")
+    val website: String?,
+    @Schema(description = "Organization email", example = "admin@example.com")
+    val email: String?,
+    @Schema(description = "Default/primary currency ISO code", example = "USD")
+    val defaultCurrency: String?,
+    @Schema(description = "Whether multi-currency mode is enabled", example = "false")
+    val multiCurrencyEnabled: Boolean,
+    @Schema(description = "Additional currency ISO codes for multi-currency mode", example = "[\"EUR\", \"GBP\"]")
+    val additionalCurrencies: List<String>,
+    @Schema(description = "Chart of accounts template ID", example = "standard-us")
+    val chartTemplateId: String?,
+    @Schema(description = "Fiscal year start month", example = "01")
+    val fiscalYearStart: String?,
+    @Schema(description = "Timezone", example = "America/New_York")
+    val timezone: String?,
+    @Schema(description = "Date format preference", example = "MM/DD/YYYY")
+    val dateFormat: String?,
+    @Schema(description = "Number format preference", example = "1,234.56")
+    val numberFormat: String?
+)

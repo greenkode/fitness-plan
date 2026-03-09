@@ -1,0 +1,6 @@
+DATABASE_NAME: krachtix
+
+server:
+  port: 80
+
+IDENTITY_BASEURL: https://id.id.krachtix.com

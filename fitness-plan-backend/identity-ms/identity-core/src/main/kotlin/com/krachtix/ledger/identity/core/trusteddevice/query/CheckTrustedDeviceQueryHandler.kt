@@ -1,0 +1,30 @@
+package com.krachtix.identity.core.trusteddevice.query
+
+import com.krachtix.identity.core.trusteddevice.dto.CheckTrustedDeviceQuery
+import com.krachtix.identity.core.trusteddevice.dto.CheckTrustedDeviceResult
+import com.krachtix.identity.core.trusteddevice.service.TrustedDeviceService
+import an.awesome.pipelinr.Command
+import io.github.oshai.kotlinlogging.KotlinLogging
+import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
+
+private val log = KotlinLogging.logger {}
+
+@Component
+@Transactional(readOnly = true)
+class CheckTrustedDeviceQueryHandler(
+    private val trustedDeviceService: TrustedDeviceService
+) : Command.Handler<CheckTrustedDeviceQuery, CheckTrustedDeviceResult> {
+
+    override fun handle(query: CheckTrustedDeviceQuery): CheckTrustedDeviceResult =
+        trustedDeviceService.checkTrustedDevice(query.userId, query.deviceFingerprint)
+            ?.let { device ->
+                CheckTrustedDeviceResult(
+                    isTrusted = true,
+                    deviceId = device.id,
+                    lastUsedAt = device.lastUsedAt,
+                    expiresAt = device.expiresAt
+                )
+            }
+            ?: CheckTrustedDeviceResult(isTrusted = false)
+}

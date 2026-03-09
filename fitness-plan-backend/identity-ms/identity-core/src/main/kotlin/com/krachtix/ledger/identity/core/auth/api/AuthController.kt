@@ -1,0 +1,360 @@
+package com.krachtix.identity.core.auth.api
+
+import com.krachtix.identity.commons.audit.AuditEvent
+import com.krachtix.identity.commons.audit.AuditResource
+import com.krachtix.identity.commons.audit.IdentityType
+import com.krachtix.identity.commons.dto.EndpointsInfo
+import com.krachtix.identity.commons.dto.ErrorResponse
+import com.krachtix.identity.commons.dto.HomeResponse
+import com.krachtix.identity.commons.dto.MerchantInfoResponse
+import com.krachtix.identity.commons.dto.TokenResponse
+import com.krachtix.identity.commons.dto.UserInfoResponse
+import com.krachtix.identity.core.organization.entity.OrganizationPropertyName
+import com.krachtix.identity.core.organization.repository.OrganizationRepository
+import com.krachtix.identity.core.repository.OAuthRegisteredClientRepository
+import com.krachtix.identity.core.repository.OAuthUserRepository
+import com.krachtix.identity.core.service.AccountLockoutService
+import com.krachtix.identity.core.service.ClientIpExtractionService
+import com.krachtix.identity.core.service.CustomUserDetails
+import tools.jackson.databind.ObjectMapper
+import io.github.oshai.kotlinlogging.KotlinLogging
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.ApplicationEventPublisher
+import org.springframework.http.ResponseEntity
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.oauth2.jwt.Jwt
+import org.springframework.security.oauth2.jwt.JwtClaimsSet
+import org.springframework.security.oauth2.jwt.JwtEncoder
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.RestController
+import java.security.Principal
+import java.time.Instant
+import java.util.UUID
+
+private val log = KotlinLogging.logger {}
+
+@Schema(description = "Login request with username and password")
+data class LoginRequest(
+    @Schema(description = "Username or email address", example = "user@example.com", required = true)
+    val username: String,
+    @Schema(description = "User password", required = true)
+    val password: CharArray,
+    @Schema(description = "Optional redirect URL after successful login", example = "https://app.example.com/dashboard", required = false)
+    val redirectUrl: String? = null
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is LoginRequest) return false
+        return username == other.username && password.contentEquals(other.password) && redirectUrl == other.redirectUrl
+    }
+
+    override fun hashCode(): Int {
+        var result = username.hashCode()
+        result = 31 * result + password.contentHashCode()
+        result = 31 * result + (redirectUrl?.hashCode() ?: 0)
+        return result
+    }
+}
+
+@RestController
+@Tag(name = "Authentication", description = "Authentication and authorization endpoints")
+class AuthController(
+    private val jwtEncoder: JwtEncoder,
+    private val authenticationManager: AuthenticationManager,
+    private val userRepository: OAuthUserRepository,
+    private val oAuthRegisteredClientRepository: OAuthRegisteredClientRepository,
+    private val organizationRepository: OrganizationRepository,
+    private val objectMapper: ObjectMapper,
+    private val accountLockoutService: AccountLockoutService,
+    private val applicationEventPublisher: ApplicationEventPublisher,
+    private val clientIpExtractionService: ClientIpExtractionService,
+    @Value("\${identity-ms.base-url}") private val identityBaseUrl: String,
+    @Value("\${identity-ms.token.expiry:600}") private val tokenExpiry: Long,
+    @Value("\${jwt.audience:core-ms-client}") private val jwtAudience: String
+) {
+
+    companion object {
+        private val DEFAULT_REALM_ROLES = listOf("offline_access", "uma_authorization", "default-roles-akuid")
+        private val DEFAULT_ACCOUNT_ROLES = listOf("manage-account", "manage-account-links", "view-profile")
+        private const val DEFAULT_SCOPE = "openid email phone profile"
+        private const val DEFAULT_LOW_BALANCE_ALERT = 50000
+        private const val DEFAULT_FAILURE_RATE = 5
+    }
+
+
+    @GetMapping("/")
+    @ResponseBody
+    @Operation(summary = "Home endpoint", description = "Returns service information and available endpoints")
+    @ApiResponse(responseCode = "200", description = "Service information",
+        content = [Content(mediaType = "application/json",
+            schema = Schema(implementation = HomeResponse::class))])
+    fun home(principal: Principal?): HomeResponse {
+        log.info { "Home endpoint accessed by: ${principal?.name}" }
+        return HomeResponse(
+            message = "Identity Service Home",
+            user = principal?.name ?: "anonymous",
+            authenticated = principal != null,
+            endpoints = EndpointsInfo()
+        )
+    }
+
+    @GetMapping("/login-success")
+    @ResponseBody
+    @Operation(summary = "OAuth login success callback", description = "Handles successful OAuth2 authentication")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Token generated successfully",
+            content = [Content(mediaType = "application/json",
+                schema = Schema(implementation = TokenResponse::class))]),
+        ApiResponse(responseCode = "302", description = "Redirect to frontend with token")
+    ])
+    @SecurityRequirement(name = "OAuth2")
+    fun loginSuccess(
+        @AuthenticationPrincipal userDetails: UserDetails?,
+        @Parameter(description = "Optional redirect URL") @RequestParam(required = false) redirect: String?
+    ): ResponseEntity<Any> {
+        log.info { "Login success for user: ${userDetails?.username}" }
+
+        val customUserDetails = userDetails as? CustomUserDetails
+        val oauthUser = customUserDetails?.getOAuthUser()
+
+        val token = generateOAuthToken(customUserDetails, oauthUser)
+
+        oauthUser?.let { publishOAuthLoginAudit(it, userDetails, redirect) }
+
+        return redirect?.takeIf { it.isNotBlank() }
+            ?.let {
+                val redirectUrl = "$it?token=$token&expires_in=$tokenExpiry"
+                log.info { "Redirecting to frontend: $redirectUrl" }
+                ResponseEntity.status(302).header("Location", redirectUrl).build()
+            }
+            ?: ResponseEntity.ok(TokenResponse(
+                accessToken = token,
+                expiresIn = tokenExpiry,
+                scope = DEFAULT_SCOPE
+            ))
+    }
+
+    private fun generateOAuthToken(customUserDetails: CustomUserDetails?, oauthUser: com.krachtix.identity.core.entity.OAuthUser?): String {
+        val now = Instant.now()
+        val authTime = now.minusSeconds(1)
+        val expiry = now.plusSeconds(tokenExpiry)
+        val jti = UUID.randomUUID().toString()
+        val sid = UUID.randomUUID().toString()
+
+        val userAuthorities = customUserDetails?.authorities?.map { it.authority } ?: emptyList()
+
+        val claims = JwtClaimsSet.builder()
+            .issuer(identityBaseUrl)
+            .subject(oauthUser?.id?.toString() ?: UUID.randomUUID().toString())
+            .audience(listOf("account"))
+            .issuedAt(now)
+            .expiresAt(expiry)
+            .claim("auth_time", authTime.epochSecond)
+            .claim("jti", jti)
+            .claim("typ", "Bearer")
+            .claim("azp", jwtAudience)
+            .claim("sid", sid)
+            .claim("acr", "1")
+            .claim("allowed-origins", listOf("https://oauth.pstmn.io"))
+            .claim("realm_access", mapOf("roles" to (DEFAULT_REALM_ROLES + userAuthorities)))
+            .claim("resource_access", mapOf("account" to mapOf("roles" to DEFAULT_ACCOUNT_ROLES)))
+            .claim("authorities", userAuthorities)
+            .claim("scope", DEFAULT_SCOPE)
+            .claim("merchant_id", oauthUser?.merchantId?.toString() ?: "")
+            .claim("totp_enabled", oauthUser?.totpEnabled ?: false)
+            .build()
+
+        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).tokenValue
+    }
+
+    private fun publishOAuthLoginAudit(
+        oauthUser: com.krachtix.identity.core.entity.OAuthUser,
+        userDetails: UserDetails?,
+        redirect: String?
+    ) {
+        applicationEventPublisher.publishEvent(
+            AuditEvent(
+                actorId = oauthUser.id.toString(),
+                actorName = "${oauthUser.firstName ?: ""} ${oauthUser.lastName ?: ""}".trim().ifEmpty { oauthUser.email?.value ?: "" },
+                merchantId = oauthUser.merchantId?.toString() ?: "unknown",
+                identityType = IdentityType.USER,
+                resource = AuditResource.IDENTITY,
+                event = "User login successful via OAuth - Username: ${userDetails?.username}",
+                eventTime = Instant.now(),
+                timeRecorded = Instant.now(),
+                payload = mapOf(
+                    "username" to (userDetails?.username ?: "unknown"),
+                    "ipAddress" to clientIpExtractionService.getClientIpAddressFromContext(),
+                    "userId" to oauthUser.id.toString(),
+                    "loginMethod" to "oauth_login",
+                    "hasRedirect" to (!redirect.isNullOrBlank()).toString()
+                )
+            )
+        )
+    }
+
+    @GetMapping("/api/userinfo")
+    @ResponseBody
+    @Operation(summary = "Get user information", description = "Retrieve user details by user ID")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "User information retrieved",
+            content = [Content(mediaType = "application/json",
+                schema = Schema(implementation = UserInfoResponse::class))]),
+        ApiResponse(responseCode = "404", description = "User not found")
+    ])
+    @SecurityRequirement(name = "bearerAuth")
+    fun apiUserInfo(
+        @Parameter(description = "ID of the user", example = "550e8400-e29b-41d4-a716-446655440000")
+        @RequestParam(required = false) userId: String?,
+        @AuthenticationPrincipal jwt: Jwt?
+    ): Any {
+        log.info { "API UserInfo requested for userId: $userId, client: ${jwt?.subject}" }
+
+        val scopes = extractScopes(jwt)
+        if (!scopes.contains("profile") && !scopes.contains("read")) {
+            log.warn { "Insufficient scope for client: ${jwt?.subject}, scopes: $scopes" }
+            return ErrorResponse(
+                error = "insufficient_scope",
+                message = "Client requires 'profile' or 'read' scope to access user information"
+            )
+        }
+
+        val effectiveUserId = userId ?: jwt?.subject
+        return effectiveUserId?.let { findUserById(it, jwt?.subject) }
+            ?: buildClientInfoResponse(jwt, scopes)
+    }
+
+    private fun extractScopes(jwt: Jwt?): List<String> {
+        return jwt?.getClaimAsString("scope")?.split(" ")
+            ?: jwt?.getClaimAsStringList("scope")
+            ?: emptyList()
+    }
+
+    private fun findUserById(userId: String, requestedBy: String?): Any {
+        return runCatching { UUID.fromString(userId) }
+            .mapCatching { uuid ->
+                userRepository.findById(uuid).map<Any> { user ->
+                    UserInfoResponse(
+                        sub = user.id.toString(),
+                        name = "${user.firstName ?: ""} ${user.lastName ?: ""}".trim(),
+                        firstName = user.firstName,
+                        lastName = user.lastName,
+                        email = user.email?.value,
+                        phone = user.phoneNumber?.e164,
+                        username = user.username,
+                        userType = user.userType?.name ?: "INDIVIDUAL",
+                        trustLevel = user.trustLevel?.name ?: "UNVERIFIED",
+                        emailVerified = user.emailVerified,
+                        phoneVerified = user.phoneNumberVerified,
+                        merchantId = user.merchantId?.toString(),
+                        requestedBy = requestedBy
+                    )
+                }.orElseGet {
+                    log.warn { "User not found for userId: $userId" }
+                    ErrorResponse(error = "user_not_found", message = "No user found with userId: $userId")
+                }
+            }
+            .getOrElse {
+                log.error { "Invalid UUID format for userId: $userId" }
+                ErrorResponse(error = "invalid_user_id", message = "Invalid userId format: $userId")
+            }
+    }
+
+    private fun buildClientInfoResponse(jwt: Jwt?, scopes: List<String>): UserInfoResponse {
+        return UserInfoResponse(
+            sub = jwt?.subject ?: "unknown-client",
+            name = "Service Client",
+            clientId = jwt?.getClaimAsString("azp"),
+            scopes = scopes,
+            authenticated = true
+        )
+    }
+
+    @GetMapping("/api/merchantinfo")
+    @ResponseBody
+    @Operation(summary = "Get merchant information", description = "Retrieve merchant details by merchant ID")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Merchant information retrieved",
+            content = [Content(mediaType = "application/json",
+                schema = Schema(implementation = MerchantInfoResponse::class))]),
+        ApiResponse(responseCode = "404", description = "Merchant not found")
+    ])
+    @SecurityRequirement(name = "bearerAuth")
+    fun apiMerchantInfo(
+        @Parameter(description = "Merchant ID", example = "merchant-123")
+        @RequestParam(required = false) merchantId: String?,
+        @AuthenticationPrincipal jwt: Jwt?
+    ): Any {
+        log.info { "API MerchantInfo requested for merchantId: $merchantId, client: ${jwt?.subject}" }
+
+        val scopes = extractScopes(jwt)
+        if (!scopes.contains("profile") && !scopes.contains("read")) {
+            log.warn { "Insufficient scope for client: ${jwt?.subject}, scopes: $scopes" }
+            return ErrorResponse(
+                error = "insufficient_scope",
+                message = "Client requires 'profile' or 'read' scope to access merchant information"
+            )
+        }
+
+        val targetMerchantId = merchantId ?: jwt?.getClaimAsString("merchant_id")
+
+        return targetMerchantId
+            ?.let { findMerchantById(it, jwt?.subject, merchantId == null) }
+            ?: ErrorResponse(error = "no_merchant_context", message = "No merchant context found")
+    }
+
+    private fun findMerchantById(merchantId: String, requestedBy: String?, isAuthenticated: Boolean): Any {
+        val uuid = runCatching { java.util.UUID.fromString(merchantId) }.getOrNull()
+            ?: return ErrorResponse(error = "invalid_merchant_id", message = "Invalid merchant ID format")
+
+        val organization = organizationRepository.findByIdWithProperties(uuid).orElse(null)
+        val merchant = oAuthRegisteredClientRepository.findById(uuid).orElse(null)
+
+        if (organization == null && merchant == null) {
+            log.warn { "Merchant not found for merchantId: $merchantId" }
+            return ErrorResponse(error = "merchant_not_found", message = "No merchant found with merchantId: $merchantId")
+        }
+
+        return MerchantInfoResponse(
+            merchantId = uuid.toString(),
+            name = organization?.name ?: merchant?.clientName ?: "",
+            email = organization?.getProperty(OrganizationPropertyName.EMAIL),
+            phone = organization?.getProperty(OrganizationPropertyName.PHONE_NUMBER),
+            clientId = merchant?.clientId ?: uuid.toString(),
+            requestedBy = requestedBy,
+            authenticatedMerchant = if (isAuthenticated) true else null,
+            lowBalanceAlert = organization?.getProperty(OrganizationPropertyName.LOW_BALANCE)?.toIntOrNull() ?: DEFAULT_LOW_BALANCE_ALERT,
+            failureRate = organization?.getProperty(OrganizationPropertyName.FAILURE_LIMIT)?.toIntOrNull() ?: DEFAULT_FAILURE_RATE
+        )
+    }
+
+    @GetMapping("/auth/userinfo")
+    @ResponseBody
+    @Operation(summary = "Get authenticated user info", description = "Returns information about the currently authenticated user")
+    @ApiResponse(responseCode = "200", description = "User information",
+        content = [Content(mediaType = "application/json",
+            schema = Schema(implementation = UserInfoResponse::class))])
+    @SecurityRequirement(name = "OAuth2")
+    fun userInfo(@AuthenticationPrincipal userDetails: UserDetails?): UserInfoResponse {
+        log.info { "UserInfo requested for: ${userDetails?.username}" }
+        return UserInfoResponse(
+            sub = userDetails?.username ?: "unknown",
+            name = userDetails?.username ?: "unknown",
+            email = "${userDetails?.username}@example.com",
+            authorities = userDetails?.authorities?.mapNotNull { it.authority }
+        )
+    }
+}

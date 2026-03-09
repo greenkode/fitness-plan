@@ -1,0 +1,65 @@
+package com.krachtix.audit.domain.command
+
+import com.krachtix.audit.domain.model.AuditLog
+import com.krachtix.audit.domain.model.AuditLogEntity
+import com.krachtix.audit.domain.model.AuditLogRepository
+import an.awesome.pipelinr.Command
+import io.github.oshai.kotlinlogging.KotlinLogging
+import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
+import java.util.UUID
+
+@Component
+class CreateAuditEventCommandHandler(
+    private val auditLogRepository: AuditLogRepository
+) : Command.Handler<CreateAuditEventCommand, CreateAuditEventResult> {
+
+    private val log = KotlinLogging.logger {}
+
+    @Transactional(transactionManager = "mainTransactionManager")
+    override fun handle(command: CreateAuditEventCommand): CreateAuditEventResult {
+        return try {
+            val ipAddress = extractIpAddress(command.payload)
+
+            val auditLog = AuditLog(
+                id = UUID.randomUUID(),
+                actorId = command.actorId,
+                actorName = command.actorName,
+                merchantId = command.merchantId,
+                resource = command.resource,
+                event = command.event,
+                eventTime = command.eventTime,
+                timeRecorded = Instant.now(),
+                identityType = command.identityType,
+                payload = command.payload,
+                ipAddress = ipAddress
+            )
+
+            val entity = AuditLogEntity.Companion.fromDomain(auditLog)
+            val saved = auditLogRepository.save(entity)
+
+            log.debug {
+                "Audit event created: id=${saved.id}, identity=${command.actorId}, " +
+                "event=${command.event}, resource=${command.resource}"
+            }
+
+            CreateAuditEventResult(
+                id = saved.id,
+                success = true
+            )
+        } catch (e: Exception) {
+            log.error(e) { "Failed to create audit event for identity=${command.actorId}, event=${command.event}" }
+
+            CreateAuditEventResult(
+                id = UUID.randomUUID(),
+                success = false,
+                message = "Failed to create audit event: ${e.message}"
+            )
+        }
+    }
+
+    private fun extractIpAddress(payload: Map<String, Any>): String {
+        return payload["ipAddress"]?.toString() ?: "N/A"
+    }
+}

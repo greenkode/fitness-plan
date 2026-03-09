@@ -1,0 +1,6 @@
+SERVER_PORT: 9200
+
+DB_HOST: localhost
+READ_REPLICA_DB_HOST: localhost
+DB_NAME: krachtix
+READ_REPLICA_DB_NAME: krachtix

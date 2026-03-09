@@ -1,0 +1,99 @@
+package com.krachtix.identity.core.invitation.command
+
+import com.krachtix.identity.commons.audit.AuditEvent
+import com.krachtix.identity.commons.audit.AuditResource
+import com.krachtix.identity.commons.audit.IdentityType
+import com.krachtix.commons.exception.InvalidRequestException
+import com.krachtix.commons.exception.RecordNotFoundException
+import com.krachtix.commons.process.MakeProcessRequestPayload
+import com.krachtix.commons.process.ProcessChannel
+import com.krachtix.identity.commons.process.ProcessGateway
+import com.krachtix.commons.process.enumeration.ProcessEvent
+import com.krachtix.commons.process.enumeration.ProcessRequestDataName
+import com.krachtix.commons.process.enumeration.ProcessRequestType
+import com.krachtix.commons.process.enumeration.ProcessType
+import com.krachtix.identity.core.repository.OAuthUserRepository
+import an.awesome.pipelinr.Command
+import io.github.oshai.kotlinlogging.KotlinLogging
+import org.springframework.context.ApplicationEventPublisher
+import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
+import java.util.UUID
+
+private val log = KotlinLogging.logger {}
+
+@Component
+@Transactional
+class CompleteInvitationCommandHandler(
+    private val processGateway: ProcessGateway,
+    private val userRepository: OAuthUserRepository,
+    private val passwordEncoder: PasswordEncoder,
+    private val applicationEventPublisher: ApplicationEventPublisher
+) : Command.Handler<CompleteInvitationCommand, CompleteInvitationResult> {
+
+    override fun handle(command: CompleteInvitationCommand): CompleteInvitationResult {
+        log.info { "Completing invitation for token: ${command.token}" }
+
+        val process = processGateway.findPendingProcessByTypeAndExternalReference(
+            type = ProcessType.MERCHANT_USER_INVITATION,
+            externalReference = command.token
+        ) ?: throw InvalidRequestException("Invalid or expired invitation token")
+
+        val initialRequest = process.getInitialRequest()
+        val authReference = initialRequest.getDataValueOrNull(ProcessRequestDataName.AUTHENTICATION_REFERENCE)
+
+        if (authReference != command.reference) {
+            throw InvalidRequestException("Invalid invitation reference")
+        }
+
+        val userId = initialRequest.getDataValueOrNull(ProcessRequestDataName.USER_IDENTIFIER)
+            ?.let { UUID.fromString(it) }
+            ?: throw InvalidRequestException("User ID not found in invitation")
+
+        val user = userRepository.findById(userId)
+            .orElseThrow { RecordNotFoundException("User not found with ID: $userId") }
+
+        val nameParts = command.fullName.trim().split("\\s+".toRegex(), 2)
+        user.firstName = nameParts[0]
+        user.lastName = if (nameParts.size > 1) nameParts[1] else ""
+        user.emailVerified = true
+        user.invitationStatus = true
+        user.password = passwordEncoder.encode(command.password)!!
+        user.phoneNumber = command.phoneNumber
+
+        userRepository.save(user)
+
+        val completeRequest = MakeProcessRequestPayload(
+            userId = userId,
+            publicId = process.publicId,
+            eventType = ProcessEvent.PROCESS_COMPLETED,
+            requestType = ProcessRequestType.COMPLETE_PROCESS,
+            channel = ProcessChannel.BUSINESS_WEB
+        )
+        
+        processGateway.makeRequest(completeRequest)
+
+        applicationEventPublisher.publishEvent(
+            AuditEvent(
+                actorId = user.id.toString(),
+                actorName = "${user.firstName ?: ""} ${user.lastName ?: ""}".trim().ifEmpty { user.email?.value ?: "" },
+                merchantId = user.merchantId?.toString() ?: "unknown",
+                identityType = IdentityType.USER,
+                resource = AuditResource.IDENTITY,
+                event = "User invitation completed successfully",
+                eventTime = Instant.now(),
+                timeRecorded = Instant.now(),
+            )
+        )
+
+        log.info { "User ${user.username} profile updated successfully" }
+
+        return CompleteInvitationResult(
+            success = true,
+            message = "Invitation completed successfully",
+            userId = userId
+        )
+    }
+}

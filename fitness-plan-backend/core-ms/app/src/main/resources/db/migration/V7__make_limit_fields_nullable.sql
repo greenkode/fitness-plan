@@ -1,0 +1,9 @@
+ALTER TABLE template_limit ALTER COLUMN max_daily_debit DROP NOT NULL;
+ALTER TABLE template_limit ALTER COLUMN max_daily_credit DROP NOT NULL;
+ALTER TABLE template_limit ALTER COLUMN cumulative_debit DROP NOT NULL;
+ALTER TABLE template_limit ALTER COLUMN cumulative_credit DROP NOT NULL;
+ALTER TABLE template_limit ALTER COLUMN min_transaction_debit DROP NOT NULL;
+ALTER TABLE template_limit ALTER COLUMN min_transaction_credit DROP NOT NULL;
+ALTER TABLE template_limit ALTER COLUMN max_transaction_debit DROP NOT NULL;
+ALTER TABLE template_limit ALTER COLUMN max_transaction_credit DROP NOT NULL;
+ALTER TABLE template_limit ALTER COLUMN max_account_balance DROP NOT NULL;

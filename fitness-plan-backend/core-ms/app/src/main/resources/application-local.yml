@@ -1,0 +1,27 @@
+DATABASE_NAME: krachtix
+
+logging:
+  level:
+    org.thymeleaf: ERROR
+
+server:
+  port: 9201
+
+IDENTITY_MS_BASE_URL: http://localhost:9202
+JWT_ISSUER_URI: http://localhost:9202
+
+AWS_ENDPOINT: http://localhost:4566
+aws_access_key: krachtix
+aws_secret: RespectTheHangover
+AWS_S3_REGION: eu-west-2
+
+# CORS
+ALLOWED_CORS_ORIGINS: http://localhost:3001,http://localhost:3000
+
+# Security - more permissive for local development
+SECURITY_PERMIT_ALL_PATHS: "/api-docs, /swagger-ui/**, /v3/api-docs/**, /webhooks/**, /error, /actuator/**, /countries/supported-countries, /currencies/supported-currencies"
+
+HIBERNATE_SEARCH_INDEX_PATH: ./local-indexes
+HIBERNATE_SEARCH_RUNTIME_ENABLED: true
+
+HAZELCAST_CLUSTER_NAME: dev
