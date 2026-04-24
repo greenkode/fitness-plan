@@ -35,12 +35,17 @@ Multi-user fitness tracking application built on the existing Krachtix platform.
 
 ## Tech Stack
 
-- **Backend**: Spring Boot 4.0 + Kotlin (CQRS/Pipelinr, Flyway, PostgreSQL, Spring Modulith)
-- **Frontend**: Nuxt 3 + TypeScript + Pinia (PWA)
-- **AI**: LangChain4j via rag-ms (already exists)
-- **Database**: PostgreSQL (existing Krachtix DB)
-- **Auth**: OAuth2/OIDC via identity-ms (already exists)
-- **Build**: Maven (backend), nuxi (frontend)
+- **Full-Stack**: Nuxt 3 + TypeScript (Nitro server routes for API, Vue SPA for frontend)
+- **ORM**: Drizzle ORM (SQL-like TS syntax, migrations)
+- **AI Orchestration**: Mastra (agents, RAG pipelines, model router — 3,600+ models, 99 providers)
+- **Chat UI**: Nuxt UI Chat Components + Vercel AI SDK (streaming, tool calling)
+- **LLM**: BYOK multi-provider (Ollama default, OpenAI, Anthropic, Google, Mistral, Groq)
+- **RAG**: Mastra RAG + pgvector + @mastra/fastembed
+- **Database**: PostgreSQL + pgvector
+- **Auth**: nuxt-auth-utils (session-based, OAuth providers)
+- **State**: Pinia
+- **Validation**: Zod
+- **Build**: nuxi (single artifact)
 
 ## Core Concepts
 

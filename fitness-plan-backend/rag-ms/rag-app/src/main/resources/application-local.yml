@@ -1,7 +1,0 @@
-DATABASE_NAME: krachtix
-
-server:
-  port: 9203
-
-DB_HOST: localhost
-IDENTITY_BASEURL: http://localhost:9202

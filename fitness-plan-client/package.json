@@ -9,10 +9,29 @@
     "lint": "npx nuxi lint"
   },
   "dependencies": {
-    "@pinia/nuxt": "^0.4.0",
-    "nuxt": "^3.9.0"
+    "@ai-sdk/anthropic": "^3.0.71",
+    "@ai-sdk/openai-compatible": "^2.0.41",
+    "@ai-sdk/vue": "^3.0.168",
+    "@mastra/core": "^1.25.0",
+    "@mastra/rag": "^2.2.0",
+    "@nuxt/ui": "^4.6.1",
+    "@pinia/nuxt": "^0.5.5",
+    "ai": "^6.0.168",
+    "argon2": "^0.44.0",
+    "date-fns": "^4.1.0",
+    "drizzle-orm": "^0.45.2",
+    "marked": "^18.0.2",
+    "nanoid": "^5.1.9",
+    "nuxt": "^4.4.2",
+    "nuxt-auth-utils": "^0.5.29",
+    "pinia": "^2.3.1",
+    "pinia-plugin-persistedstate": "^4.7.1",
+    "postgres": "^3.4.9",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@types/node": "^20.11.5"
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^20.11.5",
+    "drizzle-kit": "^0.31.10"
   }
 }

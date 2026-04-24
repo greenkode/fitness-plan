@@ -1,9 +1,0 @@
-DATABASE_NAME: krachtix
-
-server:
-  port: 9202
-
-ALLOWED_CORS_ORIGINS: http://localhost:3001,http://localhost:3000,http://localhost:3002
-HAZELCAST_CLUSTER_NAME: dev
-
-CORE_MS_BASE_URL: http://localhost:9201
