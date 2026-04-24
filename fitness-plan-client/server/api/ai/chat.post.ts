@@ -1,5 +1,5 @@
 import { streamText } from 'ai'
-import { resolveModel } from '../../utils/ai-model'
+import { resolveModelSet } from '../../utils/ai-model'
 import { CONVERSATION_PROMPT } from '../../utils/ai-prompts'
 
 function toCoreMsgs(uiMessages: any[]): { role: string; content: string }[] {
@@ -25,8 +25,8 @@ export default defineEventHandler(async (event) => {
   const messages = toCoreMsgs(body.messages || [])
 
   try {
-    const model = await resolveModel(user.id)
-    const result = streamText({ model, system: CONVERSATION_PROMPT, messages })
+    const models = await resolveModelSet(user.id)
+    const result = streamText({ model: models.conversation, system: CONVERSATION_PROMPT, messages })
     const response = result.toUIMessageStreamResponse()
 
     setResponseStatus(event, response.status)
