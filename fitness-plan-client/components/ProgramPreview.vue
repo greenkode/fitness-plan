@@ -10,15 +10,17 @@
     </div>
 
     <div v-if="program.schedule" class="schedule-bar">
-      <div
+      <button
         v-for="day in sortedSchedule"
         :key="day.dayOfWeek"
         class="schedule-day"
-        :class="'type-' + day.trainingType"
+        :class="['type-' + day.trainingType, { clickable: day.trainingType !== 'rest' }]"
+        :disabled="day.trainingType === 'rest'"
+        @click="onDayClick(day.dayOfWeek, day.trainingType)"
       >
         <span class="day-abbr">{{ dayNames[day.dayOfWeek] }}</span>
         <span class="day-type-label">{{ day.trainingType }}</span>
-      </div>
+      </button>
     </div>
 
     <div v-for="phase in program.phases" :key="phase.phaseNumber" class="phase-section">
@@ -83,6 +85,17 @@ const openWorkouts = ref(new Set<string>())
 const sortedSchedule = computed(() =>
   [...(props.program.schedule || [])].sort((a, b) => a.dayOfWeek - b.dayOfWeek))
 
+function onDayClick(dayOfWeek: number, trainingType: string) {
+  if (trainingType === 'rest') return
+  const today = new Date()
+  const todayDow = today.getDay()
+  const offset = (dayOfWeek - todayDow + 7) % 7
+  const targetDate = new Date(today)
+  targetDate.setDate(today.getDate() + offset)
+  const dateStr = targetDate.toISOString().split('T')[0]
+  navigateTo(`/workout/${dateStr}`)
+}
+
 function togglePhase(n: number) {
   if (openPhases.value.has(n)) openPhases.value.delete(n)
   else openPhases.value.add(n)
@@ -144,8 +157,24 @@ function toggleWorkout(key: string) {
   text-align: center;
   padding: 0.5rem 0.25rem;
   border-right: 1px solid var(--border-subtle);
+  background: none;
+  border-top: none;
+  border-bottom: none;
+  border-left: none;
+  cursor: default;
+  font-family: inherit;
+  transition: background 0.15s;
 }
 .schedule-day:last-child { border-right: none; }
+.schedule-day.clickable {
+  cursor: pointer;
+}
+.schedule-day.clickable:hover {
+  background: var(--section-bg);
+}
+.schedule-day:disabled {
+  opacity: 0.6;
+}
 .day-abbr {
   display: block;
   font-size: 0.6rem;

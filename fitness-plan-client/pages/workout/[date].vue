@@ -30,6 +30,10 @@
 
     <div v-else-if="step === 'active'" class="active-state">
       <div class="sticky-header">
+        <NuxtLink to="/" class="header-back">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+          Calendar
+        </NuxtLink>
         <WorkoutTimer :started-at="store.startedAt" />
         <WorkoutProgress :completed="totalCompletedSets" :total="totalPrescribedSets" />
       </div>
@@ -468,6 +472,20 @@ async function logout() {
   text-decoration: none;
 }
 .back-link:hover { color: var(--accent-orange); }
+.header-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+  transition: color 0.2s;
+}
+.header-back:hover { color: var(--accent-orange); }
 
 .sticky-header {
   position: sticky;

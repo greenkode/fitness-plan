@@ -235,6 +235,7 @@ watch(messages, () => {
 
 <style scoped>
 .wizard-page {
+  width: 100%;
   max-width: 650px;
   margin: 0 auto;
   display: flex;

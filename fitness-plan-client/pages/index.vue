@@ -43,32 +43,7 @@
         </div>
       </div>
 
-      <div v-if="todayWorkout" class="today-section">
-        <div class="today-label">Today's Workout</div>
-        <div class="today-card" @click="navigateTo(`/workout/${todayDate}`)">
-          <div class="today-info">
-            <h3 class="today-title">{{ todayWorkout.title }}</h3>
-            <span class="today-type" :class="'ttype-' + todayWorkout.workoutType">{{ todayWorkout.workoutType }}</span>
-          </div>
-          <span class="today-action">Start</span>
-        </div>
-      </div>
-
-      <div v-if="upcomingWorkouts.length" class="upcoming-section">
-        <div class="upcoming-label">This Week</div>
-        <div class="upcoming-list">
-          <div
-            v-for="w in upcomingWorkouts"
-            :key="w.date"
-            class="upcoming-item"
-            @click="navigateTo(`/workout/${w.date}`)"
-          >
-            <span class="upcoming-day">{{ formatDay(w.date) }}</span>
-            <span class="upcoming-title">{{ w.title }}</span>
-            <span class="upcoming-type" :class="'ttype-' + w.workoutType">{{ w.workoutType }}</span>
-          </div>
-        </div>
-      </div>
+      <WorkoutCalendar :assignments="allAssignments" />
     </div>
   </div>
 </template>
@@ -92,31 +67,15 @@ interface AssignmentData {
   workoutType: string
 }
 
-const todayWorkout = ref<AssignmentData | null>(null)
-const upcomingWorkouts = ref<AssignmentData[]>([])
-
-const todayDate = new Date().toISOString().split('T')[0]
-
 const { data: programs, status } = await useFetch<ProgramData[]>('/api/fitness/programs', {
   default: () => [],
 })
 
-const { data: assignments } = await useFetch<AssignmentData[]>('/api/fitness/assignments/upcoming', {
+const { data: allAssignments } = await useFetch<AssignmentData[]>('/api/fitness/assignments', {
   default: () => [],
 })
 
-watchEffect(() => {
-  const all = assignments.value || []
-  todayWorkout.value = all.find(a => a.date === todayDate) || null
-  upcomingWorkouts.value = all.filter(a => a.date !== todayDate).slice(0, 6)
-})
-
 const loading = computed(() => status.value === 'pending')
-
-function formatDay(dateStr: string): string {
-  const d = new Date(dateStr + 'T00:00:00')
-  return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
-}
 </script>
 
 <style scoped>

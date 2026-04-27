@@ -254,7 +254,7 @@ watch(messages, () => {
 </script>
 
 <style scoped>
-.wizard-page { max-width: 650px; margin: 0 auto; display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.wizard-page { width: 100%; max-width: 650px; margin: 0 auto; display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .wizard-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-shrink: 0; }
 .back-arrow { color: var(--text-muted); display: flex; transition: color 0.2s; }
 .back-arrow:hover { color: var(--accent-orange); }
