@@ -9,6 +9,8 @@
     </div>
 
     <div v-else>
+      <CoachingSuggestions />
+
       <div class="section-header">
         <h2 class="section-title">My Programs</h2>
         <NuxtLink to="/programs/new" class="new-link">+ New</NuxtLink>
