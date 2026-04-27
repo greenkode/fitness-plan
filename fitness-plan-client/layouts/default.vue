@@ -26,7 +26,12 @@
 }
 @media (max-width: 768px) {
   .krachtix-main {
-    padding: 1rem;
+    padding: 0.75rem;
+  }
+}
+@media (max-width: 480px) {
+  .krachtix-main {
+    padding: 0.5rem;
   }
 }
 </style>

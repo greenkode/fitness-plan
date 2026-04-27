@@ -306,11 +306,33 @@ async function parseWithAi() {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-@media (max-width: 480px) {
-  .modal-overlay { padding: 1rem 0.5rem; }
+@media (max-width: 768px) {
+  .modal-overlay { padding: 0; align-items: flex-end; }
+  .modal {
+    border-radius: 16px 16px 0 0;
+    max-width: 100%;
+    max-height: 90dvh;
+    overflow-y: auto;
+    animation: slideUpMobile 0.25s ease;
+  }
+  @keyframes slideUpMobile {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
   .modal-header { padding: 1rem 1.25rem; }
   .exercise-name { font-size: 1.15rem; }
   .modal-body { padding: 1rem 1.25rem; }
-  .num-input { font-size: 0.95rem; padding: 0.5rem 0.3rem; }
+  .chat-field {
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+  }
+  .log-btn-inline {
+    width: 48px;
+    height: 48px;
+  }
+  .close-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
 }
 </style>

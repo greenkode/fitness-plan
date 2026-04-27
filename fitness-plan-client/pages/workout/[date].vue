@@ -677,4 +677,44 @@ async function logout() {
   border-color: var(--text-secondary);
   color: var(--text-secondary);
 }
+@media (max-width: 768px) {
+  .workout-page {
+    padding-bottom: 1rem;
+  }
+  .workout-heading {
+    font-size: 1.5rem;
+  }
+  .workout-date {
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+  }
+  .exercise-list {
+    margin-bottom: 1.25rem;
+  }
+  .exercise-item {
+    padding: 0.65rem 0.85rem;
+    font-size: 0.9rem;
+  }
+  .start-btn {
+    font-size: 1.1rem;
+    padding: 1rem;
+    min-height: 56px;
+  }
+  .sticky-header {
+    padding: 0.5rem 0;
+  }
+  .exercise-card {
+    padding: 0.85rem 1rem;
+    min-height: 64px;
+  }
+  .ex-card-name {
+    font-size: 0.95rem;
+  }
+  .finish-btn,
+  .discard-btn,
+  .secondary-btn {
+    min-height: 48px;
+    font-size: 1rem;
+  }
+}
 </style>

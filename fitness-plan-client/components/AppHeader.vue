@@ -186,18 +186,32 @@ const userMenuItems = computed(() => [
 }
 @media (max-width: 768px) {
   .app-header {
-    padding: 1.5rem 1rem;
+    padding: 1rem;
   }
   .brand {
-    font-size: 1.75rem;
-    padding-right: 3rem;
+    font-size: 1.5rem;
+    padding-right: 5rem;
+    margin-bottom: 0.25rem;
+    text-align: left;
   }
   .tagline {
-    font-size: 0.9rem;
+    display: none;
   }
   .header-actions {
-    top: 1rem;
-    right: 1rem;
+    top: 0.75rem;
+    right: 0.75rem;
+    gap: 0.5rem;
+  }
+  .nav-bar {
+    margin-top: 0.75rem;
+    width: 100%;
+    display: flex;
+  }
+  .nav-link {
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem 0.5rem;
+    font-size: 0.75rem;
   }
   .stats-bar {
     gap: 0.75rem;

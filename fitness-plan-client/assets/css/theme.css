@@ -39,4 +39,20 @@ body {
   min-height: 100vh;
   line-height: 1.6;
   margin: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 768px) {
+  input[type='text'],
+  input[type='number'],
+  input[type='email'],
+  input[type='password'],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
 }

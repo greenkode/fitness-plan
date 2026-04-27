@@ -12,7 +12,10 @@ export default defineNuxtConfig({
       title: 'Krachtix Fitness Plan',
       meta: [
         { name: 'description', content: 'Adaptive fitness planning with AI-assisted logging.' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+        { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover' },
+        { name: 'apple-mobile-web-app-capable', content: 'yes' },
+        { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
+        { name: 'theme-color', content: '#e85d25' },
       ],
       link: [
         { rel: 'manifest', href: '/manifest.webmanifest' },
