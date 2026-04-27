@@ -106,7 +106,14 @@ onMounted(async () => {
   const { Chat } = await import('@ai-sdk/vue')
   const { DefaultChatTransport } = await import('ai')
 
+  const initialMessages = messages.value.map((m: any) => ({
+    id: m.id,
+    role: m.role,
+    parts: [{ type: 'text', text: m.content }],
+  }))
+
   chatInstance = new Chat({
+    messages: initialMessages,
     transport: new DefaultChatTransport({
       api: '/api/ai/chat',
       body: { userProgramId: programId },
@@ -114,18 +121,15 @@ onMounted(async () => {
   })
 
   const state = (chatInstance as any).state
-  setInterval(() => {
-    const msgs = state.messagesRef.value
-    const status = state.statusRef.value
-    if (msgs.length > 0) {
-      const newMsgs = msgs.filter((m: any) => !messages.value.some((existing: any) => existing.id === m.id))
-      if (newMsgs.length > 0) {
-        messages.value = [...messages.value, ...newMsgs]
-        checkForReadySignal(messages.value)
-      }
-    }
+
+  watch(state.messagesRef, (msgs: any[]) => {
+    messages.value = [...msgs]
+    if (msgs.length > 0) checkForReadySignal(messages.value)
+  }, { deep: true, immediate: true })
+
+  watch(state.statusRef, (status: string) => {
     isLoading.value = status === 'streaming' || status === 'submitted'
-  }, 300)
+  }, { immediate: true })
 })
 
 async function loadProgramInfo() {
