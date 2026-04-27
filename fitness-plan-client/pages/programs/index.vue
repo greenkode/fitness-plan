@@ -15,7 +15,7 @@
     </div>
 
     <div v-else class="program-list">
-      <div v-for="p in programs" :key="p.id" class="program-card" :class="'status-' + p.status">
+      <div v-for="p in programs" :key="p.id" class="program-card" :class="'status-' + p.status" @click="navigateTo(`/programs/${p.id}`)" style="cursor: pointer;">
         <div class="card-top">
           <div class="card-info">
             <h3 class="program-name">{{ p.templateName }}</h3>

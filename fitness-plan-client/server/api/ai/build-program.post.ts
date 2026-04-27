@@ -1,12 +1,45 @@
-import { generateText } from 'ai'
+import { z } from 'zod'
 import { resolveModelSet } from '../../utils/ai-model'
-import type { ProgramProposal } from '../../utils/ai-schemas'
+import { generateStructured } from '../../utils/ai-json'
+import { ScheduleEntrySchema, type ProgramProposal } from '../../utils/ai-schemas'
 
-function extractJson(text: string): any {
-  const match = text.match(/\{[\s\S]*\}/)
-  if (match) return JSON.parse(match[0])
-  throw new Error('No JSON found in response')
-}
+const RawSkeletonWorkoutSchema = z.object({
+  workoutType: z.string(),
+  title: z.string(),
+  estimatedDuration: z.number().optional(),
+  focus: z.string().optional(),
+})
+
+const RawSkeletonPhaseSchema = z.object({
+  phaseNumber: z.number(),
+  name: z.string().optional(),
+  theme: z.string().optional(),
+  description: z.string().optional(),
+  durationWeeks: z.number().optional(),
+  workouts: z.array(RawSkeletonWorkoutSchema),
+})
+
+const RawSkeletonSchema = z.object({
+  name: z.string().optional(),
+  description: z.string().optional(),
+  category: z.string().optional(),
+  difficultyLevel: z.string().optional(),
+  schedule: z.array(ScheduleEntrySchema).optional(),
+  phases: z.array(RawSkeletonPhaseSchema).min(1),
+})
+
+const RawWorkoutDetailSchema = z.object({
+  blocks: z.array(z.object({
+    blockKey: z.string().optional(),
+    title: z.string().optional(),
+    exercises: z.array(z.object({
+      name: z.string(),
+      prescription: z.string(),
+    })),
+  })),
+})
+
+type RawWorkoutDetail = z.infer<typeof RawWorkoutDetailSchema>
 
 const ARCHITECT_SYSTEM = `You are a fitness program architect. Design a program structure.
 Return ONLY valid JSON matching this exact structure:
@@ -93,25 +126,12 @@ RULES:
 - Match exercises to the workout focus and available equipment
 - ONLY output JSON`
 
-const JSON_FIX_SYSTEM = `You fix malformed JSON. The input may have trailing text, missing brackets, or formatting issues.
-Extract the JSON object and return ONLY the corrected valid JSON. No explanation.`
+function estimateTokens(text: string): number {
+  return Math.ceil(text.length / 4)
+}
 
-async function generateJson(model: any, system: string, prompt: string, fixModel?: any): Promise<any> {
-  const { text } = await generateText({ model, system, prompt })
-
-  try {
-    return extractJson(text)
-  } catch {
-    if (fixModel) {
-      const { text: fixed } = await generateText({
-        model: fixModel,
-        system: JSON_FIX_SYSTEM,
-        prompt: text,
-      })
-      return extractJson(fixed)
-    }
-    throw new Error('Failed to generate valid JSON')
-  }
+const PLACEHOLDER_DETAIL: RawWorkoutDetail = {
+  blocks: [{ blockKey: 'main', title: 'Main', exercises: [] }],
 }
 
 export default defineEventHandler(async (event) => {
@@ -125,33 +145,44 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Missing required fields' })
   }
 
+  const models = await resolveModelSet(user.id)
+  const reqText = `Goals: ${goals}\nDays per week: ${daysPerWeek}\nExperience: ${experienceLevel}\nEquipment: ${equipment}\nInjuries: ${injuries || 'none'}\nPreferences: ${preferences || 'none'}`
+
+  const architectEstimate = estimateTokens(ARCHITECT_SYSTEM) + estimateTokens(reqText)
+  const architectLimit = models.descriptors.structured.contextWindow
+  if (architectEstimate > architectLimit * 0.8) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: `Prompt ~${architectEstimate} tokens exceeds 80% of model ${models.descriptors.structured.id} context (${architectLimit}). Choose a larger model or shorten your request.`,
+    })
+  }
+
   try {
-    const models = await resolveModelSet(user.id)
-    const reqText = `Goals: ${goals}\nDays per week: ${daysPerWeek}\nExperience: ${experienceLevel}\nEquipment: ${equipment}\nInjuries: ${injuries || 'none'}\nPreferences: ${preferences || 'none'}`
+    console.log(`[build] Step 1: Architect (${models.descriptors.structured.id})`)
+    const skeleton = await generateStructured({
+      model: models.structured,
+      system: ARCHITECT_SYSTEM,
+      prompt: reqText,
+      schema: RawSkeletonSchema,
+      fixModel: models.small,
+    })
 
-    console.log('[build] Step 1: Architect (structured model)')
-    const skeleton = await generateJson(models.structured, ARCHITECT_SYSTEM, reqText, models.small)
+    const workoutCount = skeleton.phases.reduce((s, p) => s + p.workouts.length, 0)
+    console.log(`[build] Step 2: Designing ${workoutCount} workouts in parallel`)
 
-    if (!skeleton?.phases?.length) {
-      throw new Error('Architect produced no phases')
-    }
-
-    console.log(`[build] Step 2: Designing ${skeleton.phases.reduce((s: number, p: any) => s + (p.workouts?.length || 0), 0)} workouts in parallel (structured model)`)
-
-    const workoutPromises: { phaseNum: number; workout: any; index: number; promise: Promise<any> }[] = []
+    const workoutPromises: { phaseNum: number; workout: z.infer<typeof RawSkeletonWorkoutSchema>; index: number; promise: Promise<RawWorkoutDetail> }[] = []
 
     for (const phase of skeleton.phases) {
-      for (let wi = 0; wi < (phase.workouts || []).length; wi++) {
-        const workout = phase.workouts[wi]
-        const prompt = `Workout: ${workout.title}\nType: ${workout.workoutType}\nDuration: ${workout.estimatedDuration}min\nFocus: ${workout.focus}\nEquipment: ${equipment}\nExperience: ${experienceLevel}\nInjuries: ${injuries || 'none'}`
+      for (const [wi, workout] of phase.workouts.entries()) {
+        const prompt = `Workout: ${workout.title}\nType: ${workout.workoutType}\nDuration: ${workout.estimatedDuration || 45}min\nFocus: ${workout.focus || ''}\nEquipment: ${equipment}\nExperience: ${experienceLevel}\nInjuries: ${injuries || 'none'}`
 
-        const promise = generateJson(models.structured, WORKOUT_SYSTEM, prompt, models.small).catch(() => ({
-          blocks: [{
-            blockKey: 'main', title: 'Main', exercises: [
-              { name: workout.title, prescription: '3 x 10' },
-            ],
-          }],
-        }))
+        const promise = generateStructured({
+          model: models.structured,
+          system: WORKOUT_SYSTEM,
+          prompt,
+          schema: RawWorkoutDetailSchema,
+          fixModel: models.small,
+        }).catch(() => PLACEHOLDER_DETAIL)
 
         workoutPromises.push({ phaseNum: phase.phaseNumber, workout, index: wi, promise })
       }
@@ -161,16 +192,16 @@ export default defineEventHandler(async (event) => {
 
     console.log('[build] Step 3: Assembling program')
 
-    const phaseMap = new Map<number, any[]>()
+    const phaseMap = new Map<number, ProgramProposal['phases'][number]['workouts']>()
     workoutPromises.forEach((entry, i) => {
-      const detail = results[i]
-      const blocks = (detail.blocks || []).map((b: any, bi: number) => ({
+      const detail = results[i] ?? PLACEHOLDER_DETAIL
+      const blocks = detail.blocks.map((b, bi) => ({
         blockKey: b.blockKey || 'main',
         title: b.title || 'Block',
         sortOrder: bi,
-        exercises: (b.exercises || []).map((e: any, ei: number) => ({
-          name: e.name || 'Exercise',
-          prescription: e.prescription || '3 x 10',
+        exercises: b.exercises.map((e, ei) => ({
+          name: e.name,
+          prescription: e.prescription,
           sortOrder: ei,
         })),
       }))
@@ -190,13 +221,13 @@ export default defineEventHandler(async (event) => {
       description: skeleton.description || '',
       category: skeleton.category || 'general_fitness',
       difficultyLevel: skeleton.difficultyLevel || experienceLevel,
-      schedule: (skeleton.schedule || []).map((s: any) => ({
+      schedule: (skeleton.schedule || []).map(s => ({
         dayOfWeek: s.dayOfWeek,
         trainingType: s.trainingType,
       })),
-      phases: skeleton.phases.map((phase: any) => ({
+      phases: skeleton.phases.map(phase => ({
         phaseNumber: phase.phaseNumber,
-        name: phase.name,
+        name: phase.name || `Phase ${phase.phaseNumber}`,
         theme: phase.theme || '',
         description: phase.description || '',
         progressionCriteria: { weeks: phase.durationWeeks || 4, rule: 'Progress when difficulty consistently below 7' },
@@ -206,8 +237,9 @@ export default defineEventHandler(async (event) => {
 
     console.log(`[build] Done: "${program.name}" - ${program.phases.length} phases, ${workoutPromises.length} workouts`)
     return { program }
-  } catch (err: any) {
-    console.error('Build program error:', err.message)
-    throw createError({ statusCode: 502, statusMessage: 'Failed to generate program: ' + (err.message || 'unknown') })
+  } catch (err) {
+    const message = (err as Error).message || 'unknown'
+    console.error('[build] Failed:', message)
+    throw createError({ statusCode: 502, statusMessage: 'Failed to generate program: ' + message })
   }
 })

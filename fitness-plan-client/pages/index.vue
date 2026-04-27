@@ -97,6 +97,16 @@ const { data: programs, status } = await useFetch<ProgramData[]>('/api/fitness/p
   default: () => [],
 })
 
+const { data: assignments } = await useFetch<AssignmentData[]>('/api/fitness/assignments/upcoming', {
+  default: () => [],
+})
+
+watchEffect(() => {
+  const all = assignments.value || []
+  todayWorkout.value = all.find(a => a.date === todayDate) || null
+  upcomingWorkouts.value = all.filter(a => a.date !== todayDate).slice(0, 6)
+})
+
 const loading = computed(() => status.value === 'pending')
 
 function formatDay(dateStr: string): string {

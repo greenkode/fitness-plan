@@ -3,14 +3,26 @@
     <div v-if="loading" class="loading-state">
       <p>Loading workout...</p>
     </div>
+    <div v-else-if="noAssignment" class="preview-state">
+      <h2 class="workout-heading">No Workout Today</h2>
+      <p class="workout-date">{{ formattedDate }}</p>
+      <p class="empty-msg">There's no workout scheduled for this day. Either it's a rest day, or you haven't created a program yet.</p>
+      <NuxtLink to="/programs" class="start-btn">View Programs</NuxtLink>
+      <NuxtLink to="/" class="back-link">Back to Calendar</NuxtLink>
+    </div>
     <div v-else-if="step === 'preview'" class="preview-state">
       <h2 class="workout-heading">{{ workoutTitle }}</h2>
       <p class="workout-date">{{ formattedDate }}</p>
       <div class="exercise-list">
-        <div v-for="ex in templateExercises" :key="ex.name" class="exercise-item">
-          <span class="ex-name">{{ ex.name }}</span>
-          <span class="ex-rx">{{ ex.prescription }}</span>
-        </div>
+        <template v-for="(ex, i) in templateExercises" :key="ex.name + i">
+          <div v-if="i === 0 || ex.blockTitle !== templateExercises[i - 1].blockTitle" class="block-header">
+            {{ ex.blockTitle || 'Main' }}
+          </div>
+          <div class="exercise-item">
+            <span class="ex-name">{{ ex.name }}</span>
+            <span class="ex-rx">{{ ex.prescription }}</span>
+          </div>
+        </template>
       </div>
       <button class="start-btn" @click="start">Start Workout</button>
       <NuxtLink to="/" class="back-link">Back to Calendar</NuxtLink>
@@ -118,11 +130,15 @@ const activeExerciseIndex = ref(0)
 const showDiscardConfirm = ref(false)
 const loading = ref(true)
 
-const workoutTitle = ref('Lower Body Strength')
+const workoutTitle = ref('Workout')
+const workoutType = ref<'gym' | 'cardio' | 'recovery' | 'rest'>('gym')
+const noAssignment = ref(false)
 
 interface TemplateExercise {
   name: string
   prescription: string
+  blockKey?: string
+  blockTitle?: string
 }
 
 interface LoggedSet {
@@ -131,17 +147,41 @@ interface LoggedSet {
   rpe: number
 }
 
-const templateExercises = ref<TemplateExercise[]>([
-  { name: 'Back Squat', prescription: '5 × 5' },
-  { name: 'Romanian Deadlift', prescription: '3 × 10' },
-  { name: 'Leg Press', prescription: '3 × 12' },
-  { name: 'Walking Lunges', prescription: '3 × 10 each' },
-  { name: 'Calf Raises', prescription: '4 × 15' },
-])
+const templateExercises = ref<TemplateExercise[]>([])
 
 const loggedSets = ref<Map<string, LoggedSet[]>>(new Map())
 
+async function loadAssignment() {
+  try {
+    const assignment = await $fetch<any>(`/api/fitness/assignments/${date}`)
+    if (!assignment) {
+      noAssignment.value = true
+      return
+    }
+
+    workoutTitle.value = assignment.title
+    workoutType.value = assignment.workoutType
+
+    const exercises: TemplateExercise[] = []
+    for (const block of assignment.blocks || []) {
+      for (const ex of block.exercises || []) {
+        exercises.push({
+          name: ex.name,
+          prescription: ex.prescription,
+          blockKey: block.blockKey,
+          blockTitle: block.title,
+        })
+      }
+    }
+    templateExercises.value = exercises
+  } catch {
+    noAssignment.value = true
+  }
+}
+
 async function hydrateFromServer() {
+  await loadAssignment()
+
   try {
     const active = await $fetch<any>(`/api/fitness/workout-logs/active`, {
       query: { date },
@@ -380,6 +420,25 @@ async function logout() {
 .exercise-item:last-child { border-bottom: none; }
 .ex-name { font-weight: 500; color: var(--text-primary); }
 .ex-rx { color: var(--accent-orange); font-size: 0.85rem; }
+.block-header {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  font-weight: 600;
+  padding: 0.75rem 1rem 0.4rem;
+  background: var(--section-bg);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.empty-msg {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 0 0 2rem;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
 .start-btn {
   display: block;
   width: 100%;

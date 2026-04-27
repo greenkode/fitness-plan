@@ -1,34 +1,27 @@
-import { createAnthropic } from '@ai-sdk/anthropic'
-import { createOpenAICompatible } from '@ai-sdk/openai-compatible'
 import { eq } from 'drizzle-orm'
+import type { LanguageModel } from 'ai'
 import { db } from './db'
 import { userAiSettings } from '../../database/schema/user-config'
 import { decrypt } from './crypto'
-import type { LanguageModelV1 } from 'ai'
+import { buildModel, getDescriptor, type ModelDescriptor } from './ai-registry'
 
-const OLLAMA_BASE = process.env.OLLAMA_BASE_URL || 'http://localhost:11434'
 const CLAUDE_MODEL = 'claude-sonnet-4-6'
 
-const MODELS = {
+const OLLAMA_DEFAULTS = {
   conversation: process.env.OLLAMA_CONVERSATION_MODEL || 'qwen2.5:14b',
   structured: process.env.OLLAMA_STRUCTURED_MODEL || 'qwen2.5-coder:7b',
   small: process.env.OLLAMA_SMALL_MODEL || 'qwen2.5:3b',
 }
 
-function ollamaModel(modelId: string, baseUrl?: string): LanguageModelV1 {
-  const provider = createOpenAICompatible({
-    baseURL: (baseUrl || OLLAMA_BASE) + '/v1',
-    name: 'ollama',
-  })
-  return provider(modelId)
-}
+type ResolvedConfig =
+  | { kind: 'anthropic'; apiKey: string; modelId: string }
+  | { kind: 'ollama'; baseUrl?: string; modelIds: { conversation: string; structured: string; small: string } }
 
-export async function resolveModel(userId: string): Promise<LanguageModelV1> {
+async function resolveUserConfig(userId: string): Promise<ResolvedConfig> {
   const config = useRuntimeConfig()
-  const anthropicKey = config.anthropicApiKey as string
-
-  if (anthropicKey) {
-    return createAnthropic({ apiKey: anthropicKey })(CLAUDE_MODEL)
+  const globalKey = config.anthropicApiKey as string
+  if (globalKey) {
+    return { kind: 'anthropic', apiKey: globalKey, modelId: CLAUDE_MODEL }
   }
 
   try {
@@ -37,54 +30,65 @@ export async function resolveModel(userId: string): Promise<LanguageModelV1> {
     })
 
     if (settings?.provider === 'anthropic' && settings.apiKeyEnc) {
-      return createAnthropic({ apiKey: decrypt(settings.apiKeyEnc) })(settings.modelId || CLAUDE_MODEL)
+      return { kind: 'anthropic', apiKey: decrypt(settings.apiKeyEnc), modelId: settings.modelId || CLAUDE_MODEL }
     }
 
     if (settings?.provider === 'ollama') {
-      return ollamaModel(settings.modelId || MODELS.conversation, settings.baseUrl || undefined)
+      const modelId = settings.modelId || OLLAMA_DEFAULTS.conversation
+      return {
+        kind: 'ollama',
+        baseUrl: settings.baseUrl || undefined,
+        modelIds: { conversation: modelId, structured: modelId, small: modelId },
+      }
     }
-  } catch (err: any) {
-    console.error('Failed to load user AI settings:', err.message)
+  } catch (err) {
+    console.warn('[ai-model] Failed to load user AI settings:', (err as Error).message)
   }
 
-  return ollamaModel(MODELS.conversation)
+  return { kind: 'ollama', modelIds: OLLAMA_DEFAULTS }
 }
 
-export function getConversationModel(): LanguageModelV1 {
-  return ollamaModel(MODELS.conversation)
-}
-
-export function getStructuredModel(): LanguageModelV1 {
-  return ollamaModel(MODELS.structured)
-}
-
-export function getSmallModel(): LanguageModelV1 {
-  return ollamaModel(MODELS.small)
-}
-
-export async function resolveModelSet(userId: string) {
-  const config = useRuntimeConfig()
-  const anthropicKey = config.anthropicApiKey as string
-
-  if (anthropicKey) {
-    const claude = createAnthropic({ apiKey: anthropicKey })(CLAUDE_MODEL)
-    return { conversation: claude, structured: claude, small: claude }
+function materialize(descriptor: ModelDescriptor, cfg: ResolvedConfig): LanguageModel {
+  if (cfg.kind === 'anthropic') {
+    return buildModel(descriptor, { apiKey: cfg.apiKey })
   }
+  return buildModel(descriptor, { baseUrl: cfg.baseUrl })
+}
 
-  try {
-    const settings = await db.query.userAiSettings.findFirst({
-      where: eq(userAiSettings.userId, userId),
-    })
+export async function resolveModel(userId: string): Promise<LanguageModel> {
+  const cfg = await resolveUserConfig(userId)
+  const id = cfg.kind === 'anthropic' ? cfg.modelId : cfg.modelIds.conversation
+  return materialize(getDescriptor(id, cfg.kind), cfg)
+}
 
-    if (settings?.provider === 'anthropic' && settings.apiKeyEnc) {
-      const claude = createAnthropic({ apiKey: decrypt(settings.apiKeyEnc) })(settings.modelId || CLAUDE_MODEL)
-      return { conversation: claude, structured: claude, small: claude }
-    }
-  } catch {}
+export interface ResolvedModelSet {
+  conversation: LanguageModel
+  structured: LanguageModel
+  small: LanguageModel
+  descriptors: {
+    conversation: ModelDescriptor
+    structured: ModelDescriptor
+    small: ModelDescriptor
+  }
+}
+
+export async function resolveModelSet(userId: string): Promise<ResolvedModelSet> {
+  const cfg = await resolveUserConfig(userId)
+
+  const ids = cfg.kind === 'anthropic'
+    ? { conversation: cfg.modelId, structured: cfg.modelId, small: cfg.modelId }
+    : cfg.modelIds
+
+  const descriptors = {
+    conversation: getDescriptor(ids.conversation, cfg.kind),
+    structured: getDescriptor(ids.structured, cfg.kind),
+    small: getDescriptor(ids.small, cfg.kind),
+  }
 
   return {
-    conversation: ollamaModel(MODELS.conversation),
-    structured: ollamaModel(MODELS.structured),
-    small: ollamaModel(MODELS.small),
+    conversation: materialize(descriptors.conversation, cfg),
+    structured: materialize(descriptors.structured, cfg),
+    small: materialize(descriptors.small, cfg),
+    descriptors,
   }
 }

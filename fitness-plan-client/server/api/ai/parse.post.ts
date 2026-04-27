@@ -1,6 +1,10 @@
-import { generateText } from 'ai'
+import { z } from 'zod'
 import { resolveModelSet } from '../../utils/ai-model'
+import { generateStructured } from '../../utils/ai-json'
 import { SET_PARSER_PROMPT } from '../../utils/ai-prompts'
+import { ParsedSetSchema } from '../../utils/ai-schemas'
+
+const ParseResponseSchema = z.object({ sets: z.array(ParsedSetSchema) })
 
 function regexParse(input: string): z.infer<typeof ParsedSetSchema>[] {
   const isBw = /\b(bw|bodyweight)\b/i.test(input)
@@ -49,20 +53,14 @@ export default defineEventHandler(async (event) => {
     const models = await resolveModelSet(user.id)
     const prompt = exerciseName ? `Exercise: ${exerciseName}\nInput: ${message}` : message
 
-    const { text } = await generateText({
+    const parsed = await generateStructured({
       model: models.small,
       system: SET_PARSER_PROMPT + '\n\nReturn ONLY valid JSON: {"sets": [{"weightKg": 100, "reps": 5, "durationSeconds": null, "difficulty": 7}]}',
       prompt,
+      schema: ParseResponseSchema,
     })
 
-    const match = text.match(/\{[\s\S]*\}/)
-    if (match) {
-      const parsed = JSON.parse(match[0])
-      if (parsed.sets) return { source: 'ai', sets: parsed.sets, originalMessage: message }
-    }
-
-    const sets = regexParse(message)
-    return { source: 'parser', sets, originalMessage: message }
+    return { source: 'ai', sets: parsed.sets, originalMessage: message }
   } catch {
     const sets = regexParse(message)
     return { source: 'parser', sets, originalMessage: message }

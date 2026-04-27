@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(code --install-extension Vue.volar --install-extension bradlc.vscode-tailwindcss --install-extension anthropics.claude-code --install-extension cweijan.vscode-database-client2 --install-extension dbaeumer.vscode-eslint --install-extension nuxtr.nuxtr-vscode --install-extension mikestead.dotenv --install-extension usernamehw.errorlens --install-extension eamodio.gitlens)",
+      "Read(//Applications/Visual Studio Code.app/Contents/Resources/app/bin/**)",
+      "Bash('/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code' --install-extension Vue.volar --install-extension bradlc.vscode-tailwindcss --install-extension anthropics.claude-code --install-extension cweijan.vscode-database-client2 --install-extension dbaeumer.vscode-eslint --install-extension nuxtr.nuxtr-vscode --install-extension mikestead.dotenv --install-extension usernamehw.errorlens --install-extension eamodio.gitlens)",
+      "Bash('/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code' --install-extension anthropic.claude-code)"
+    ]
+  }
+}
