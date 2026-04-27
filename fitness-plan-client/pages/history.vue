@@ -62,7 +62,9 @@
 
     <h3 class="section-heading">All Workouts</h3>
 
-    <div v-if="loading" class="loading">Loading...</div>
+    <div v-if="loading" class="skeleton-list">
+      <SkeletonCard v-for="n in 4" :key="n" size="sm" />
+    </div>
     <div v-else-if="!workouts.length" class="empty">No workouts logged yet.</div>
 
     <div v-else class="workout-list">
@@ -326,6 +328,11 @@ function formatDate(dateStr: string): string {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin-bottom: 1.5rem;
+}
+.skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 .loading, .empty {
   text-align: center;

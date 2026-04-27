@@ -8,7 +8,9 @@
       </NuxtLink>
     </div>
 
-    <div v-if="loading" class="loading-state">Loading...</div>
+    <div v-if="loading" class="skeleton-list">
+      <SkeletonCard v-for="n in 2" :key="n" size="md" />
+    </div>
     <div v-else-if="!programs.length" class="empty-state">
       <p>No programs yet.</p>
       <NuxtLink to="/programs/new" class="create-link">Create your first program with AI</NuxtLink>
@@ -168,6 +170,11 @@ function formatDate(dateStr: string): string {
   text-align: center;
   padding: 3rem;
   color: var(--text-muted);
+}
+.skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 .create-link {
   display: inline-block;

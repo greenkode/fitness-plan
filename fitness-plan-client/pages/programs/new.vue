@@ -106,20 +106,15 @@ onMounted(async () => {
   })
 
   const state = (chatInstance as any).state
-  setInterval(() => {
-    const msgs = state.messagesRef.value
-    const status = state.statusRef.value
-    if (msgs.length !== messages.value.length || status !== (isLoading.value ? 'streaming' : 'ready')) {
-      console.log('UPDATE - messages:', msgs.length, 'status:', status)
-      msgs.forEach((m: any, i: number) => {
-        const text = m.content || m.parts?.map((p: any) => p.type === 'text' ? p.text : `[${p.type}]`).join('') || ''
-        console.log(`  msg[${i}] role=${m.role} content=${JSON.stringify(text).substring(0, 100)} parts=${m.parts?.length || 0}`)
-      })
-    }
+
+  watch(state.messagesRef, (msgs: any[]) => {
     messages.value = [...msgs]
-    isLoading.value = status === 'streaming' || status === 'submitted'
     if (msgs.length > 0) checkForReadySignal(messages.value)
-  }, 300)
+  }, { deep: true, immediate: true })
+
+  watch(state.statusRef, (status: string) => {
+    isLoading.value = status === 'streaming' || status === 'submitted'
+  }, { immediate: true })
 })
 
 const building = ref(false)

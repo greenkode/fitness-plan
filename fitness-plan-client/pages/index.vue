@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div v-if="loading" class="loading-state">Loading...</div>
+    <div v-if="loading" class="skeleton-list">
+      <SkeletonCard v-for="n in 3" :key="n" size="md" />
+    </div>
 
     <div v-else-if="!programs.length" class="empty-state">
       <h2 class="empty-title">Welcome to Krachtix</h2>
@@ -122,6 +124,11 @@ function formatDay(dateStr: string): string {
   text-align: center;
   padding: 4rem;
   color: var(--text-muted);
+}
+.skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 .empty-state {
   text-align: center;

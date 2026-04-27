@@ -35,15 +35,13 @@ export default defineEventHandler(async (event) => {
   const userProgramId = body.userProgramId || null
 
   const lastUserMsg = getLastUserMessage(messages)
-  let userMsgId: string | null = null
   if (lastUserMsg) {
-    const [saved] = await db.insert(conversationMessages).values({
+    await db.insert(conversationMessages).values({
       userId: user.id,
       userProgramId,
       role: 'user',
       content: lastUserMsg,
-    }).returning({ id: conversationMessages.id })
-    userMsgId = saved.id
+    })
   }
 
   try {
@@ -52,14 +50,12 @@ export default defineEventHandler(async (event) => {
 
     result.text.then(async (fullText) => {
       if (fullText.trim()) {
-        const [saved] = await db.insert(conversationMessages).values({
+        await db.insert(conversationMessages).values({
           userId: user.id,
           userProgramId,
           role: 'assistant',
           content: fullText,
-        }).returning({ id: conversationMessages.id })
-
-        console.log(`[chat] Saved conversation: user=${userMsgId}, assistant=${saved.id}`)
+        })
       }
     }).catch((err) => {
       console.error('[chat] Failed to save assistant message:', err.message)
