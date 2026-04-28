@@ -207,7 +207,7 @@ async function updateProgram() {
   if (!currentProposal.value) return
   saving.value = true
   try {
-    await $fetch('/api/fitness/programs/save', {
+    await $fetch(`/api/fitness/programs/${programId}/update`, {
       method: 'POST',
       body: { program: currentProposal.value },
     })
