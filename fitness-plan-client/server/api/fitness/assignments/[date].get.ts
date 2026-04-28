@@ -1,7 +1,7 @@
 import { eq, and } from 'drizzle-orm'
 import { db } from '../../../utils/db'
 import { workoutAssignments } from '../../../../database/schema/assignments'
-import { templateWorkouts, templateWorkoutBlocks, templateExercises } from '../../../../database/schema/templates'
+import { templateWorkouts, templateWorkoutBlocks, templateExercises, exerciseMedia } from '../../../../database/schema/templates'
 import { userPrograms } from '../../../../database/schema/user-config'
 
 export default defineEventHandler(async (event) => {
@@ -58,7 +58,21 @@ export default defineEventHandler(async (event) => {
         .where(eq(templateExercises.blockId, block.id))
         .orderBy(templateExercises.sortOrder)
 
-      return { ...block, exercises }
+      const exercisesWithMedia = await Promise.all(exercises.map(async (ex) => {
+        const media = await db.select({
+          id: exerciseMedia.id,
+          url: exerciseMedia.url,
+          mediaType: exerciseMedia.mediaType,
+          label: exerciseMedia.label,
+          sortOrder: exerciseMedia.sortOrder,
+        })
+          .from(exerciseMedia)
+          .where(eq(exerciseMedia.exerciseId, ex.id))
+          .orderBy(exerciseMedia.sortOrder)
+        return { ...ex, media }
+      }))
+
+      return { ...block, exercises: exercisesWithMedia }
     }))
 
     return {

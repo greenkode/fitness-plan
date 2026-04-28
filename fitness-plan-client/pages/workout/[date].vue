@@ -14,13 +14,21 @@
       <h2 class="workout-heading">{{ workoutTitle }}</h2>
       <p class="workout-date">{{ formattedDate }}</p>
       <div class="exercise-list">
-        <template v-for="(ex, i) in templateExercises" :key="ex.name + i">
+        <template v-for="(ex, i) in templateExercises" :key="ex.id">
           <div v-if="i === 0 || ex.blockTitle !== templateExercises[i - 1].blockTitle" class="block-header">
             {{ ex.blockTitle || 'Main' }}
           </div>
           <div class="exercise-item">
-            <span class="ex-name">{{ ex.name }}</span>
-            <span class="ex-rx">{{ ex.prescription }}</span>
+            <div class="exercise-row">
+              <span class="ex-name">{{ ex.name }}</span>
+              <span class="ex-rx">{{ ex.prescription }}</span>
+            </div>
+            <ExerciseMedia
+              :exercise-id="ex.id"
+              :initial-media="ex.media"
+              :can-edit="true"
+              @updated="(m) => ex.media = m"
+            />
           </div>
         </template>
       </div>
@@ -85,9 +93,11 @@
 
       <SetLogModal
         :open="modalOpen"
+        :exercise-id="activeExercise?.id || ''"
         :exercise-name="activeExercise?.name || ''"
         :prescription="activeExercise?.prescription || ''"
         :existing-sets="activeExerciseSets"
+        :media="activeExercise?.media || []"
         @close="modalOpen = false"
         @set-logged="onSetLogged"
       />
@@ -138,11 +148,21 @@ const workoutTitle = ref('Workout')
 const workoutType = ref<'gym' | 'cardio' | 'recovery' | 'rest'>('gym')
 const noAssignment = ref(false)
 
+interface MediaItem {
+  id: string
+  url: string
+  mediaType: string
+  label: string | null
+  sortOrder: number
+}
+
 interface TemplateExercise {
+  id: string
   name: string
   prescription: string
   blockKey?: string
   blockTitle?: string
+  media: MediaItem[]
 }
 
 interface LoggedSet {
@@ -170,8 +190,10 @@ async function loadAssignment() {
     for (const block of assignment.blocks || []) {
       for (const ex of block.exercises || []) {
         exercises.push({
+          id: ex.id,
           name: ex.name,
           prescription: ex.prescription,
+          media: ex.media || [],
           blockKey: block.blockKey,
           blockTitle: block.title,
         })
@@ -416,12 +438,19 @@ async function logout() {
 }
 .exercise-item {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 0.5rem;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--border-subtle);
   font-size: 0.95rem;
 }
 .exercise-item:last-child { border-bottom: none; }
+.exercise-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
 .ex-name { font-weight: 500; color: var(--text-primary); }
 .ex-rx { color: var(--accent-orange); font-size: 0.85rem; }
 .block-header {

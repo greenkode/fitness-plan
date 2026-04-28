@@ -14,6 +14,13 @@
       </div>
 
       <div class="modal-body">
+        <ExerciseMedia
+          v-if="exerciseId"
+          :exercise-id="exerciseId"
+          :initial-media="media"
+          :can-edit="false"
+        />
+
         <div class="sets-log">
           <div v-if="sets.length === 0" class="empty-state">No sets logged yet</div>
           <div v-for="(set, i) in sets" :key="i" class="logged-set">
@@ -54,11 +61,21 @@ interface LoggedSet {
   rpe: number
 }
 
+interface MediaItem {
+  id: string
+  url: string
+  mediaType: string
+  label: string | null
+  sortOrder: number
+}
+
 const props = defineProps<{
   open: boolean
+  exerciseId?: string
   exerciseName: string
   prescription: string
   existingSets: LoggedSet[]
+  media?: MediaItem[]
 }>()
 
 const emit = defineEmits<{

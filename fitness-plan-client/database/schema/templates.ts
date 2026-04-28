@@ -48,6 +48,15 @@ export const templateExercises = pgTable('template_exercises', {
   sortOrder: integer('sort_order').notNull().default(0),
 })
 
+export const exerciseMedia = pgTable('exercise_media', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  exerciseId: uuid('exercise_id').notNull().references(() => templateExercises.id, { onDelete: 'cascade' }),
+  url: text('url').notNull(),
+  mediaType: text('media_type').notNull(),
+  label: text('label'),
+  sortOrder: integer('sort_order').notNull().default(0),
+})
+
 export const templateWorkoutTips = pgTable('template_workout_tips', {
   id: uuid('id').defaultRandom().primaryKey(),
   templateWorkoutId: uuid('template_workout_id').notNull().references(() => templateWorkouts.id, { onDelete: 'cascade' }),
