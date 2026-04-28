@@ -1,6 +1,6 @@
 <template>
   <div class="settings-page">
-    <h2 class="page-title">Settings</h2>
+    <PageHeader title="Settings" subtitle="Profile, AI provider, and appearance" />
 
     <section class="card">
       <h3 class="section-title">Profile</h3>
@@ -203,8 +203,7 @@ async function clearApiKey() {
 
 <style scoped>
 .settings-page {
-  max-width: 600px;
-  margin: 0 auto;
+  width: 100%;
 }
 .page-title {
   font-family: 'Oswald', sans-serif;

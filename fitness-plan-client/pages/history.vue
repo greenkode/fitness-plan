@@ -1,6 +1,6 @@
 <template>
   <div class="history-page">
-    <h2 class="page-title">Workout History</h2>
+    <PageHeader title="History" :subtitle="insights ? `${insights.totalWorkouts} workouts logged` : ''" />
 
     <div v-if="insights && insights.totalWorkouts > 0" class="insights-grid">
       <div class="insight-card">
@@ -188,8 +188,7 @@ function formatDate(dateStr: string): string {
 
 <style scoped>
 .history-page {
-  max-width: 700px;
-  margin: 0 auto;
+  width: 100%;
 }
 .insights-grid {
   display: grid;

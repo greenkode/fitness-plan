@@ -1,12 +1,13 @@
 <template>
   <div class="programs-page">
-    <div class="page-header">
-      <h2 class="page-title">My Programs</h2>
-      <NuxtLink to="/programs/new" class="new-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-        New Program
-      </NuxtLink>
-    </div>
+    <PageHeader title="Programs" :subtitle="programs.length ? `${programs.length} ${programs.length === 1 ? 'program' : 'programs'}` : ''">
+      <template #actions>
+        <NuxtLink to="/programs/new" class="new-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+          New
+        </NuxtLink>
+      </template>
+    </PageHeader>
 
     <div v-if="loading" class="skeleton-list">
       <SkeletonCard v-for="n in 2" :key="n" size="md" />
@@ -124,8 +125,7 @@ function formatDate(dateStr: string): string {
 
 <style scoped>
 .programs-page {
-  max-width: 700px;
-  margin: 0 auto;
+  width: 100%;
 }
 .page-header {
   display: flex;
@@ -146,7 +146,7 @@ function formatDate(dateStr: string): string {
   margin: 0;
 }
 .new-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   background: var(--accent-orange);
@@ -155,11 +155,12 @@ function formatDate(dateStr: string): string {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  font-size: 0.85rem;
-  padding: 0.6rem 1.1rem;
+  font-size: 0.8rem;
+  padding: 0.55rem 1rem;
   border-radius: 8px;
   text-decoration: none;
   transition: all 0.2s;
+  white-space: nowrap;
 }
 .new-btn:hover {
   filter: brightness(1.1);

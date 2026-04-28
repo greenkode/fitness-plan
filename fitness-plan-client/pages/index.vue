@@ -11,12 +11,11 @@
     </div>
 
     <div v-else>
+      <PageHeader title="Dashboard" subtitle="Today's workout, calendar, and AI insights" />
+
       <CoachingSuggestions />
 
-      <div class="section-header">
-        <h2 class="section-title">My Programs</h2>
-        <NuxtLink to="/programs/new" class="new-link">+ New</NuxtLink>
-      </div>
+      <div class="section-eyebrow">My Programs</div>
 
       <div class="program-list">
         <div
@@ -130,28 +129,15 @@ const loading = computed(() => status.value === 'pending')
   box-shadow: 0 6px 20px rgba(232, 93, 37, 0.4);
 }
 
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-.section-title {
+.section-eyebrow {
   font-family: 'Oswald', sans-serif;
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-primary);
-  margin: 0;
-}
-.new-link {
-  color: var(--accent-orange);
-  text-decoration: none;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
   font-weight: 600;
-  font-size: 0.9rem;
+  margin: 1.5rem 0 0.75rem;
 }
-.new-link:hover { text-decoration: underline; }
 
 .program-list {
   display: flex;

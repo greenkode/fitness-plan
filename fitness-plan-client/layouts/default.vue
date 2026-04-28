@@ -17,21 +17,21 @@
 }
 .krachtix-main {
   flex: 1;
-  max-width: 1400px;
+  max-width: 800px;
   width: 100%;
   margin: 0 auto;
-  padding: 1.5rem 2rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
 }
 @media (max-width: 768px) {
   .krachtix-main {
-    padding: 0.75rem;
+    padding: 1rem;
   }
 }
 @media (max-width: 480px) {
   .krachtix-main {
-    padding: 0.5rem;
+    padding: 0.75rem;
   }
 }
 </style>
