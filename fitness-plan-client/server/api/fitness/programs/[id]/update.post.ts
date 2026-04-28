@@ -81,6 +81,7 @@ export default defineEventHandler(async (event) => {
                   blockId: insertedBlock.id,
                   name: ex.name,
                   prescription: ex.prescription,
+                  description: ex.description,
                   sortOrder: ex.sortOrder,
                 }))
               )

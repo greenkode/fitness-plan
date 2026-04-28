@@ -35,6 +35,7 @@ const RawWorkoutDetailSchema = z.object({
     exercises: z.array(z.object({
       name: z.string(),
       prescription: z.string(),
+      description: z.string().optional(),
     })),
   })),
 })
@@ -87,33 +88,33 @@ Return ONLY valid JSON:
       "blockKey": "warmup",
       "title": "Warm-Up",
       "exercises": [
-        {"name": "Band Pull-Aparts", "prescription": "2 x 15"},
-        {"name": "Arm Circles", "prescription": "1 x 20"}
+        {"name": "Band Pull-Aparts", "prescription": "2 x 15", "description": "Hold a light resistance band at shoulder width and pull apart, squeezing shoulder blades. Activates rear delts and upper back."},
+        {"name": "Arm Circles", "prescription": "1 x 20", "description": "Extend arms to sides and make controlled circles forward then backward. Warms up shoulder joints and rotator cuff."}
       ]
     },
     {
       "blockKey": "main",
       "title": "Main Lifts",
       "exercises": [
-        {"name": "Barbell Bench Press", "prescription": "4 x 6-8"},
-        {"name": "Incline Dumbbell Press", "prescription": "3 x 10-12"},
-        {"name": "Standing Overhead Press", "prescription": "3 x 8-10"}
+        {"name": "Barbell Bench Press", "prescription": "4 x 6-8", "description": "Lie flat, grip just outside shoulder width, lower bar to mid-chest with control, press up. Targets chest, front delts, triceps."},
+        {"name": "Incline Dumbbell Press", "prescription": "3 x 10-12", "description": "On a 30-45° incline bench, press dumbbells from shoulder level to lockout. Emphasizes upper chest and front delts."},
+        {"name": "Standing Overhead Press", "prescription": "3 x 8-10", "description": "Press a barbell from shoulders to overhead, keeping core braced and ribs down. Builds shoulder and tricep strength."}
       ]
     },
     {
       "blockKey": "accessory",
       "title": "Accessories",
       "exercises": [
-        {"name": "Cable Lateral Raises", "prescription": "3 x 15"},
-        {"name": "Tricep Rope Pushdowns", "prescription": "3 x 12-15"},
-        {"name": "Face Pulls", "prescription": "3 x 15"}
+        {"name": "Cable Lateral Raises", "prescription": "3 x 15", "description": "Raise cable handle out to the side to shoulder height with a slight bend in the elbow. Isolates the medial deltoid."},
+        {"name": "Tricep Rope Pushdowns", "prescription": "3 x 12-15", "description": "Push rope down and apart at the bottom while keeping elbows pinned at sides. Targets all three tricep heads."},
+        {"name": "Face Pulls", "prescription": "3 x 15", "description": "Pull a rope to your forehead with elbows high and externally rotate at the end range. Strengthens rear delts and upper back."}
       ]
     },
     {
       "blockKey": "cooldown",
       "title": "Cool-Down",
       "exercises": [
-        {"name": "Static Stretching", "prescription": "5 min"}
+        {"name": "Static Stretching", "prescription": "5 min", "description": "Hold gentle stretches for trained muscle groups for 20-30 seconds each. Helps recovery and mobility."}
       ]
     }
   ]
@@ -123,6 +124,7 @@ RULES:
 - Include warmup (2-3 exercises), main (3-5 exercises), accessory (2-4 exercises), cooldown (1-2)
 - Use specific exercise names like "Barbell Back Squat" not just "Squat"
 - Prescriptions: "4 x 8-10" or "3 x 12" or "2 x 30s hold"
+- Every exercise MUST include a "description" field: 1-2 sentences covering execution cues and target muscles
 - Match exercises to the workout focus and available equipment
 - ONLY output JSON`
 
@@ -202,6 +204,7 @@ export default defineEventHandler(async (event) => {
         exercises: b.exercises.map((e, ei) => ({
           name: e.name,
           prescription: e.prescription,
+          description: e.description,
           sortOrder: ei,
         })),
       }))

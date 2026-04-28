@@ -3,6 +3,7 @@ import { z } from 'zod'
 export const ExerciseSchema = z.object({
   name: z.string(),
   prescription: z.string(),
+  description: z.string().optional(),
   sortOrder: z.number(),
 })
 

@@ -20,15 +20,15 @@
           </div>
           <div class="exercise-item">
             <div class="exercise-row">
-              <span class="ex-name">{{ ex.name }}</span>
-              <span class="ex-rx">{{ ex.prescription }}</span>
+              <div class="ex-name-block">
+                <span class="ex-name">{{ ex.name }}</span>
+                <span class="ex-rx">{{ ex.prescription }}</span>
+              </div>
+              <NuxtLink :to="`/exercises/${ex.id}`" class="details-link" @click.stop>
+                Details
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+              </NuxtLink>
             </div>
-            <ExerciseMedia
-              :exercise-id="ex.id"
-              :initial-media="ex.media"
-              :can-edit="true"
-              @updated="(m) => ex.media = m"
-            />
           </div>
         </template>
       </div>
@@ -97,7 +97,6 @@
         :exercise-name="activeExercise?.name || ''"
         :prescription="activeExercise?.prescription || ''"
         :existing-sets="activeExerciseSets"
-        :media="activeExercise?.media || []"
         @close="modalOpen = false"
         @set-logged="onSetLogged"
       />
@@ -148,21 +147,12 @@ const workoutTitle = ref('Workout')
 const workoutType = ref<'gym' | 'cardio' | 'recovery' | 'rest'>('gym')
 const noAssignment = ref(false)
 
-interface MediaItem {
-  id: string
-  url: string
-  mediaType: string
-  label: string | null
-  sortOrder: number
-}
-
 interface TemplateExercise {
   id: string
   name: string
   prescription: string
   blockKey?: string
   blockTitle?: string
-  media: MediaItem[]
 }
 
 interface LoggedSet {
@@ -193,7 +183,6 @@ async function loadAssignment() {
           id: ex.id,
           name: ex.name,
           prescription: ex.prescription,
-          media: ex.media || [],
           blockKey: block.blockKey,
           blockTitle: block.title,
         })
@@ -449,10 +438,37 @@ async function logout() {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+}
+.ex-name-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  flex: 1;
 }
 .ex-name { font-weight: 500; color: var(--text-primary); }
 .ex-rx { color: var(--accent-orange); font-size: 0.85rem; }
+.details-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.75rem;
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.details-link:hover {
+  border-color: var(--accent-orange);
+  color: var(--accent-orange);
+}
 .block-header {
   font-family: 'Oswald', sans-serif;
   font-size: 0.7rem;

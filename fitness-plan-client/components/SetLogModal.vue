@@ -2,24 +2,24 @@
   <div v-if="open" class="modal-overlay" @click.self="$emit('close')">
     <div class="modal">
       <div class="modal-header">
-        <div>
+        <div class="header-info">
           <h2 class="exercise-name">{{ exerciseName }}</h2>
           <span class="exercise-rx">{{ prescription }}</span>
         </div>
-        <button class="close-btn" @click="$emit('close')">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
+        <div class="header-actions">
+          <NuxtLink v-if="exerciseId" :to="`/exercises/${exerciseId}`" class="details-link">
+            Details
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+          </NuxtLink>
+          <button class="close-btn" @click="$emit('close')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       <div class="modal-body">
-        <ExerciseMedia
-          v-if="exerciseId"
-          :exercise-id="exerciseId"
-          :initial-media="media"
-          :can-edit="false"
-        />
 
         <div class="sets-log">
           <div v-if="sets.length === 0" class="empty-state">No sets logged yet</div>
@@ -61,21 +61,12 @@ interface LoggedSet {
   rpe: number
 }
 
-interface MediaItem {
-  id: string
-  url: string
-  mediaType: string
-  label: string | null
-  sortOrder: number
-}
-
 const props = defineProps<{
   open: boolean
   exerciseId?: string
   exerciseName: string
   prescription: string
   existingSets: LoggedSet[]
-  media?: MediaItem[]
 }>()
 
 const emit = defineEmits<{
@@ -175,8 +166,38 @@ async function parseWithAi() {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 0.75rem;
   background: linear-gradient(135deg, rgba(232, 93, 37, 0.08) 0%, transparent 100%);
   border-radius: 16px 16px 0 0;
+}
+.header-info {
+  flex: 1;
+  min-width: 0;
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+.details-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.7rem;
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+.details-link:hover {
+  border-color: var(--accent-orange);
+  color: var(--accent-orange);
 }
 :global(html.dark) .modal-header {
   background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, transparent 100%);

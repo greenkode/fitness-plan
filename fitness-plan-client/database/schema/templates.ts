@@ -45,6 +45,7 @@ export const templateExercises = pgTable('template_exercises', {
   blockId: uuid('block_id').notNull().references(() => templateWorkoutBlocks.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
   prescription: text('prescription'),
+  description: text('description'),
   sortOrder: integer('sort_order').notNull().default(0),
 })
 

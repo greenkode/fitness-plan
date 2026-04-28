@@ -62,6 +62,25 @@
             class="action-btn complete-btn"
             @click.stop="updateStatus(p, 'completed')"
           >Complete</button>
+          <button
+            class="action-btn delete-btn"
+            @click.stop="confirmDelete(p)"
+          >Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="deleteTarget" class="modal-overlay" @click.self="deleteTarget = null">
+      <div class="confirm-modal">
+        <h3 class="confirm-title">Delete program?</h3>
+        <p class="confirm-text">
+          This will permanently delete <strong>{{ deleteTarget.templateName }}</strong>, its conversation history, and all upcoming assignments. Past workout logs are preserved. This cannot be undone.
+        </p>
+        <div class="confirm-actions">
+          <button class="discard-confirm-btn" :disabled="deleting" @click="performDelete">
+            {{ deleting ? 'Deleting…' : 'Yes, Delete' }}
+          </button>
+          <button class="cancel-btn" :disabled="deleting" @click="deleteTarget = null">Cancel</button>
         </div>
       </div>
     </div>
@@ -90,6 +109,28 @@ interface ProgramData {
 
 const programs = ref<ProgramData[]>([])
 const loading = ref(true)
+const deleteTarget = ref<ProgramData | null>(null)
+const deleting = ref(false)
+
+function confirmDelete(p: ProgramData) {
+  deleteTarget.value = p
+}
+
+async function performDelete() {
+  if (!deleteTarget.value) return
+  deleting.value = true
+  const target = deleteTarget.value
+  try {
+    await $fetch(`/api/fitness/programs/${target.id}`, { method: 'DELETE' })
+    programs.value = programs.value.filter(p => p.id !== target.id)
+    toast.add({ title: 'Program deleted', color: 'neutral' })
+    deleteTarget.value = null
+  } catch {
+    toast.add({ title: 'Failed to delete program', color: 'error' })
+  } finally {
+    deleting.value = false
+  }
+}
 
 onMounted(async () => {
   try {
@@ -315,4 +356,83 @@ function formatDate(dateStr: string): string {
   color: var(--accent-green);
 }
 .complete-btn:hover { background: rgba(13, 148, 136, 0.1); }
+.delete-btn {
+  background: none;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  margin-left: auto;
+}
+.delete-btn:hover { background: rgba(239, 68, 68, 0.1); }
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  z-index: 100;
+  animation: fadeIn 0.15s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.confirm-modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  max-width: 420px;
+  width: 100%;
+}
+.confirm-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem;
+}
+.confirm-text {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0 0 1.25rem;
+  line-height: 1.5;
+}
+.confirm-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+.discard-confirm-btn {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+.discard-confirm-btn:hover:not(:disabled) { filter: brightness(1.1); }
+.discard-confirm-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.cancel-btn {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+.cancel-btn:hover:not(:disabled) { border-color: var(--text-secondary); }
+.cancel-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 </style>
