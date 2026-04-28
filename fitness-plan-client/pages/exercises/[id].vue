@@ -13,9 +13,42 @@
     <div v-else-if="!data" class="empty">Exercise not found.</div>
 
     <template v-else>
-      <section v-if="data.exercise.description" class="card">
-        <h3 class="section-heading">How to perform</h3>
-        <p class="description">{{ data.exercise.description }}</p>
+      <section class="card">
+        <div class="section-row">
+          <h3 class="section-heading">How to perform</h3>
+          <div class="section-actions">
+            <button
+              v-if="!editingDescription"
+              class="text-btn"
+              :disabled="generating"
+              @click="generateDescription"
+            >
+              {{ generating ? 'Generating…' : (data.exercise.description ? 'Regenerate' : 'Generate with AI') }}
+            </button>
+            <button
+              v-if="!editingDescription"
+              class="text-btn"
+              @click="startEditDescription"
+            >Edit</button>
+          </div>
+        </div>
+
+        <div v-if="editingDescription" class="edit-block">
+          <textarea
+            v-model="descriptionDraft"
+            class="description-input"
+            rows="3"
+            placeholder="Execution cues and target muscles…"
+          />
+          <div class="edit-actions">
+            <button class="save-btn" :disabled="savingDescription" @click="saveDescription">
+              {{ savingDescription ? 'Saving…' : 'Save' }}
+            </button>
+            <button class="cancel-btn-sm" :disabled="savingDescription" @click="editingDescription = false">Cancel</button>
+          </div>
+        </div>
+        <p v-else-if="data.exercise.description" class="description">{{ data.exercise.description }}</p>
+        <p v-else class="empty-inline">No description yet.</p>
       </section>
 
       <section class="card">
@@ -143,8 +176,54 @@ interface ExerciseDetail {
 
 const route = useRoute()
 const router = useRouter()
+const toast = useToast()
 const data = ref<ExerciseDetail | null>(null)
 const loading = ref(true)
+
+const editingDescription = ref(false)
+const descriptionDraft = ref('')
+const savingDescription = ref(false)
+const generating = ref(false)
+
+function startEditDescription() {
+  if (!data.value) return
+  descriptionDraft.value = data.value.exercise.description || ''
+  editingDescription.value = true
+}
+
+async function saveDescription() {
+  if (!data.value) return
+  savingDescription.value = true
+  try {
+    const updated = await $fetch<{ id: string; description: string | null }>(`/api/fitness/exercises/${data.value.exercise.id}`, {
+      method: 'PATCH',
+      body: { description: descriptionDraft.value },
+    })
+    data.value.exercise.description = updated.description
+    editingDescription.value = false
+    toast.add({ title: 'Description saved', color: 'success' })
+  } catch {
+    toast.add({ title: 'Failed to save', color: 'error' })
+  } finally {
+    savingDescription.value = false
+  }
+}
+
+async function generateDescription() {
+  if (!data.value) return
+  generating.value = true
+  try {
+    const updated = await $fetch<{ id: string; description: string | null }>(`/api/fitness/exercises/${data.value.exercise.id}/generate-description`, {
+      method: 'POST',
+    })
+    data.value.exercise.description = updated.description
+    toast.add({ title: 'Description generated', color: 'success' })
+  } catch (e: any) {
+    toast.add({ title: 'Failed to generate', description: e.data?.statusMessage || 'Try again', color: 'error' })
+  } finally {
+    generating.value = false
+  }
+}
 
 onMounted(async () => {
   try {
@@ -245,6 +324,97 @@ function goBack() {
   color: var(--text-primary);
   line-height: 1.5;
 }
+.section-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.section-row .section-heading {
+  margin: 0;
+}
+.section-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+.text-btn {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.text-btn:hover:not(:disabled) {
+  border-color: var(--accent-orange);
+  color: var(--accent-orange);
+}
+.text-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.edit-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.description-input {
+  width: 100%;
+  background: var(--section-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  font-family: 'Source Sans 3', sans-serif;
+  resize: vertical;
+  outline: none;
+  line-height: 1.4;
+}
+.description-input:focus { border-color: var(--accent-orange); }
+.edit-actions {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: flex-end;
+}
+.save-btn {
+  background: var(--accent-orange);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 0.85rem;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+.save-btn:hover:not(:disabled) { filter: brightness(1.1); }
+.save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.cancel-btn-sm {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  border-radius: 6px;
+  padding: 0.4rem 0.85rem;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+.cancel-btn-sm:hover:not(:disabled) { border-color: var(--text-secondary); color: var(--text-secondary); }
+.cancel-btn-sm:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .stats-grid {
   display: grid;
